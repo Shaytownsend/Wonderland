@@ -181,3 +181,95 @@ The 3MF files already include the 0.3 % shrink scale and the 0.3 mm bed-edge cha
 8. Check that the side vents see open air (nothing within 50 mm of either side panel between the shelf and the chassis top) and that no rear connector sits in the outer 8 mm covered by the rear stops.
 9. Offer the frame to the rack at a 2U opening with the flange front face against the rails. Fit eight rack screws with the wide washers through the teardrop slots (both holes of each U, top and bottom) and tighten to 3 N·m for 10-32 or 5 N·m for M6.
 10. Connect cables. The cradle is rated for 5 g vertical shock and 3 g in both horizontal directions with the stated 1.5 kg of cables and SFP modules.
+
+---
+
+# 1U bolt-on ears (PATH A) – `ace_ears_1u.py`
+
+Two one-piece ears (left = mirror of right) that bolt to the two existing screw positions on each side of the
+ACE and carry it on the front rails alone. Output in `output_1u/` (STEP, 3MF, renders, `report.md`).
+
+## What you must measure before printing
+
+DirectOut's drawing for these holes could not be reached (site blocked here), so the block at the top of
+`ace_ears_1u.py` holds **placeholders**. Take one side screw out and measure:
+
+| Variable | Placeholder | What to measure |
+|---|---|---|
+| `CH_HOLE_Y` | (20, 60) | distance of each screw centre behind the front-panel face, mm |
+| `CH_HOLE_Z` | (22, 22) | height of each screw centre above the chassis bottom, mm |
+| `CH_THREAD` | "M4" | M3 or M4 (measure the screw) |
+| `CH_SCREW_LEN_ORIG` | 8 | thread length of the factory screw |
+| `CH_DEPTH` | 8 | usable thread depth (= factory length unless DirectOut says more) |
+| `VENTS` | [] | every vent / fan outlet on the side panel as (y0, y1, z0, z1) rectangles |
+| `PROTRUSIONS` | [] | anything standing proud of the side panel (the 315.6 envelope) as rectangles |
+
+Re-run the script; it re-sizes the plate, the torsion box, the vent windows, the diagonal slots and the
+relief pockets, and re-runs every check. The "every vent uncovered" check reads UNVERIFIED until `VENTS`
+is filled.
+
+## Design (section 5)
+
+- **Flange** 6 mm, front face coplanar with the ACE front face, X 155 … 241.3, Z 0.2 … 43.8 (43.6 tall,
+  0.2 above the chassis bottom). Three teardrop rack slots 10.7 x 7.2 at X = 232.55, Z = 6.125 / 22.0 / 37.875
+  (= 6.35 / 22.225 / 38.1 from the U edge; the 43.6 panel is centred in the 44.45 pitch). Loads are
+  computed with only the top and bottom screw used.
+- **Side plate** 5 mm, sits on the chassis side, reaches 10.35 mm past the rearmost hole (70.35 mm with the
+  placeholders). Round teardrop clearance holes (4.7 for M4) with flat-bottom teardrop counterbores Ø 9.2 x 2 mm
+  for the pan head + washer, 3 mm of plate left under the washer, ≥ 8 mm material around every hole.
+- **Torsion box**: 4 mm full-height diagonal wall from the flange rear face (outer face at 220, inside the
+  222 limit) to the side plate at Y = 70.35 (spec says 80, capped at the plate end), closing a triangle in top
+  view. Ø 12 teardrop access holes through the diagonal in line with each chassis screw so a driver reaches them.
+- **Fillets**: 6 mm cove at the flange–plate corner, 2 mm at both diagonal junctions (applied, verified).
+- **Vents / protrusions**: gable-roofed windows with 2 mm margin in the plate, 4 mm slots on 8 mm pitch in the
+  diagonal over any vent, 3 mm relief pockets under protrusions (plate auto-thickens to keep 2.4 mm).
+- **Screws**: factory thread + (plate under the washer) = factory length + 3 mm, so engagement never exceeds
+  the factory depth. With the placeholders: M4 x 11 pan head + Ø 9 washer.
+
+## Verification (33 checks: 32 PASS, 1 UNVERIFIED pending vent data)
+
+| Check | Result |
+|---|---|
+| Ears vs ACE body 310 x 44 x 210 | 0 mm³ |
+| Ears vs 315.6 envelope | only the plate's own footprint on the side panel (it bolts there) |
+| Ears vs rack rails | 0 mm³ |
+| Rack slot centres | 3 slots, 0.0000 mm deviation |
+| Width / panel height | 482.600 / 43.600 mm |
+| Structure behind the flange | 220.0 mm ≤ 222 |
+| Every vent uncovered | **UNVERIFIED – enter VENTS** |
+| Minimum wall | 3.00 mm (under the counterbore) |
+| Each ear | one valid solid, 49.3 cm³ (≈ 62 g solid), 86.3 x 70.3 x 43.6 mm, no face past 45°, 0 bridges |
+
+## Loads (placeholder hole positions Y = 20 / 60; re-run after measuring)
+
+P per ear = 25.5 N at 1 g. The pitch couple over the 40 mm screw spacing is 25.5 x (105 − 40) / 40 = 41 N, so the
+rear chassis screw sees 54 N shear at 1 g and **271 N at 5 g**; plate bearing 271 / (4.7 x 5) = 11.5 MPa, SF 3.9.
+Diagonal wall at 5 g: V = 127.5 x 105 / 70.35 = 190 N, bending 13.0 MPa, SF 3.46 (the governing feature).
+Side plate root 8.45 MPa (SF 5.3), flange in-plane 5.0 MPa (SF 8.9), flange torsion share 2.75 MPa (SF 9.4).
+Rack screws: 13 391 / 31.75 = 422 N tension on the top screw at 5 g, 301 N shear.
+Case A sag at the chassis rear: diagonal tip 0.19 mm → rotation → 0.56 mm, plus plate bending 0.13 mm = **0.69 mm ≤ 1.0 mm**
+(elastic only; a 0.2 mm hole clearance can add up to 1 mm of rigid-body droop, so fit the screws with the chassis rear lifted).
+Case C: 64 N tension and 38 N shear per chassis screw; the ACE's own threads must hold 64 N, trivial for M3/M4 in aluminium.
+
+## Hardware (1U ears)
+
+| Item | Qty |
+|---|---|
+| Chassis screws, pan head, same thread as factory, factory length + 3 mm (placeholder M4 x 11), steel 8.8 | 4 |
+| Steel flat washers for them (Ø 9 for M4, Ø 7 for M3) | 4 |
+| Rack screws 10-32 x 5/8" or M6 x 16 with Ø 18 washers | 4 (6 if all three slots are used) |
+
+## Print
+
+Both ears **upright, rack vertical = printer Z**, flange bottom edge on the bed (86.3 x 70.3 footprint, 43.6 tall).
+All holes are horizontal-axis teardrops; the diagonal and plate are vertical, so there is no overhang at all.
+Same slicer settings as the cradle; 100 % infill modifier around the chassis holes, the rack slots and the flange–plate corner.
+3MF files are scaled x 1.003 with the 0.3 mm bed chamfer applied.
+
+## Assembly
+
+1. Measure the side screws and vents, edit the MEASURE block, run `python3 ace_ears_1u.py`, confirm 0 FAIL and 0 UNVERIFIED.
+2. Print `output_1u/3mf/ear_R.3mf` and `ear_L.3mf`.
+3. Remove the two factory screws on one side, offer the ear with its flange flush to the front panel, fit the new screws with washers through the access holes in the diagonal; torque 1.2 N·m (M4) or 0.6 N·m (M3). Repeat on the other side.
+4. Lift the rear of the ACE slightly while tightening so the hole clearance is taken up upward.
+5. Fit to the rack with the top and bottom slot of each ear at minimum; torque 3 N·m (10-32) / 5 N·m (M6).

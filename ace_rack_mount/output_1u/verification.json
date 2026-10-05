@@ -1,0 +1,391 @@
+{
+ "checks": [
+  {
+   "name": "Zero interference: ears vs ACE body (310 x 44 x 210)",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Ears vs 315.6 envelope: only the side plate's own footprint on the side panel (bolted there)",
+   "ok": true,
+   "value": "8485 mm3 = plate footprint; relief pockets entered: 0",
+   "status": "PASS"
+  },
+  {
+   "name": "Zero interference: ears vs rack rails",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Rack slot centres within 0.05 mm (X 232.55; Z 6.35 / 22.225 / 38.1 from the U edge)",
+   "ok": true,
+   "value": "3 slots, max deviation 0.0000 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Assembly width = 482.6 mm",
+   "ok": true,
+   "value": "482.600 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Panel height = 43.6 mm (1U)",
+   "ok": true,
+   "value": "43.600 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Structure behind the flange <= 222 mm (3 mm inside the rail opening)",
+   "ok": true,
+   "value": "220.00 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Every official vent uncovered (side plate windows + diagonal slots)",
+   "ok": false,
+   "value": "NO VENT DATA ENTERED - measure the side panel and fill VENTS, then re-run",
+   "status": "UNVERIFIED"
+  },
+  {
+   "name": "Minimum wall >= 2.4 mm (thinnest: under counterbore)",
+   "ok": true,
+   "value": "3.00 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_R: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 48.9 cm3",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_R: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "86.3 x 70.3 x 43.6 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_R: no overhang > 45 deg (bridges <= 25 mm allowed)",
+   "ok": true,
+   "value": "OK, 0 bridge faces",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_L: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 48.9 cm3",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_L: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "86.3 x 70.3 x 43.6 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_L: no overhang > 45 deg (bridges <= 25 mm allowed)",
+   "ok": true,
+   "value": "OK, 0 bridge faces",
+   "status": "PASS"
+  },
+  {
+   "name": "2 mm fillets at the diagonal junctions applied",
+   "ok": true,
+   "value": "[True]",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Side plate root creep (Case A)",
+   "ok": true,
+   "value": "1.69 MPa vs 6.8 -> SF 3.99",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Diagonal wall creep (Case A)",
+   "ok": true,
+   "value": "2.60 MPa vs 6.8 -> SF 2.59",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange creep (Case A)",
+   "ok": true,
+   "value": "1.01 MPa vs 6.8 -> SF 6.70",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Rear sag (Case A)",
+   "ok": true,
+   "value": "0.69 mm vs 1.0 -> SF 1.46",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Side plate root (Case B)",
+   "ok": true,
+   "value": "8.45 MPa vs 45.0 -> SF 5.32",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Diagonal wall shear (Case B)",
+   "ok": true,
+   "value": "1.09 MPa vs 26.0 -> SF 23.79",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Diagonal wall bending (Case B)",
+   "ok": true,
+   "value": "13.01 MPa vs 45.0 -> SF 3.46",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange in-plane (Case B)",
+   "ok": true,
+   "value": "5.03 MPa vs 45.0 -> SF 8.94",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange torsion (10 % share) (Case B)",
+   "ok": true,
+   "value": "2.75 MPa vs 26.0 -> SF 9.43",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis hole bearing (Case B)",
+   "ok": true,
+   "value": "11.53 MPa vs 45.0 -> SF 3.90",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis screw shear (Case B)",
+   "ok": true,
+   "value": "271.00 N vs 4200.0 -> SF 15.50",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Rack screw tension (Case B)",
+   "ok": true,
+   "value": "421.75 N vs 8000.0 -> SF 18.97",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange under rack washer (Case B)",
+   "ok": true,
+   "value": "2.17 MPa vs 25.0 -> SF 11.50",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis screw tension (side load) (Case C)",
+   "ok": true,
+   "value": "64.18 N vs 7000.0 -> SF 109.07",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis screw shear (front-back) (Case C)",
+   "ok": true,
+   "value": "38.26 N vs 4200.0 -> SF 109.78",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Plate bearing / head pull-through (Case C)",
+   "ok": true,
+   "value": "1.39 MPa vs 45.0 -> SF 32.44",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis retained (Case C) (Case C)",
+   "ok": true,
+   "value": "retained",
+   "status": "PASS"
+  }
+ ],
+ "loads": [
+  {
+   "name": "Side plate root creep",
+   "case": "A",
+   "value": 1.6905963302752294,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 3.9926739926739927,
+   "ok": true,
+   "note": "<= 15 % yield",
+   "dirn": "XY"
+  },
+  {
+   "name": "Diagonal wall creep",
+   "case": "A",
+   "value": 2.6023094516024234,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 2.5938498574193605,
+   "ok": true,
+   "note": "<= 15 % yield",
+   "dirn": "XY"
+  },
+  {
+   "name": "Flange creep",
+   "case": "A",
+   "value": 1.0069782110091745,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 6.703223492030952,
+   "ok": true,
+   "note": "<= 15 % yield",
+   "dirn": "XY"
+  },
+  {
+   "name": "Rear sag",
+   "case": "A",
+   "value": 0.6858356936139086,
+   "unit": "mm",
+   "allow": 1.0,
+   "sf": 1.4580751764765254,
+   "ok": true,
+   "note": "elastic; hole clearance slop not included",
+   "dirn": ""
+  },
+  {
+   "name": "Side plate root",
+   "case": "B",
+   "value": 8.452981651376147,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 5.323565323565323,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Diagonal wall shear",
+   "case": "B",
+   "value": 1.0914179104477613,
+   "unit": "MPa",
+   "allow": 25.964999999999996,
+   "sf": 23.790153846153842,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Diagonal wall bending",
+   "case": "B",
+   "value": 13.011547258012117,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 3.4584664765591473,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Flange in-plane",
+   "case": "B",
+   "value": 5.034891055045872,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 8.937631322707938,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Flange torsion (10 % share)",
+   "case": "B",
+   "value": 2.7520161290322585,
+   "unit": "MPa",
+   "allow": 25.964999999999996,
+   "sf": 9.434901098901097,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Chassis hole bearing",
+   "case": "B",
+   "value": 11.531968085106383,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 3.9021960230810744,
+   "ok": true,
+   "note": "rear screw, in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Chassis screw shear",
+   "case": "B",
+   "value": 271.00125,
+   "unit": "N",
+   "allow": 4200.0,
+   "sf": 15.498083495924833,
+   "ok": true,
+   "note": "M4 8.8 single shear",
+   "dirn": ""
+  },
+  {
+   "name": "Rack screw tension",
+   "case": "B",
+   "value": 421.75275590551183,
+   "unit": "N",
+   "allow": 8000.0,
+   "sf": 18.968459335431813,
+   "ok": true,
+   "note": "10-32 steel proof",
+   "dirn": ""
+  },
+  {
+   "name": "Flange under rack washer",
+   "case": "B",
+   "value": 2.1744099729508184,
+   "unit": "MPa",
+   "allow": 25.0,
+   "sf": 11.497371843853964,
+   "ok": true,
+   "note": "compression across layers",
+   "dirn": "Z"
+  },
+  {
+   "name": "Chassis screw tension (side load)",
+   "case": "C",
+   "value": 64.1763870967742,
+   "unit": "N",
+   "allow": 7000.0,
+   "sf": 109.07438571517609,
+   "ok": true,
+   "note": "M4 proof; thread in the ACE must hold this",
+   "dirn": ""
+  },
+  {
+   "name": "Chassis screw shear (front-back)",
+   "case": "C",
+   "value": 38.25900000000001,
+   "unit": "N",
+   "allow": 4200.0,
+   "sf": 109.77809142946755,
+   "ok": true,
+   "note": "",
+   "dirn": ""
+  },
+  {
+   "name": "Plate bearing / head pull-through",
+   "case": "C",
+   "value": 1.387063552704878,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 32.44263747846782,
+   "ok": true,
+   "note": "washer bearing on the counterbore floor, in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Chassis retained (Case C)",
+   "case": "C",
+   "value": 1,
+   "unit": "",
+   "allow": 1,
+   "sf": Infinity,
+   "ok": true,
+   "note": "4 screws into the chassis; no slip possible",
+   "dirn": ""
+  }
+ ]
+}
