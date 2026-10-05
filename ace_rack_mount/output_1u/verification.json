@@ -9,7 +9,7 @@
   {
    "name": "Ears vs 315.6 envelope: only the side plate's own footprint on the side panel (bolted there)",
    "ok": true,
-   "value": "8485 mm3 = plate footprint; relief pockets entered: 0",
+   "value": "4117 mm3 = plate footprint; relief pockets entered: 1",
    "status": "PASS"
   },
   {
@@ -44,9 +44,9 @@
   },
   {
    "name": "Every official vent uncovered (side plate windows + diagonal slots)",
-   "ok": false,
-   "value": "NO VENT DATA ENTERED - measure the side panel and fill VENTS, then re-run",
-   "status": "UNVERIFIED"
+   "ok": true,
+   "value": "0.0000 mm3 of plate over vents",
+   "status": "PASS"
   },
   {
    "name": "Minimum wall >= 2.4 mm (thinnest: under counterbore)",
@@ -55,39 +55,45 @@
    "status": "PASS"
   },
   {
+   "name": "8 mm material around each chassis hole (5.7)",
+   "ok": false,
+   "value": "6.95 mm between the lower hole and the ear bottom edge (ear bottom fixed at 0.2 mm by 5.1; hole position fixed by the chassis)",
+   "status": "SPEC-CONFLICT"
+  },
+  {
    "name": "ear_R: one watertight solid",
    "ok": true,
-   "value": "1 solid(s), valid=True, 48.9 cm3",
+   "value": "1 solid(s), valid=True, 40.6 cm3",
    "status": "PASS"
   },
   {
    "name": "ear_R: inside 256^3 build volume as oriented",
    "ok": true,
-   "value": "86.3 x 70.3 x 43.6 mm",
+   "value": "86.3 x 36.0 x 43.6 mm",
    "status": "PASS"
   },
   {
    "name": "ear_R: no overhang > 45 deg (bridges <= 25 mm allowed)",
    "ok": true,
-   "value": "OK, 0 bridge faces",
+   "value": "OK, 2 bridge faces",
    "status": "PASS"
   },
   {
    "name": "ear_L: one watertight solid",
    "ok": true,
-   "value": "1 solid(s), valid=True, 48.9 cm3",
+   "value": "1 solid(s), valid=True, 40.6 cm3",
    "status": "PASS"
   },
   {
    "name": "ear_L: inside 256^3 build volume as oriented",
    "ok": true,
-   "value": "86.3 x 70.3 x 43.6 mm",
+   "value": "86.3 x 36.0 x 43.6 mm",
    "status": "PASS"
   },
   {
    "name": "ear_L: no overhang > 45 deg (bridges <= 25 mm allowed)",
    "ok": true,
-   "value": "OK, 0 bridge faces",
+   "value": "OK, 2 bridge faces",
    "status": "PASS"
   },
   {
@@ -99,49 +105,49 @@
   {
    "name": "Load: Side plate root creep (Case A)",
    "ok": true,
-   "value": "1.69 MPa vs 6.8 -> SF 3.99",
+   "value": "1.21 MPa vs 6.8 -> SF 5.59",
    "status": "PASS"
   },
   {
    "name": "Load: Diagonal wall creep (Case A)",
    "ok": true,
-   "value": "2.60 MPa vs 6.8 -> SF 2.59",
+   "value": "2.98 MPa vs 6.8 -> SF 2.26",
    "status": "PASS"
   },
   {
    "name": "Load: Flange creep (Case A)",
    "ok": true,
-   "value": "1.01 MPa vs 6.8 -> SF 6.70",
+   "value": "0.99 MPa vs 6.8 -> SF 6.79",
    "status": "PASS"
   },
   {
    "name": "Load: Rear sag (Case A)",
    "ok": true,
-   "value": "0.69 mm vs 1.0 -> SF 1.46",
+   "value": "0.77 mm vs 1.0 -> SF 1.29",
    "status": "PASS"
   },
   {
    "name": "Load: Side plate root (Case B)",
    "ok": true,
-   "value": "8.45 MPa vs 45.0 -> SF 5.32",
+   "value": "6.04 MPa vs 45.0 -> SF 7.45",
    "status": "PASS"
   },
   {
    "name": "Load: Diagonal wall shear (Case B)",
    "ok": true,
-   "value": "1.09 MPa vs 26.0 -> SF 23.79",
+   "value": "1.71 MPa vs 26.0 -> SF 15.22",
    "status": "PASS"
   },
   {
    "name": "Load: Diagonal wall bending (Case B)",
    "ok": true,
-   "value": "13.01 MPa vs 45.0 -> SF 3.46",
+   "value": "14.92 MPa vs 45.0 -> SF 3.02",
    "status": "PASS"
   },
   {
    "name": "Load: Flange in-plane (Case B)",
    "ok": true,
-   "value": "5.03 MPa vs 45.0 -> SF 8.94",
+   "value": "4.97 MPa vs 45.0 -> SF 9.06",
    "status": "PASS"
   },
   {
@@ -153,13 +159,13 @@
   {
    "name": "Load: Chassis hole bearing (Case B)",
    "ok": true,
-   "value": "11.53 MPa vs 45.0 -> SF 3.90",
+   "value": "13.70 MPa vs 45.0 -> SF 3.28",
    "status": "PASS"
   },
   {
    "name": "Load: Chassis screw shear (Case B)",
    "ok": true,
-   "value": "271.00 N vs 4200.0 -> SF 15.50",
+   "value": "450.89 N vs 4200.0 -> SF 9.31",
    "status": "PASS"
   },
   {
@@ -203,10 +209,10 @@
   {
    "name": "Side plate root creep",
    "case": "A",
-   "value": 1.6905963302752294,
+   "value": 1.2075688073394495,
    "unit": "MPa",
    "allow": 6.75,
-   "sf": 3.9926739926739927,
+   "sf": 5.58974358974359,
    "ok": true,
    "note": "<= 15 % yield",
    "dirn": "XY"
@@ -214,10 +220,10 @@
   {
    "name": "Diagonal wall creep",
    "case": "A",
-   "value": 2.6023094516024234,
+   "value": 2.9834104042949487,
    "unit": "MPa",
    "allow": 6.75,
-   "sf": 2.5938498574193605,
+   "sf": 2.2625113830409083,
    "ok": true,
    "note": "<= 15 % yield",
    "dirn": "XY"
@@ -225,10 +231,10 @@
   {
    "name": "Flange creep",
    "case": "A",
-   "value": 1.0069782110091745,
+   "value": 0.9935607798165139,
    "unit": "MPa",
    "allow": 6.75,
-   "sf": 6.703223492030952,
+   "sf": 6.7937464291279275,
    "ok": true,
    "note": "<= 15 % yield",
    "dirn": "XY"
@@ -236,10 +242,10 @@
   {
    "name": "Rear sag",
    "case": "A",
-   "value": 0.6858356936139086,
+   "value": 0.7741558259433641,
    "unit": "mm",
    "allow": 1.0,
-   "sf": 1.4580751764765254,
+   "sf": 1.291729605963281,
    "ok": true,
    "note": "elastic; hole clearance slop not included",
    "dirn": ""
@@ -247,10 +253,10 @@
   {
    "name": "Side plate root",
    "case": "B",
-   "value": 8.452981651376147,
+   "value": 6.037844036697248,
    "unit": "MPa",
    "allow": 45.0,
-   "sf": 5.323565323565323,
+   "sf": 7.452991452991453,
    "ok": true,
    "note": "in-layer",
    "dirn": "XY"
@@ -258,10 +264,10 @@
   {
    "name": "Diagonal wall shear",
    "case": "B",
-   "value": 1.0914179104477613,
+   "value": 1.7062500000000003,
    "unit": "MPa",
    "allow": 25.964999999999996,
-   "sf": 23.790153846153842,
+   "sf": 15.217582417582413,
    "ok": true,
    "note": "in-layer",
    "dirn": "XY"
@@ -269,10 +275,10 @@
   {
    "name": "Diagonal wall bending",
    "case": "B",
-   "value": 13.011547258012117,
+   "value": 14.91705202147474,
    "unit": "MPa",
    "allow": 45.0,
-   "sf": 3.4584664765591473,
+   "sf": 3.016681844054545,
    "ok": true,
    "note": "in-layer",
    "dirn": "XY"
@@ -280,10 +286,10 @@
   {
    "name": "Flange in-plane",
    "case": "B",
-   "value": 5.034891055045872,
+   "value": 4.96780389908257,
    "unit": "MPa",
    "allow": 45.0,
-   "sf": 8.937631322707938,
+   "sf": 9.058328572170568,
    "ok": true,
    "note": "in-layer",
    "dirn": "XY"
@@ -302,10 +308,10 @@
   {
    "name": "Chassis hole bearing",
    "case": "B",
-   "value": 11.531968085106383,
+   "value": 13.704761064547178,
    "unit": "MPa",
    "allow": 45.0,
-   "sf": 3.9021960230810744,
+   "sf": 3.2835304306333675,
    "ok": true,
    "note": "rear screw, in-layer",
    "dirn": "XY"
@@ -313,10 +319,10 @@
   {
    "name": "Chassis screw shear",
    "case": "B",
-   "value": 271.00125,
+   "value": 450.88663902360213,
    "unit": "N",
    "allow": 4200.0,
-   "sf": 15.498083495924833,
+   "sf": 9.314979945059198,
    "ok": true,
    "note": "M4 8.8 single shear",
    "dirn": ""

@@ -23,13 +23,16 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output_1u")
 # =============================================================================
 # >>>>>  MEASURE ON YOUR UNIT  (placeholders - NOT official DirectOut data)  <<<<<
 # =============================================================================
-CH_HOLE_Y   = (20.0, 60.0)   # mm behind the front-panel face: the two side screws (front, rear)
-CH_HOLE_Z   = (22.0, 22.0)   # mm above the chassis bottom for each screw
-CH_THREAD   = "M4"           # "M3" or "M4" - take one factory screw out and measure it
-CH_SCREW_LEN_ORIG = 8.0      # mm, thread length of the factory screw
-CH_DEPTH    = 8.0            # mm usable thread depth; = factory screw length unless DirectOut states more
-VENTS       = []             # side-panel vent / fan outlets as (y0, y1, z0, z1) rectangles, e.g. [(90, 140, 8, 36)]
-PROTRUSIONS = []             # side-panel features standing proud (the 315.6 envelope) as (y0, y1, z0, z1)
+# Values below come from the user's photo IMG_8471, rectified on the 210 x 44 side panel (+/- 0.5 mm).
+# Both ends carry the same vertical pair of M4 button-head Torx screws; the ear uses the FRONT pair.
+# Confirm with the test-fit template (output_1u/3mf/test_fit_template.3mf) before printing the ears.
+CH_HOLE_Y   = (17.5, 17.5)   # mm behind the front-panel face (photo: 17.6 / 18.0 left end, 16.0 / 17.3 right end)
+CH_HOLE_Z   = (9.5, 34.5)    # mm above the chassis bottom (photo: 10.4 / 35.3 and 8.5 / 33.9 -> symmetric about 22)
+CH_THREAD   = "M4"           # head diameter 7.1-7.7 mm in the photo = ISO 7380 M4 button head
+CH_SCREW_LEN_ORIG = 8.0      # mm  <-- STILL TO MEASURE: take one screw out
+CH_DEPTH    = 8.0            # mm  usable thread depth; = factory screw length unless DirectOut states more
+VENTS       = [(38.0, 168.0, 8.0, 38.0)]   # hex-perforated field, photo: L 37.8-168.6, Z 7.9-38.1 (same from either end)
+PROTRUSIONS = [(29.5, 36.0, 3.7, 10.0)]    # small M3 button head at L 32.6, Z 6.8 (seen at the LEFT end) - relieved in case that end is the front
 # =============================================================================
 
 # --- 1. Device ---------------------------------------------------------------
@@ -88,24 +91,36 @@ if PROTRUSIONS and T_SIDE - RELIEF < MIN_WALL:
     T_SIDE = math.ceil(RELIEF + MIN_WALL)
 CBORE_D = SCREW["washer_od"] + COMP_HOLE
 CBORE_DEPTH = T_SIDE - CBORE_REMAIN
-Y_PLATE_END = max(CH_HOLE_Y) + max(PLATE_PAST_HOLE, (SCREW["clr"] + COMP_HOLE) / 2 + HOLE_MARGIN)
+Y_PLATE_MIN = max(CH_HOLE_Y) + max(PLATE_PAST_HOLE, (SCREW["clr"] + COMP_HOLE) / 2 + HOLE_MARGIN)   # 5.3 minimum
+Y_VENT_START = min(v[0] for v in VENTS) - VENT_MARGIN if VENTS else DIAG_Y_SPEC
+Y_PLATE_END = max(Y_PLATE_MIN, min(DIAG_Y_SPEC, Y_VENT_START))      # extend to the vent edge, never over it
 Y_DIAG = min(DIAG_Y_SPEC, Y_PLATE_END)
 X_DIAG_FLANGE = STRUCT_X_MAX - T_DIAG_SPEC             # wall centre line at 218 so its outer face + fillet stay inside 222
+# screw group: two screws separated by (dY, dZ); the pitch moment P*(COM_Y - Y_mean) is a force couple M/d
+# perpendicular to the line joining them, plus the shared vertical load P/2 each
+M_DES = ACE_MASS + M_EXTRA
+W = M_DES * G
+P_SIDE = W / 2
+Y_MEAN = sum(CH_HOLE_Y) / 2
+D_SCREWS = math.hypot(CH_HOLE_Y[1] - CH_HOLE_Y[0], CH_HOLE_Z[1] - CH_HOLE_Z[0])
+def screw_force(P):
+    f_c = P * (COM_Y - Y_MEAN) / D_SCREWS
+    return math.hypot(f_c, P / 2), f_c
+while True:
+    F_B, _ = screw_force(P_SIDE * CASE_B)
+    bearing_B = F_B / ((SCREW["clr"] + COMP_HOLE) * T_SIDE)
+    if SY_XY / bearing_B >= SF_REQ: break
+    T_SIDE += 1.0
+CBORE_DEPTH = T_SIDE - CBORE_REMAIN
+log("Side plate thickness for hole bearing at 5 g: F = %.0f N per screw, t -> %.0f mm, bearing %.1f MPa, SF %.2f"
+    % (F_B, T_SIDE, bearing_B, SY_XY / bearing_B))
 SCREW_LEN = CH_SCREW_LEN_ORIG + (T_SIDE - CBORE_DEPTH)   # engagement stays = factory screw
 ENGAGE = SCREW_LEN - (T_SIDE - CBORE_DEPTH)
 log("Side plate: t = %.0f mm, ends at Y = %.1f (rearmost hole %.1f + %.1f)" % (T_SIDE, Y_PLATE_END, max(CH_HOLE_Y), Y_PLATE_END - max(CH_HOLE_Y)))
 log("Chassis screws: %s x %.0f mm (factory %.0f + plate under the washer %.1f) -> engagement %.1f mm <= depth %.1f mm"
     % (CH_THREAD, SCREW_LEN, CH_SCREW_LEN_ORIG, T_SIDE - CBORE_DEPTH, ENGAGE, CH_DEPTH))
 assert ENGAGE <= CH_DEPTH + 1e-9
-for z in CH_HOLE_Z:
-    assert EAR_Z0 + HOLE_MARGIN + (SCREW["clr"] + COMP_HOLE) / 2 <= z <= EAR_Z1 - HOLE_MARGIN - (SCREW["clr"] + COMP_HOLE) / 2, \
-        "chassis hole Z=%.1f leaves less than 8 mm of plate above or below it" % z
-
-M_DES = ACE_MASS + M_EXTRA
-W = M_DES * G
-P_SIDE = W / 2
-Y_MEAN = sum(CH_HOLE_Y) / 2
-DY = abs(CH_HOLE_Y[1] - CH_HOLE_Y[0])
+HOLE_EDGE_MARGIN = min(min(z - EAR_Z0, EAR_Z1 - z) - (SCREW["clr"] + COMP_HOLE) / 2 for z in CH_HOLE_Z)
 log("Design mass %.1f kg -> W = %.1f N ; per ear P = %.2f N (1 g) ; COM %.0f mm behind the flange" % (M_DES, W, P_SIDE, COM_Y))
 
 def I_rect(b, h): return b * h ** 3 / 12.0
@@ -139,13 +154,12 @@ def load_calcs():
         P = P_SIDE * gf
         log(""); log("== Case %s: %.0f g, P per ear = %.1f N ==" % (case, gf, P))
         # chassis screws: weight shared + pitch couple over the screw spacing
-        F_couple = P * (COM_Y - Y_MEAN) / DY
-        V_rear = P / 2 + F_couple
-        V_front = abs(P / 2 - F_couple)
+        V_rear, F_couple = screw_force(P)
+        V_front = V_rear
         bearing = V_rear / ((SCREW["clr"] + COMP_HOLE) * T_SIDE)
-        log("Chassis screws: couple = %.1f x (%.0f - %.0f) / %.0f = %.1f N ; rear screw shear %.1f N, front %.1f N ; "
-            "plate bearing %.1f / (%.1f x %.0f) = %.2f MPa" % (P, COM_Y, Y_MEAN, DY, F_couple, V_rear, V_front,
-                                                              V_rear, SCREW["clr"] + COMP_HOLE, T_SIDE, bearing))
+        log("Chassis screws (pair %.1f mm apart): couple = %.1f x (%.0f - %.1f) / %.1f = %.1f N along Y, plus P/2 = %.1f N vertical "
+            "-> %.1f N resultant per screw ; plate bearing %.1f / (%.1f x %.0f) = %.2f MPa"
+            % (D_SCREWS, P, COM_Y, Y_MEAN, D_SCREWS, F_couple, P / 2, V_rear, V_rear, SCREW["clr"] + COMP_HOLE, T_SIDE, bearing))
         # side plate root at the flange: in-plane bending (stress along Y = in-layer)
         M_plate = P * COM_Y
         s_plate = M_plate * (PANEL_H / 2) / I_plate
@@ -397,8 +411,12 @@ def run_verification(ear_R, ear_L, ace_body, ace_env, rails):
              "around chassis hole": HOLE_MARGIN, "slot to flange edge": FLANGE_X_OUT - RACK_HOLE_X - (SLOT_W + COMP_HOLE) / 2,
              "between rack slots": (HOLE_Z[1] - HOLE_Z[0]) - (SLOT_H + COMP_HOLE),
              "plate relief remainder": (T_SIDE - RELIEF) if PROTRUSIONS else T_SIDE}
+    walls["around chassis hole"] = HOLE_EDGE_MARGIN
     mn = min(walls, key=walls.get)
     check("Minimum wall >= 2.4 mm (thinnest: %s)" % mn, walls[mn] >= MIN_WALL, "%.2f mm" % walls[mn])
+    check("8 mm material around each chassis hole (5.7)", HOLE_EDGE_MARGIN >= HOLE_MARGIN,
+          "%.2f mm between the lower hole and the ear bottom edge (ear bottom fixed at 0.2 mm by 5.1; hole position fixed by the chassis)"
+          % HOLE_EDGE_MARGIN, status=None if HOLE_EDGE_MARGIN >= HOLE_MARGIN else "SPEC-CONFLICT")
     for n, p in (("ear_R", ear_R), ("ear_L", ear_L)):
         po = to_print_orientation(p); s = po.val(); ns = len(po.solids().vals())
         check("%s: one watertight solid" % n, ns == 1 and s.isValid(), "%d solid(s), valid=%s, %.1f cm3" % (ns, s.isValid(), s.Volume() / 1000))
@@ -456,6 +474,16 @@ def main():
         exporters.export(cq.Workplane("XY").add(po.val().scale(SHRINK_SCALE)), os.path.join(OUT, "3mf", n + ".3mf"))
         exporters.export(po, os.path.join(OUT, "step", n + "_print_oriented.step"))
         files.append("3mf/%s.3mf (x%.3f shrink, bed chamfer %s)" % (n, SHRINK_SCALE, ch))
+    # test-fit template: 2 mm plate with the two holes and a lip that registers on the front-panel face
+    tpl = box(X_SIDE, X_SIDE + 2.0, 0, Y_PLATE_END, EAR_Z0, EAR_Z1).union(box(X_SIDE, X_SIDE + 8.0, -3.0, 0, EAR_Z0, EAR_Z1))
+    for yc, zc in zip(CH_HOLE_Y, CH_HOLE_Z):
+        tpl = tpl.cut(teardrop_round_x(SCREW["clr"] + COMP_HOLE, yc, zc, X_SIDE - 1, X_SIDE + 3))
+    for (py0, py1, pz0, pz1) in PROTRUSIONS:
+        tpl = tpl.cut(box(X_SIDE - 1, X_SIDE + 3, py0 - 1, py1 + 1, pz0 - 1, pz1 + 1))
+    tpl_print = tpl.rotate((0, 0, 0), (0, 1, 0), -90)                      # plate flat on the bed
+    bb = tpl_print.val().BoundingBox(); tpl_print = tpl_print.translate((-bb.xmin, -bb.ymin, -bb.zmin))
+    exporters.export(cq.Workplane("XY").add(tpl_print.val().scale(SHRINK_SCALE)), os.path.join(OUT, "3mf", "test_fit_template.3mf"))
+    exporters.export(tpl, os.path.join(OUT, "step", "test_fit_template.step")); files.append("3mf/test_fit_template.3mf (2 mm plate, holes + front lip)")
     assy = cq.Assembly(name="ACE_1U_ears")
     assy.add(ear_R, name="ear_R", color=cq.Color(*BLUE)); assy.add(ear_L, name="ear_L", color=cq.Color(*BLUE))
     assy.add(ace_body, name="ACE_body", color=cq.Color(*DARK))
