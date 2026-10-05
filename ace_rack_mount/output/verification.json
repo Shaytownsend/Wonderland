@@ -1,0 +1,497 @@
+{
+ "checks": [
+  {
+   "name": "Zero interference: cradle bodies, ribs, clamps, tie bars vs ACE envelope (315.6 x 44 x 239)",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "limit": ""
+  },
+  {
+   "name": "Rear stop vs ACE body (310 x 44 x 210): zero interference, 0.5 mm gap behind the rear panel",
+   "ok": true,
+   "value": "0.0000 mm3 ; stop occupies the rear protrusion envelope at X 147..155 only (spec 6.4)",
+   "limit": ""
+  },
+  {
+   "name": "Zero interference: parts vs rack rails (flange face touches rail, volume 0)",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "limit": ""
+  },
+  {
+   "name": "Zero interference: clamps and tie bars vs cradle side",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "limit": ""
+  },
+  {
+   "name": "Rack slot centres within 0.05 mm of EIA-310-D (X=232.55; Z=6.350,38.100,50.800,82.550 + 0.4 below panel edge)",
+   "ok": true,
+   "value": "4 slots, max deviation 0.0000 mm",
+   "limit": ""
+  },
+  {
+   "name": "Assembly width = 482.6 mm",
+   "ok": true,
+   "value": "482.600 mm",
+   "limit": ""
+  },
+  {
+   "name": "Panel height = 88.1 mm (2U)",
+   "ok": true,
+   "value": "88.100 mm",
+   "limit": ""
+  },
+  {
+   "name": "Nothing within 50 mm of the ACE side panels except ribs and rear stops",
+   "ok": true,
+   "value": "0.0000 mm3 inside band",
+   "limit": ""
+  },
+  {
+   "name": "Structure behind the flange stays 3 mm inside the 450 mm rail opening (X <= 222)",
+   "ok": true,
+   "value": "220.00 mm",
+   "limit": ""
+  },
+  {
+   "name": "Minimum wall >= 2.4 mm (thinnest: insert roof (shelf))",
+   "ok": true,
+   "value": "2.50 mm",
+   "limit": ""
+  },
+  {
+   "name": "cradle_side_R: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 559.9 cm3",
+   "limit": ""
+  },
+  {
+   "name": "cradle_side_R: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "146.3 x 220.5 x 88.1 mm",
+   "limit": ""
+  },
+  {
+   "name": "cradle_side_R: no overhang > 45 deg (bridges <= 25 mm allowed)",
+   "ok": true,
+   "value": "OK, 212 bridge faces",
+   "limit": ""
+  },
+  {
+   "name": "cradle_side_L: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 559.9 cm3",
+   "limit": ""
+  },
+  {
+   "name": "cradle_side_L: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "146.3 x 220.5 x 88.1 mm",
+   "limit": ""
+  },
+  {
+   "name": "cradle_side_L: no overhang > 45 deg (bridges <= 25 mm allowed)",
+   "ok": true,
+   "value": "OK, 212 bridge faces",
+   "limit": ""
+  },
+  {
+   "name": "clamp_R_40: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 16.0 cm3",
+   "limit": ""
+  },
+  {
+   "name": "clamp_R_40: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "80.0 x 26.6 x 20.0 mm",
+   "limit": ""
+  },
+  {
+   "name": "clamp_R_40: no overhang > 45 deg (bridges <= 25 mm allowed)",
+   "ok": true,
+   "value": "OK, 0 bridge faces",
+   "limit": ""
+  },
+  {
+   "name": "clamp_L_40: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 16.0 cm3",
+   "limit": ""
+  },
+  {
+   "name": "clamp_L_40: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "80.0 x 26.6 x 20.0 mm",
+   "limit": ""
+  },
+  {
+   "name": "clamp_L_40: no overhang > 45 deg (bridges <= 25 mm allowed)",
+   "ok": true,
+   "value": "OK, 0 bridge faces",
+   "limit": ""
+  },
+  {
+   "name": "clamp_R_170: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 16.0 cm3",
+   "limit": ""
+  },
+  {
+   "name": "clamp_R_170: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "80.0 x 26.6 x 20.0 mm",
+   "limit": ""
+  },
+  {
+   "name": "clamp_R_170: no overhang > 45 deg (bridges <= 25 mm allowed)",
+   "ok": true,
+   "value": "OK, 0 bridge faces",
+   "limit": ""
+  },
+  {
+   "name": "clamp_L_170: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 16.0 cm3",
+   "limit": ""
+  },
+  {
+   "name": "clamp_L_170: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "80.0 x 26.6 x 20.0 mm",
+   "limit": ""
+  },
+  {
+   "name": "clamp_L_170: no overhang > 45 deg (bridges <= 25 mm allowed)",
+   "ok": true,
+   "value": "OK, 0 bridge faces",
+   "limit": ""
+  },
+  {
+   "name": "Load: Shelf root creep (Case A)",
+   "ok": true,
+   "value": "0.28 MPa vs 6.8 -> SF 23.98",
+   "limit": ""
+  },
+  {
+   "name": "Load: Wall root creep (Case A)",
+   "ok": true,
+   "value": "0.41 MPa vs 6.8 -> SF 16.30",
+   "limit": ""
+  },
+  {
+   "name": "Load: Flange creep (Case A)",
+   "ok": true,
+   "value": "0.35 MPa vs 6.8 -> SF 19.10",
+   "limit": ""
+  },
+  {
+   "name": "Load: Rear sag (Case A)",
+   "ok": true,
+   "value": "0.10 mm vs 1.0 -> SF 10.12",
+   "limit": ""
+  },
+  {
+   "name": "Load: Clamp arm preload creep (Case A)",
+   "ok": true,
+   "value": "6.59 MPa vs 6.8 -> SF 1.02",
+   "limit": ""
+  },
+  {
+   "name": "Load: Shelf root (bending) (Case B)",
+   "ok": true,
+   "value": "1.41 MPa vs 45.0 -> SF 31.98",
+   "limit": ""
+  },
+  {
+   "name": "Load: Wall root at flange (Case B)",
+   "ok": true,
+   "value": "2.07 MPa vs 45.0 -> SF 21.74",
+   "limit": ""
+  },
+  {
+   "name": "Load: Flange in-plane (Case B)",
+   "ok": true,
+   "value": "1.77 MPa vs 45.0 -> SF 25.46",
+   "limit": ""
+  },
+  {
+   "name": "Load: Flange slot bearing (Case B)",
+   "ok": true,
+   "value": "6.46 MPa vs 45.0 -> SF 6.96",
+   "limit": ""
+  },
+  {
+   "name": "Load: Clamp arm root (Case B)",
+   "ok": true,
+   "value": "10.51 MPa vs 45.0 -> SF 4.28",
+   "limit": ""
+  },
+  {
+   "name": "Load: Clamp web root (Case B)",
+   "ok": true,
+   "value": "10.51 MPa vs 45.0 -> SF 4.28",
+   "limit": ""
+  },
+  {
+   "name": "Load: Clamp insert pull-out (Case B)",
+   "ok": true,
+   "value": "176.45 N vs 600.0 -> SF 3.40",
+   "limit": ""
+  },
+  {
+   "name": "Load: Clamp foot under head (Case B)",
+   "ok": true,
+   "value": "6.30 MPa vs 25.0 -> SF 3.97",
+   "limit": ""
+  },
+  {
+   "name": "Load: Rack screw tension (Case B)",
+   "ok": true,
+   "value": "150.63 N vs 8000.0 -> SF 53.11",
+   "limit": ""
+  },
+  {
+   "name": "Load: Rear stop root (Case C)",
+   "ok": true,
+   "value": "6.44 MPa vs 25.0 -> SF 3.88",
+   "limit": ""
+  },
+  {
+   "name": "Load: Front lip root (Case C)",
+   "ok": true,
+   "value": "1.70 MPa vs 25.0 -> SF 14.70",
+   "limit": ""
+  },
+  {
+   "name": "Load: Locating rib root (Case C)",
+   "ok": true,
+   "value": "4.30 MPa vs 25.0 -> SF 5.81",
+   "limit": ""
+  },
+  {
+   "name": "Load: Tie-bar screw shear (Case C)",
+   "ok": true,
+   "value": "17.27 N vs 2000.0 -> SF 115.78",
+   "limit": ""
+  },
+  {
+   "name": "Load: Chassis retained (Case C) (Case C)",
+   "ok": true,
+   "value": "retained",
+   "limit": ""
+  }
+ ],
+ "loads": [
+  {
+   "name": "Shelf root creep",
+   "case": "A",
+   "value": 0.28144551724137934,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 23.983327452364147,
+   "ok": true,
+   "note": "<= 15 % of 45 MPa",
+   "dirn": "XY"
+  },
+  {
+   "name": "Wall root creep",
+   "case": "A",
+   "value": 0.414057908088657,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 16.3020675807373,
+   "ok": true,
+   "note": "<= 15 % of 45 MPa",
+   "dirn": "XY"
+  },
+  {
+   "name": "Flange creep",
+   "case": "A",
+   "value": 0.35342800011853226,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 19.098656579943277,
+   "ok": true,
+   "note": "<= 15 % of 45 MPa",
+   "dirn": "XY"
+  },
+  {
+   "name": "Rear sag",
+   "case": "A",
+   "value": 0.09877913905225318,
+   "unit": "mm",
+   "allow": 1.0,
+   "sf": 10.123595018083828,
+   "ok": true,
+   "note": "shelf + wall",
+   "dirn": ""
+  },
+  {
+   "name": "Clamp arm preload creep",
+   "case": "A",
+   "value": 6.592592592592593,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 1.023876404494382,
+   "ok": true,
+   "note": "pad force 40 N max",
+   "dirn": "XY"
+  },
+  {
+   "name": "Shelf root (bending)",
+   "case": "B",
+   "value": 1.4072275862068966,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 31.977769936485533,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Wall root at flange",
+   "case": "B",
+   "value": 2.070289540443285,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 21.736090107649733,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Flange in-plane",
+   "case": "B",
+   "value": 1.7671400005926612,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 25.464875439924374,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Flange slot bearing",
+   "case": "B",
+   "value": 6.464116106580427,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 6.9615086205197185,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Clamp arm root",
+   "case": "B",
+   "value": 10.509416666666668,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 4.281874192192715,
+   "ok": true,
+   "note": "in-layer (printed on side)",
+   "dirn": "XY"
+  },
+  {
+   "name": "Clamp web root",
+   "case": "B",
+   "value": 10.509416666666668,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 4.281874192192715,
+   "ok": true,
+   "note": "in-layer",
+   "dirn": "XY"
+  },
+  {
+   "name": "Clamp insert pull-out",
+   "case": "B",
+   "value": 176.44895038167948,
+   "unit": "N",
+   "allow": 600.0,
+   "sf": 3.40041694043592,
+   "ok": true,
+   "note": "per M4 insert",
+   "dirn": ""
+  },
+  {
+   "name": "Clamp foot under head",
+   "case": "B",
+   "value": 6.298339816455479,
+   "unit": "MPa",
+   "allow": 25.0,
+   "sf": 3.9692999629336083,
+   "ok": true,
+   "note": "compression across layers",
+   "dirn": "Z"
+  },
+  {
+   "name": "Rack screw tension",
+   "case": "B",
+   "value": 150.62598425196848,
+   "unit": "N",
+   "allow": 8000.0,
+   "sf": 53.111686139209084,
+   "ok": true,
+   "note": "10-32 steel (weakest option) proof load",
+   "dirn": ""
+  },
+  {
+   "name": "Rear stop root",
+   "case": "C",
+   "value": 6.441566326530614,
+   "unit": "MPa",
+   "allow": 25.0,
+   "sf": 3.8810436363953174,
+   "ok": true,
+   "note": "3 g rearwards, 2 tabs",
+   "dirn": "Z"
+  },
+  {
+   "name": "Front lip root",
+   "case": "C",
+   "value": 1.7004000000000001,
+   "unit": "MPa",
+   "allow": 25.0,
+   "sf": 14.702422959303693,
+   "ok": true,
+   "note": "3 g forwards, 2 lips",
+   "dirn": "Z"
+  },
+  {
+   "name": "Locating rib root",
+   "case": "C",
+   "value": 4.3041375,
+   "unit": "MPa",
+   "allow": 25.0,
+   "sf": 5.808364625897755,
+   "ok": true,
+   "note": "3 g sideways, 2 ribs",
+   "dirn": "Z"
+  },
+  {
+   "name": "Tie-bar screw shear",
+   "case": "C",
+   "value": 17.274543109008818,
+   "unit": "N",
+   "allow": 2000.0,
+   "sf": 115.77730232164481,
+   "ok": true,
+   "note": "M4 8.8 single shear ~ 2 kN (conservative)",
+   "dirn": ""
+  },
+  {
+   "name": "Chassis retained (Case C)",
+   "case": "C",
+   "value": 1,
+   "unit": "",
+   "allow": 1,
+   "sf": Infinity,
+   "ok": true,
+   "note": "positive stops in all 6 directions",
+   "dirn": ""
+  }
+ ]
+}
