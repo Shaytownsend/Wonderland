@@ -1,0 +1,326 @@
+{
+ "checks": [
+  {
+   "name": "Zero interference: ears vs ACE body (310 x 44 x 210)",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Zero interference: ears vs 315.6 envelope incl. the 3 mm front/rear panel lips",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Zero interference: ears vs rack rails",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Side plate tab lies on the flange rear face without overlap",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Rack slot centres within 0.05 mm (X 232.55; Z 6.35 / 22.225 / 38.1 from the U edge)",
+   "ok": true,
+   "value": "3 slots, max deviation 0.0000 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Assembly width = 482.6 mm",
+   "ok": true,
+   "value": "482.600 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Panel height = 43.6 mm (1U)",
+   "ok": true,
+   "value": "43.600 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Structure behind the flange <= 222 mm",
+   "ok": true,
+   "value": "174.0 mm (tab)",
+   "status": "PASS"
+  },
+  {
+   "name": "Vent field uncovered (window with 2 mm margin)",
+   "ok": true,
+   "value": "0.0000 mm3 of plate over the vent",
+   "status": "PASS"
+  },
+  {
+   "name": "Factory button head (7.6) bears on the plate: front round hole ring 1.40 mm, rear slot end ring 0.30 mm (slot is along Y, head always covers it across)",
+   "ok": true,
+   "value": "ok",
+   "status": "PASS"
+  },
+  {
+   "name": "Small M3 head (5.2) clears its 7.0 mm hole by 0.90 mm at either end",
+   "ok": true,
+   "value": "ok",
+   "status": "PASS"
+  },
+  {
+   "name": "Minimum web >= 1.5 t = 3.0 mm for laser-cut steel (thinnest: strip under the M3 notch / hole)",
+   "ok": true,
+   "value": "3.10 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "side_plate_R: one valid solid",
+   "ok": true,
+   "value": "1 solid(s), 9.2 cm3",
+   "status": "PASS"
+  },
+  {
+   "name": "flange_R: one valid solid",
+   "ok": true,
+   "value": "1 solid(s), 20.2 cm3",
+   "status": "PASS"
+  },
+  {
+   "name": "side_plate_L: one valid solid",
+   "ok": true,
+   "value": "1 solid(s), 9.2 cm3",
+   "status": "PASS"
+  },
+  {
+   "name": "flange_L: one valid solid",
+   "ok": true,
+   "value": "1 solid(s), 20.2 cm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Rear sag (Case A)",
+   "ok": true,
+   "value": "0.51 mm vs 1.0 -> SF 1.96",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Side plate frame (window strips) (Case B)",
+   "ok": true,
+   "value": "36.37 MPa vs 205.0 -> SF 5.64",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Side plate root at the bend (Case B)",
+   "ok": true,
+   "value": "19.12 MPa vs 205.0 -> SF 10.72",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis hole bearing (Case B)",
+   "ok": true,
+   "value": "3.32 MPa vs 205.0 -> SF 61.73",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis screw load (Case B)",
+   "ok": true,
+   "value": "31.88 N vs 4200.0 -> SF 131.73",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange torsion (Case B)",
+   "ok": true,
+   "value": "28.02 MPa vs 140.0 -> SF 5.00",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange in-plane bending (Case B)",
+   "ok": true,
+   "value": "4.43 MPa vs 240.0 -> SF 54.16",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Joint screw tension (M4) (Case B)",
+   "ok": true,
+   "value": "431.96 N vs 7000.0 -> SF 16.21",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Joint tab bearing (Case B)",
+   "ok": true,
+   "value": "52.72 MPa vs 205.0 -> SF 3.89",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Rack screw tension (Case B)",
+   "ok": true,
+   "value": "421.75 N vs 8000.0 -> SF 18.97",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange under rack washer (Case B)",
+   "ok": true,
+   "value": "2.98 MPa vs 240.0 -> SF 80.45",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis screw tension (side load) (Case C)",
+   "ok": true,
+   "value": "32.09 N vs 7000.0 -> SF 218.15",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis screw shear (front-back) (Case C)",
+   "ok": true,
+   "value": "19.13 N vs 4200.0 -> SF 219.56",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis retained (Case C)",
+   "ok": true,
+   "value": "retained",
+   "status": "PASS"
+  }
+ ],
+ "loads": [
+  {
+   "name": "Rear sag",
+   "case": "A",
+   "value": 0.5104685773206553,
+   "unit": "mm",
+   "allow": 1.0,
+   "sf": 1.958984439843084,
+   "ok": true,
+   "note": "flange twist + frame flexure (metal: no creep limit)"
+  },
+  {
+   "name": "Side plate frame (window strips)",
+   "case": "B",
+   "value": 36.365392875771654,
+   "unit": "MPa",
+   "allow": 205.0,
+   "sf": 5.637227698881282,
+   "ok": true,
+   "note": "bending at the window front edge"
+  },
+  {
+   "name": "Side plate root at the bend",
+   "case": "B",
+   "value": 19.119839449541285,
+   "unit": "MPa",
+   "allow": 205.0,
+   "sf": 10.7218473534263,
+   "ok": true,
+   "note": "in-plane bending"
+  },
+  {
+   "name": "Chassis hole bearing",
+   "case": "B",
+   "value": 3.3210937500000006,
+   "unit": "MPa",
+   "allow": 205.0,
+   "sf": 61.72665255234062,
+   "ok": true,
+   "note": "per factory screw"
+  },
+  {
+   "name": "Chassis screw load",
+   "case": "B",
+   "value": 31.882500000000004,
+   "unit": "N",
+   "allow": 4200.0,
+   "sf": 131.73370971536107,
+   "ok": true,
+   "note": "M4 8.8 single shear"
+  },
+  {
+   "name": "Flange torsion",
+   "case": "B",
+   "value": 28.02321281191585,
+   "unit": "MPa",
+   "allow": 140.0,
+   "sf": 4.995858288613863,
+   "ok": true,
+   "note": "6 mm 6061-T6"
+  },
+  {
+   "name": "Flange in-plane bending",
+   "case": "B",
+   "value": 4.431106651376147,
+   "unit": "MPa",
+   "allow": 240.0,
+   "sf": 54.162541974805414,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "Joint screw tension (M4)",
+   "case": "B",
+   "value": 431.95645161290327,
+   "unit": "N",
+   "allow": 7000.0,
+   "sf": 16.205337306254737,
+   "ok": true,
+   "note": "class 8.8 proof"
+  },
+  {
+   "name": "Joint tab bearing",
+   "case": "B",
+   "value": 52.718494623655914,
+   "unit": "MPa",
+   "allow": 205.0,
+   "sf": 3.8885784099762994,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "Rack screw tension",
+   "case": "B",
+   "value": 421.75275590551183,
+   "unit": "N",
+   "allow": 8000.0,
+   "sf": 18.968459335431813,
+   "ok": true,
+   "note": "10-32 steel proof"
+  },
+  {
+   "name": "Flange under rack washer",
+   "case": "B",
+   "value": 2.9832904828885227,
+   "unit": "MPa",
+   "allow": 240.0,
+   "sf": 80.44808287244757,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "Chassis screw tension (side load)",
+   "case": "C",
+   "value": 32.0881935483871,
+   "unit": "N",
+   "allow": 7000.0,
+   "sf": 218.14877143035218,
+   "ok": true,
+   "note": "M4 proof; the ACE thread sees this"
+  },
+  {
+   "name": "Chassis screw shear (front-back)",
+   "case": "C",
+   "value": 19.129500000000004,
+   "unit": "N",
+   "allow": 4200.0,
+   "sf": 219.5561828589351,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "Chassis retained",
+   "case": "C",
+   "value": 1,
+   "unit": "",
+   "allow": 1,
+   "sf": Infinity,
+   "ok": true,
+   "note": "8 screws into the chassis"
+  }
+ ]
+}

@@ -267,3 +267,93 @@ scaled x 1.003 with the 0.3 mm bed chamfer.
 3. Remove the two front screws on one side, offer the ear flush to the front panel, fit M4 x (factory + 3) with washers through the access holes in the diagonal, torque 1.2 N·m. Repeat on the other side.
 4. Lift the rear of the ACE slightly while tightening so the hole clearance is taken up upward.
 5. Fit to the rack with at least the top and bottom slot of each ear; torque 3 N·m (10-32) or 5 N·m (M6).
+
+---
+
+# Fabricated metal ears, all four factory screws per side – `ace_ears_metal.py`
+
+For ordering from a laser-cutting service instead of printing. Output in `output_metal/` (STEP, DXF, 1:1 PDF, drawing,
+renders, `report.md`). The small M3 screw at the lower front is not used; the plate has a notch around it.
+
+## Why two pieces
+
+A bent sheet ear carries the 105 mm overhang moment into the rack screws by **twisting its flange**. In 2 mm steel that
+is 248 MPa shear at 5 g, five times over yield; even 3 mm steel fails. The flange has to be thick (6 mm) but the part under
+the factory screw heads must stay thin or the factory screws lose their thread. So:
+
+| Part | Material | Thickness | Make | Qty |
+|---|---|---|---|---|
+| Side plate (R and mirrored L) | 304 stainless (or mild steel, powder coated) | 2.0 mm (0.075 in) | laser cut, one 90° bend | 1 + 1 |
+| Rack flange (same both sides) | 6061-T6 aluminium plate | 6.0 mm (0.25 in) | laser or waterjet cut, 3 holes countersunk 90° on the front face | 2 |
+
+The plate's 15 mm tab bolts flat to the rear face of the flange with three M4 countersunk screws and nyloc nuts; the
+tab sits at X 159 to 174, well inside the 222 mm rail clear zone. Each ear weighs about 128 g.
+
+## Geometry
+
+- Side plate on the chassis side, Y 10 to 206 (clear of both panel lips), Z 0.2 to 43.8, bend R2 at the front.
+  Front screw pair: Ø 4.8 round at Y 17.5, Z 9.5 / 34.5. Rear pair: Ø 4.8 x 7.0 slots along Y at Y 192.5, so a pair
+  spacing error of ±1.1 mm still fits. Window 134 x 34 mm (vent + 2 mm margin), R2 corners, leaving 3.8 mm and 5.8 mm
+  strips top and bottom. M3 head clearance Ø 7: a notch into the window at the front end, a hole at the rear end
+  (whichever end is the front). Three Ø 4.5 holes in the tab at X 166.5, Z 6.5 / 22 / 37.5.
+- Flange X 158 to 241.3 (clears the 2.8 mm lip), Y 0 to 6 with the front face coplanar with the ACE front face,
+  three EIA slots 10.5 x 7 at X 232.55, Z 6.125 / 22 / 37.875.
+- Flat pattern: 196 + 4.52 bend allowance (K 0.44) + 15 = 215.52 mm, bend line 198.26 mm from the rear end.
+
+## Verification (30 checks, all PASS)
+
+| Check | Result |
+|---|---|
+| Interference vs ACE body, vs 315.6 envelope with 3 mm lips, vs rails, plate vs flange | 0 mm³ each |
+| Rack slot centres | 3 slots, 0.0000 mm deviation |
+| Width / panel height | 482.600 / 43.600 mm |
+| Vent field uncovered | 0 mm³ of plate over the vent |
+| Thinnest web (strip under the M3 notch) | 3.10 mm ≥ 1.5 t |
+| Factory button head on the plate | 1.4 mm bearing ring on the round holes; slots are covered across |
+
+## Loads (all four screws per side)
+
+The chassis sits with its centre of mass exactly between the pairs (17.5 and 192.5 mm), so the factory screws see
+only weight: 6.4 N each at 1 g, 32 N at 5 g, 32 N tension sideways at 3 g. The frame strips through the window carry
+36 MPa at 5 g (SF 5.6 on 304). Flange torsion 28 MPa at 5 g (SF 5.0 on 6061-T6). Joint: 432 N on the top M4 at 5 g
+(SF 16). Rack screws 422 N tension at 5 g. Rear sag at 1 g: 0.50 mm flange twist + 0.01 mm frame = **0.51 mm**. No creep
+or temperature limits apply to metal.
+
+## Getting the hole positions right without a printer
+
+The photo gives ±0.5 mm; the design absorbs ±0.4 mm on the front pair and ±1.1 mm on the pair spacing. Confirm with a
+pencil rubbing, which needs no tools:
+
+1. Tape a sheet of plain paper over one side panel, its bottom edge folded exactly along the chassis bottom edge and
+   its left edge folded over the front-panel face.
+2. Rub the side of a pencil over the paper: the four screw heads, the M3 head and the vent edges come through as
+   rings and lines.
+3. Mark the ring centres, then photograph the flat sheet from straight above with a ruler laid along the fold, or
+   measure centre-to-fold with a ruler and send me the numbers. A flat sheet rectifies exactly, so this is good to ±0.2 mm.
+4. Hold `output_metal/drawings/side_plate_1to1_A4.pdf` against the rubbing if you get access to any office printer.
+
+If any number differs from 17.5 / 192.5 / 9.5 / 34.5 by more than 0.4 mm, change it at the top of the script and re-run;
+the DXF, STEP and PDF regenerate.
+
+## Ordering
+
+Upload `output_metal/dxf/side_plate_flat_R.dxf` (and the mirrored L, or ask for one mirrored) with the bent STEP
+`output_metal/step/side_plate_R.step` as the bend reference, and `output_metal/dxf/flange.dxf` x 2 with countersinks on
+the front face. Services such as SendCutSend, Fractory, OSH Cut or any local laser shop take DXF + STEP; for the plate
+ask for 0.075 in / 2 mm 304 stainless with the bend, for the flange 0.25 in 6061-T6 with 90° countersinks.
+
+## Hardware
+
+| Item | Qty |
+|---|---|
+| Factory M4 button-head screws, reused (the plate takes 2 mm of their length) | 8 |
+| M4 x 12 countersunk DIN 7991, steel, for the tab-to-flange joint | 6 |
+| M4 nyloc nuts + M4 washers for the joint | 6 + 6 |
+| Rack screws 10-32 x 5/8" or M6 x 16 with Ø 18 washers | 4 to 6 |
+
+## Assembly
+
+1. Bolt each side plate's tab to the rear face of a flange with three M4 countersunk screws from the front, washers and nyloc nuts behind the tab. The flange's slotted end points outward. Torque 2 N·m.
+2. Remove the four factory screws on one side of the ACE, hold the plate against the side with its front end behind the front-panel lip, refit the four screws through the plate. Torque 1.2 N·m. Repeat on the other side.
+3. Mount in the rack with the top and bottom slot of each flange at least; torque 3 N·m (10-32) or 5 N·m (M6).
+4. If the factory screws turn out shorter than 6 mm, replace them with M4 x (factory + 2) button heads.
