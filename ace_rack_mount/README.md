@@ -1,3 +1,9 @@
+# DirectOut ACE rack mount
+
+**Current design: one-piece printed 1U ears, `ace_ears_onepiece.py` (see the last section).** Flange and side plate are one
+part per side, it reuses all four factory side screws, and it prints with no supports. The earlier designs below (2U cradle,
+front-pair-only ears, two-piece metal ears) are kept for reference.
+
 # DirectOut ACE – 2U printed rack cradle (PATH B)
 
 Parametric CadQuery design, automatic verification, load calculations and print files for mounting one
@@ -357,3 +363,99 @@ ask for 0.075 in / 2 mm 304 stainless with the bend, for the flange 0.25 in 6061
 2. Remove the four factory screws on one side of the ACE, hold the plate against the side with its front end behind the front-panel lip, refit the four screws through the plate. Torque 1.2 N·m. Repeat on the other side.
 3. Mount in the rack with the top and bottom slot of each flange at least; torque 3 N·m (10-32) or 5 N·m (M6).
 4. If the factory screws turn out shorter than 6 mm, replace them with M4 x (factory + 2) button heads.
+
+---
+
+# One-piece printed 1U ears using all four factory screws – `ace_ears_onepiece.py`  (CURRENT)
+
+Like a Sennheiser rack kit, each ear is one piece: the rack flange and a full-length side plate. The plate is held by
+the four existing button-head screws on that side of the ACE. The small M3 screw at the bottom corner is not used and
+gets a relief pocket. Output in `output_onepiece/`.
+
+## How it is built (right ear; the left is the mirror)
+
+- **Flange** 10 mm thick, front face flush with the ACE front face, three EIA rack slots. It is thickened from 6 mm by the
+  load loop: the flange bending between the side structure and the bottom rack screw is the critical spot of any printed ear.
+- **Side plate** 6 mm, on the chassis side from just behind the front lip to 206 mm back. Over the vent field it is cut
+  open to the top, so it never covers a vent, either way round, and never has to bridge 138 mm in the print.
+- **Factory screws:** each head sits in a Ø 7.8 pocket, which makes it a steel shear key, with only **2.4 mm of plastic
+  under the head**. The front pair has close-fit Ø 4.2 holes. The rear pair has 6.2 mm slots along the depth, which allow
+  ±1 mm error on the 175 mm spacing.
+- **Outer web** 6 mm thick at X 216 to 222, which is 61 mm from the side panel and 3 mm inside the rail opening. It carries
+  the rear screws' share of the load forward to the flange. Four 30 x 30 mm diamond openings plus three triangles give
+  2345 mm² of open area for the fan exhaust. All their edges are at 45°, so they print without support.
+- **Floor** 2.6 mm on the print bed, plus front and rear bulkheads, close the box. The rear bulkhead also has a diamond opening.
+- **Access holes** Ø 8.6 in the outer web, in line with each screw. The screw and a magnetic Torx driver pass straight through.
+- Each ear is about 171 g and measures 86.3 x 206 x 43.6 mm.
+
+## Verification: 36 checks, all PASS
+
+| Check | Result |
+|---|---|
+| Ears vs ACE body, vs the 315.6 envelope with front/rear lips, vs rack rails | 0 mm³ each |
+| Rack slot centres | 3 slots, 0.0000 mm deviation |
+| Width / panel height | 482.600 / 43.600 mm |
+| Structure behind the flange | 222.0 mm (limit 222) |
+| Plate over the vent field | 0 mm³ |
+| Air column 50 mm deep in front of the vent | empty; outer web at 61 mm |
+| Thinnest wall | 2.40 mm, the plastic under the screw heads |
+| Each ear | one valid solid, fits the bed, no overhang past 45°, no bridges |
+
+## Loads
+
+A beam model with section properties sliced from the CAD finds how the rigid chassis shares its weight between the
+front and rear screw pairs. It includes screw bearing stiffness, flange flex, and the worst case of 0.2 mm play at the
+rear holes.
+
+| Item | Case A, 1 g | Case B, 5 g | Limit |
+|---|---|---|---|
+| Force per front factory screw | 90 N | 320 N | |
+| Front screw pocket bearing | 3.4 MPa | 12.2 MPa, SF 3.70 | creep 6.75 / SF 3 |
+| Flange bending at the rack screw | 2.7 MPa | 13.4 MPa, SF 3.35 | creep 6.75 / SF 3 |
+| Ear bending, worst section | 0.7 MPa | 3.4 MPa, SF 13 | |
+| Rack screw tension | 72 N | 360 N | |
+| Chassis rear sag | **0.47 mm** | | 1.0 mm |
+
+Case C, 3 g: 38 N per screw in tension or fore-aft. Every safety factor there is above 30. The chassis cannot leave the
+mount because 8 screws hold it.
+
+## Before you print the ears: fit check (about 20 minutes of printing)
+
+1. Print `output_onepiece/3mf/fit_template.3mf`: a 2.4 mm plate with all four holes, flat on the bed.
+2. Take the four side screws out and refit them through the template. If all four start by hand without forcing,
+   the positions are right. Flip the template over and try the other side of the unit too.
+3. The template is the same 2.4 mm as the plastic under the screw heads. If the factory screws snug up firmly through
+   it, they will hold the ear. If one bottoms out loose or grips with fewer than about four turns, use M4 button heads
+   2 mm longer.
+4. If a hole is off, note which way and by how much. Change `SCREW_Y` / `SCREW_Z` at the top of the script and re-run;
+   all files regenerate.
+
+## Printing
+
+| Part | Qty | Orientation | Notes |
+|---|---|---|---|
+| `3mf/ear_R.3mf`, `3mf/ear_L.3mf` | 1 + 1 | as installed: floor on the bed, rack vertical = printer Z | 86 x 206 mm footprint, 43.6 tall, no supports. All holes are teardrops; diamonds are 45°. |
+| `3mf/fit_template.3mf` | 1 | flat | print first |
+
+PETG-ESD, 0.4 nozzle, 0.2 mm layers, 6 walls, 5 top and bottom layers. Most walls are 6 mm, so they come out solid
+anyway. Use a 100 % infill modifier on the flange and within 10 mm of every screw pocket. 3MF files already include
+the 0.3 % shrink scale and the 0.3 mm bed chamfer, so import at 100 %.
+
+## Hardware
+
+| Item | Qty |
+|---|---|
+| Factory M4 button-head side screws, reused | 4 per ear |
+| Rack screws 10-32 x 3/4" or M6 x 20 with Ø 18 steel washers (the flange is 10 mm) | 2 per ear minimum, 3 recommended |
+
+## Assembly
+
+1. Do the fit check above.
+2. Remove the four side screws on one side. Hold the ear against the side with the flange flush to the front panel.
+3. Drop each screw through its access hole in the outer web into its pocket and drive it with a Torx driver at least
+   70 mm long. Tighten snug, about 1 N·m; the head bears on 2.4 mm of plastic. Repeat on the other side.
+4. Mount in the rack with the top and bottom slot at least, ideally all three. Torque 3 N·m for 10-32 or 5 N·m for M6.
+
+**Assumptions.** Hole and vent positions come from your photo of one side; the other side is assumed to be the mirror,
+and the fit template checks both. The front and rear panel lips are taken as 3 mm thick, so the plate starts 3.2 mm
+behind the front face. The design fits whichever end is the front.

@@ -1,0 +1,412 @@
+{
+ "checks": [
+  {
+   "name": "Zero interference: ears vs ACE body (310 x 44 x 210)",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Zero interference: ears vs ACE envelope incl. the 3 mm front/rear panel lips (315.6 wide)",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Zero interference: ears vs rack rails",
+   "ok": true,
+   "value": "0.0000 mm3",
+   "status": "PASS"
+  },
+  {
+   "name": "Rack slot centres within 0.05 mm (X 232.55; Z 6.35 / 22.225 / 38.1 from the U edge)",
+   "ok": true,
+   "value": "3 slots, max deviation 0.0000 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Assembly width = 482.6 mm",
+   "ok": true,
+   "value": "482.600 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Panel height = 43.6 mm (1U)",
+   "ok": true,
+   "value": "43.600 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Structure behind the flange <= 222 mm (3 mm inside the 450 mm rail opening)",
+   "ok": true,
+   "value": "222.00 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Every vent uncovered (side plate open over the vent field, both orientations)",
+   "ok": true,
+   "value": "0.0000 mm3 of plate over the vent",
+   "status": "PASS"
+  },
+  {
+   "name": "Air column in front of the vent clear for 50 mm (nothing within 50 mm of the vent)",
+   "ok": true,
+   "value": "0.0000 mm3 ; outer web at 61 mm, 2345 mm2 of diamond openings",
+   "status": "PASS"
+  },
+  {
+   "name": "Minimum wall >= 2.4 mm (thinnest: plastic under the screw heads)",
+   "ok": true,
+   "value": "2.40 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "Fillets: 6 mm at flange-plate and flange-web, 2 mm at bulkheads and floor",
+   "ok": true,
+   "value": "10 coves",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_R: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 134.4 cm3",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_R: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "86.3 x 206.0 x 43.6 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_R: no overhang > 45 deg as printed (bridges <= 10 mm allowed)",
+   "ok": true,
+   "value": "OK, 0 short bridge faces (max 0.0 mm)",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_L: one watertight solid",
+   "ok": true,
+   "value": "1 solid(s), valid=True, 134.4 cm3",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_L: inside 256^3 build volume as oriented",
+   "ok": true,
+   "value": "86.3 x 206.0 x 43.6 mm",
+   "status": "PASS"
+  },
+  {
+   "name": "ear_L: no overhang > 45 deg as printed (bridges <= 10 mm allowed)",
+   "ok": true,
+   "value": "OK, 0 short bridge faces (max 0.0 mm)",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Front screw bearing (creep) (Case A)",
+   "ok": true,
+   "value": "3.43 MPa vs 6.75 -> SF 1.97",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Ear bending, max (creep) (Case A)",
+   "ok": true,
+   "value": "0.67 MPa vs 6.75 -> SF 10.04",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange plate bending (creep) (Case A)",
+   "ok": true,
+   "value": "2.68 MPa vs 6.75 -> SF 2.52",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis rear sag (Case A)",
+   "ok": true,
+   "value": "0.47 mm vs 1.00 -> SF 2.12",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Front screw bearing (pocket + floor) (Case B)",
+   "ok": true,
+   "value": "12.18 MPa vs 45.00 -> SF 3.70",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Rear screw bearing (Case B)",
+   "ok": true,
+   "value": "0.35 MPa vs 45.00 -> SF 127.01",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Ear root at the flange (Case B)",
+   "ok": true,
+   "value": "1.87 MPa vs 45.00 -> SF 24.13",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Ear bending, max along the length (Case B)",
+   "ok": true,
+   "value": "3.36 MPa vs 45.00 -> SF 13.39",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Lattice chords (Case B)",
+   "ok": true,
+   "value": "1.47 MPa vs 45.00 -> SF 30.52",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Lattice diagonals (Case B)",
+   "ok": true,
+   "value": "0.73 MPa vs 25.00 -> SF 34.12",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange plate bending at the rack screw (Case B)",
+   "ok": true,
+   "value": "13.42 MPa vs 45.00 -> SF 3.35",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange in-plane (roll) (Case B)",
+   "ok": true,
+   "value": "3.00 MPa vs 45.00 -> SF 15.00",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Rack screw tension (Case B)",
+   "ok": true,
+   "value": "359.77 N vs 8000.00 -> SF 22.24",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Flange under the rack washer (Case B)",
+   "ok": true,
+   "value": "1.85 MPa vs 25.00 -> SF 13.48",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Screw head pull-through (side load) (Case C)",
+   "ok": true,
+   "value": "1.21 MPa vs 45.00 -> SF 37.06",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Floor punching shear (side load) (Case C)",
+   "ok": true,
+   "value": "0.67 MPa vs 25.96 -> SF 38.89",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Front screw bearing (fore-aft) (Case C)",
+   "ok": true,
+   "value": "1.45 MPa vs 45.00 -> SF 30.96",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Factory screw tension (side load) (Case C)",
+   "ok": true,
+   "value": "38.26 N vs 7000.00 -> SF 182.96",
+   "status": "PASS"
+  },
+  {
+   "name": "Load: Chassis retained (Case C)",
+   "ok": true,
+   "value": "retained",
+   "status": "PASS"
+  }
+ ],
+ "loads": [
+  {
+   "name": "Front screw bearing (creep)",
+   "case": "A",
+   "value": 3.4261902661370014,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 1.9701182583799013,
+   "ok": true,
+   "note": "90 N per screw"
+  },
+  {
+   "name": "Ear bending, max (creep)",
+   "case": "A",
+   "value": 0.6721663635910802,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 10.042156771930404,
+   "ok": "True",
+   "note": "at Y = 16"
+  },
+  {
+   "name": "Flange plate bending (creep)",
+   "case": "A",
+   "value": 2.6834432071269507,
+   "unit": "MPa",
+   "allow": 6.75,
+   "sf": 2.5154249518203664,
+   "ok": true,
+   "note": "web -> rack screw"
+  },
+  {
+   "name": "Chassis rear sag",
+   "case": "A",
+   "value": 0.4724966832421072,
+   "unit": "mm",
+   "allow": 1.0,
+   "sf": 2.1164169727887807,
+   "ok": "True",
+   "note": "beam model incl. screw bearing, flange flex, rear hole play"
+  },
+  {
+   "name": "Front screw bearing (pocket + floor)",
+   "case": "B",
+   "value": 12.175630280133094,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 3.6959072314659753,
+   "ok": true,
+   "note": "320 N per screw, in-layer"
+  },
+  {
+   "name": "Rear screw bearing",
+   "case": "B",
+   "value": 0.3542943346846294,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 127.01303858007263,
+   "ok": "True",
+   "note": "9 N per screw"
+  },
+  {
+   "name": "Ear root at the flange",
+   "case": "B",
+   "value": 1.8651369934742172,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 24.126914085907362,
+   "ok": "True",
+   "note": "in-layer"
+  },
+  {
+   "name": "Ear bending, max along the length",
+   "case": "B",
+   "value": 3.3608318179845846,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 13.389542362457604,
+   "ok": "True",
+   "note": "Y = 16, in-layer"
+  },
+  {
+   "name": "Lattice chords",
+   "case": "B",
+   "value": 1.474389569906478,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 30.521105763692017,
+   "ok": "True",
+   "note": "in-layer"
+  },
+  {
+   "name": "Lattice diagonals",
+   "case": "B",
+   "value": 0.7326433054100248,
+   "unit": "MPa",
+   "allow": 25.0,
+   "sf": 34.12301704716829,
+   "ok": "True",
+   "note": "45 deg to the layers -> Z strength"
+  },
+  {
+   "name": "Flange plate bending at the rack screw",
+   "case": "B",
+   "value": 13.417216035634755,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 3.3538999357604884,
+   "ok": true,
+   "note": "sized: t = 10 mm"
+  },
+  {
+   "name": "Flange in-plane (roll)",
+   "case": "B",
+   "value": 3.0008084862385327,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 14.995958657930487,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "Rack screw tension",
+   "case": "B",
+   "value": 359.7728285077951,
+   "unit": "N",
+   "allow": 8000.0,
+   "sf": 22.236254008344787,
+   "ok": true,
+   "note": "10-32 steel proof (weakest)"
+  },
+  {
+   "name": "Flange under the rack washer",
+   "case": "B",
+   "value": 1.85486310486454,
+   "unit": "MPa",
+   "allow": 25.0,
+   "sf": 13.478083603277957,
+   "ok": true,
+   "note": "compression across layers"
+  },
+  {
+   "name": "Screw head pull-through (side load)",
+   "case": "C",
+   "value": 1.2141792557832154,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 37.062072824636104,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "Floor punching shear (side load)",
+   "case": "C",
+   "value": 0.6676654569904414,
+   "unit": "MPa",
+   "allow": 25.964999999999996,
+   "sf": 38.889236710012575,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "Front screw bearing (fore-aft)",
+   "case": "C",
+   "value": 1.4536094224924014,
+   "unit": "MPa",
+   "allow": 45.0,
+   "sf": 30.95742178310985,
+   "ok": true,
+   "note": ""
+  },
+  {
+   "name": "Factory screw tension (side load)",
+   "case": "C",
+   "value": 38.25900000000001,
+   "unit": "N",
+   "allow": 7000.0,
+   "sf": 182.96348571577926,
+   "ok": true,
+   "note": "M4 proof; the ACE thread sees this"
+  },
+  {
+   "name": "Chassis retained",
+   "case": "C",
+   "value": 1,
+   "unit": "",
+   "allow": 1,
+   "sf": Infinity,
+   "ok": true,
+   "note": "8 screws into the chassis"
+  }
+ ]
+}
