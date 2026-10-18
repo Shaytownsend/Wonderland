@@ -25,7 +25,7 @@ namespace
 }
 
 BldsPlayerAudioProcessorEditor::BldsPlayerAudioProcessorEditor (BldsPlayerAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+    : AudioProcessorEditor (&p), bldsProcessor (p)
 {
     titleLabel.setText (BLDS_EFFECT ? "BLDS Player FX" : "BLDS Player", juce::dontSendNotification);
     styleLabel (titleLabel, 14.0f, dimText, true);
@@ -78,9 +78,9 @@ void BldsPlayerAudioProcessorEditor::timerCallback()
 void BldsPlayerAudioProcessorEditor::refresh (bool force)
 {
     Snapshot now;
-    now.hostRate = processor.getHostRate();
-    now.status   = processor.getStatus();
-    now.active   = processor.getActiveTable();
+    now.hostRate = bldsProcessor.getHostRate();
+    now.status   = bldsProcessor.getStatus();
+    now.active   = bldsProcessor.getActiveTable();
 
     if (! force && now == shown)
         return;
@@ -89,7 +89,7 @@ void BldsPlayerAudioProcessorEditor::refresh (bool force)
 
     using Status = BldsPlayerAudioProcessor::Status;
     const auto rateText = juce::String (now.hostRate) + " Hz";
-    const auto* slotTable = processor.getLibrary().tableForRate (now.hostRate);
+    const auto* slotTable = bldsProcessor.getLibrary().tableForRate (now.hostRate);
 
     juce::String statusText;
     juce::Colour statusColour = dimText;
@@ -154,7 +154,7 @@ void BldsPlayerAudioProcessorEditor::paint (juce::Graphics& g)
     g.fillAll (background);
 
     const auto area = rateIndicatorArea().toFloat();
-    const auto& lib = processor.getLibrary();
+    const auto& lib = bldsProcessor.getLibrary();
     const float gap = 6.0f;
     const float w = (area.getWidth() - gap * (float) (blds::numRates - 1)) / (float) blds::numRates;
 

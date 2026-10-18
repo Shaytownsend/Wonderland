@@ -33,7 +33,7 @@ private:
     void refresh (bool force);
     juce::Rectangle<int> rateIndicatorArea() const;
 
-    BldsPlayerAudioProcessor& processor;
+    BldsPlayerAudioProcessor& bldsProcessor;
     Snapshot shown;
 
     juce::Label titleLabel, statusLabel, rateLabel, fileLabel, lengthLabel, ratesCaption, channelCaption, hintLabel;

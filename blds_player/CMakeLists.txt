@@ -41,6 +41,12 @@ set(BLDS_ASM "")
 set(BLDS_DECLS "")
 set(BLDS_ENTRIES "")
 set(BLDS_COUNT 0)
+set(BLDS_TOTAL_BYTES 0)
+set(BLDS_SIZE_REPORT "")
+
+# Everything embedded is also decoded into RAM in every plugin instance, and a
+# Mach-O object can't hold more than a few GB, so the total is capped.
+set(BLDS_MAX_EMBED_MB 256 CACHE STRING "Maximum total size of the embedded BLDS files in MB")
 
 # Re-run configure if a file appears or disappears.
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${BLDS_DIR}")
@@ -56,6 +62,10 @@ foreach(rate IN LISTS BLDS_RATES)
         endif()
 
         file(SIZE "${f}" size)
+        math(EXPR BLDS_TOTAL_BYTES "${BLDS_TOTAL_BYTES} + ${size}")
+        math(EXPR seconds "(${size} - 44) / 3 / ${rate}")
+        math(EXPR mb "${size} / 1048576")
+        string(APPEND BLDS_SIZE_REPORT "    BLDS_${rate}.wav  ${mb} MB  (~${seconds} s)\n")
         file(SHA256 "${f}" sha)
         set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${f}")
         list(APPEND BLDS_EMBEDDED_FILES "${f}")
@@ -82,6 +92,16 @@ foreach(rate IN LISTS BLDS_RATES)
         message(WARNING "BLDS: blds_files/BLDS_${rate}.wav not found - ${rate} Hz will report 'No BLDS file'")
     endif()
 endforeach()
+
+math(EXPR BLDS_TOTAL_MB "${BLDS_TOTAL_BYTES} / 1048576")
+if(BLDS_TOTAL_MB GREATER BLDS_MAX_EMBED_MB)
+    message(FATAL_ERROR
+        "BLDS: the files in blds_files/ total ${BLDS_TOTAL_MB} MB, more than the ${BLDS_MAX_EMBED_MB} MB that can be embedded:\n"
+        "${BLDS_SIZE_REPORT}"
+        "If BLDS Generator lets you choose a shorter duration, generate shorter files (1 minute at all six "
+        "rates is about 115 MB), or keep only the rates you actually use, then delete the build folder and "
+        "run the script again.")
+endif()
 
 if(BLDS_COUNT EQUAL 0)
     set(BLDS_ENTRIES "    { 0, \"\", nullptr, nullptr, 0u }  // placeholder: nothing embedded\n")
