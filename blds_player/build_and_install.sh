@@ -48,9 +48,12 @@ fi
 
 #-------------------------------------------------------------------------------
 step "Configuring ($CONFIG, arm64 + x86_64, macOS 12+)"
-GENERATOR=()
-if command -v ninja >/dev/null; then GENERATOR=(-G Ninja); fi
-cmake -S "$ROOT" -B "$BUILD" "${GENERATOR[@]}" -DCMAKE_BUILD_TYPE=$CONFIG
+# (No empty arrays: macOS bash 3.2 treats them as unbound under 'set -u'.)
+if command -v ninja >/dev/null; then
+    cmake -S "$ROOT" -B "$BUILD" -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG
+else
+    cmake -S "$ROOT" -B "$BUILD" -DCMAKE_BUILD_TYPE=$CONFIG
+fi
 
 step "Building"
 cmake --build "$BUILD" --config $CONFIG --parallel "$(sysctl -n hw.ncpu)"
