@@ -47,12 +47,57 @@ if [[ $found -eq 0 ]]; then
 fi
 
 #-------------------------------------------------------------------------------
+# Pick a macOS SDK the installed linker can actually use. Some Command Line Tools
+# installs default to an SDK newer than their own ld (e.g. "tapi error: unknown
+# architecture arm64e.x1"); in that case fall back to the SDK matching this OS.
+step "Checking the compiler/SDK"
+probe_dir="$(mktemp -d)"
+printf 'int main(void){return 0;}\n' > "$probe_dir/t.c"
+can_link() {  # $1 = SDK path, or empty for the default
+    local sysroot=()
+    [[ -n "$1" ]] && sysroot=(-isysroot "$1")
+    cc -arch arm64 -arch x86_64 ${sysroot[@]+"${sysroot[@]}"} "$probe_dir/t.c" -o "$probe_dir/t" >/dev/null 2>&1
+}
+
+if [[ -n "${SDKROOT:-}" ]]; then
+    can_link "$SDKROOT" || die "SDKROOT=$SDKROOT cannot link a test program."
+    echo "  using SDKROOT=$SDKROOT"
+elif can_link ""; then
+    echo "  default SDK works: $(xcrun --show-sdk-path 2>/dev/null)"
+else
+    os_major="$(sw_vers -productVersion | cut -d. -f1)"
+    dev_dir="$(xcode-select -p)"
+    for sdk in "$dev_dir"/SDKs/MacOSX"$os_major"*.sdk \
+               "$dev_dir"/Platforms/MacOSX.platform/Developer/SDKs/MacOSX"$os_major"*.sdk \
+               "$dev_dir"/SDKs/MacOSX*.sdk; do
+        [[ -d "$sdk" ]] || continue
+        if can_link "$sdk"; then
+            export SDKROOT="$sdk"
+            break
+        fi
+    done
+    [[ -n "${SDKROOT:-}" ]] || die "No installed macOS SDK links with this linker. Reinstall Command Line Tools or install Xcode."
+    echo "  default SDK is unusable with this linker; using $SDKROOT"
+fi
+rm -rf "$probe_dir"
+
+SYSROOT_ARGS=()
+if [[ -n "${SDKROOT:-}" ]]; then
+    SYSROOT_ARGS=(-DCMAKE_OSX_SYSROOT="$SDKROOT")
+    # A cache made with a different SDK (or a failed compiler check) must be discarded.
+    if [[ -f "$BUILD/CMakeCache.txt" ]] && ! grep -q "^CMAKE_OSX_SYSROOT:.*=$SDKROOT\$" "$BUILD/CMakeCache.txt"; then
+        echo "  discarding old CMake cache (different SDK)"
+        rm -rf "$BUILD/CMakeCache.txt" "$BUILD/CMakeFiles"
+    fi
+fi
+
+#-------------------------------------------------------------------------------
 step "Configuring ($CONFIG, arm64 + x86_64, macOS 12+)"
 # (No empty arrays: macOS bash 3.2 treats them as unbound under 'set -u'.)
 if command -v ninja >/dev/null; then
-    cmake -S "$ROOT" -B "$BUILD" -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG
+    cmake -S "$ROOT" -B "$BUILD" -G Ninja -DCMAKE_BUILD_TYPE=$CONFIG ${SYSROOT_ARGS[@]+"${SYSROOT_ARGS[@]}"}
 else
-    cmake -S "$ROOT" -B "$BUILD" -DCMAKE_BUILD_TYPE=$CONFIG
+    cmake -S "$ROOT" -B "$BUILD" -DCMAKE_BUILD_TYPE=$CONFIG ${SYSROOT_ARGS[@]+"${SYSROOT_ARGS[@]}"}
 fi
 
 step "Building"
