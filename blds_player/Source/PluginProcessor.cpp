@@ -7,7 +7,7 @@
 
 //==============================================================================
 BldsPlayerAudioProcessor::BldsPlayerAudioProcessor()
-    : BldsPlayerAudioProcessor (blds::Library::fromBinaryData())
+    : BldsPlayerAudioProcessor (blds::Library::fromEmbeddedFiles())
 {
 }
 

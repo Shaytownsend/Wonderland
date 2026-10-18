@@ -1,8 +1,7 @@
 #include "BldsLibrary.h"
 #include "BldsWav.h"
 
-#include <BinaryData.h>
-#include <cstring>
+#include "BldsEmbedded.h"
 
 namespace blds
 {
@@ -51,27 +50,27 @@ void Library::load (int index, const void* data, std::size_t size)
     t.length = (std::uint64_t) t.samples.size();
 }
 
-std::unique_ptr<Library> Library::fromBinaryData()
+std::unique_ptr<Library> Library::fromEmbeddedFiles()
 {
     std::unique_ptr<Library> lib (new Library());
 
     for (int i = 0; i < numRates; ++i)
     {
-        const auto wanted = lib->tables[(std::size_t) i].fileName;
+        const auto* f = embeddedFileForRate (lib->tables[(std::size_t) i].rate);
 
-        for (int r = 0; r < BinaryData::namedResourceListSize; ++r)
+        if (f == nullptr)
+            continue;
+
+        if (f->size() != f->expectedSize)
         {
-            if (std::strcmp (BinaryData::originalFilenames[r], wanted.c_str()) != 0)
-                continue;
-
-            int size = 0;
-            const char* data = BinaryData::getNamedResource (BinaryData::namedResourceList[r], size);
-
-            if (data != nullptr)
-                lib->load (i, data, (std::size_t) size);
-
-            break;
+            auto& t = lib->tables[(std::size_t) i];
+            t.state = Table::State::invalid;
+            t.reason = "embedded size " + std::to_string (f->size()) + " bytes differs from file size "
+                       + std::to_string (f->expectedSize) + " (rebuild the plugin)";
+            continue;
         }
+
+        lib->load (i, f->begin, f->size());
     }
 
     return lib;

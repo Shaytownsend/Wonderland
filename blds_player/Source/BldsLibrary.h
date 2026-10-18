@@ -42,8 +42,8 @@ namespace blds
             std::size_t size = 0;
         };
 
-        // Decodes the files embedded in the binary (JUCE BinaryData).
-        static std::unique_ptr<Library> fromBinaryData();
+        // Decodes the files embedded in the binary.
+        static std::unique_ptr<Library> fromEmbeddedFiles();
 
         // Decodes caller-supplied blobs (used by the verification tests).
         static std::unique_ptr<Library> fromBlobs (const std::vector<Blob>& blobs);

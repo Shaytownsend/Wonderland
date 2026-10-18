@@ -74,7 +74,8 @@ For every embedded rate, through the real plugin processor, with no host:
   unsupported rate (silence plus the error flag) and back. After each change,
   output must restart at sample 0 of the new file and stay bit-exact.
 - Bypass gives exact silence, and the loop keeps running underneath.
-- The embedded files are checked against a separate reference decoder.
+- The bytes embedded in the binary are compared with the files on disk, and the
+  decoded samples are checked against a separate reference decoder.
 - Every 24-bit value (2^24 of them) converts to float exactly. WAV parser accept/reject cases.
 - Random 24-bit fixtures at all six rates. These are test data, not BLDS, and
   are never embedded. They exercise the engine even when no official files are present.
@@ -113,6 +114,8 @@ Both machines need the same plugin build, the same files, and the same routing.
 
 ## How it works
 
+- **Build time:** CMake embeds each `.wav` byte-for-byte using the assembler's
+  `.incbin` directive. No converter tool, so nothing can alter the data.
 - **Load time (never on the audio thread):** each embedded file is decoded and
   validated. Each 24-bit sample `s` becomes `float(s) / 8388608.0f`, which is
   exact because every 24-bit integer fits in float32. Tables are allocated once
@@ -135,7 +138,8 @@ CMakeLists.txt            JUCE via FetchContent (8.0.15), both variants, tests
 build_and_install.sh      build → test → sign → install → auval → pluginval
 blds_files/               put the six official BLDS_<rate>.wav files here
 Source/BldsWav.*          strict 24-bit mono PCM WAV decoder
-Source/BldsLibrary.*      six rate slots, decoded from BinaryData at construction
+Source/BldsEmbedded.h     access to the files embedded verbatim with .incbin
+Source/BldsLibrary.*      six rate slots, decoded from the embedded files at construction
 Source/PluginProcessor.*  real-time player, Output Channel parameter, state
 Source/PluginEditor.*     fixed-size status UI
 Tests/BldsTests.cpp       command-line bit-exact verification

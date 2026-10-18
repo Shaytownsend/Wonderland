@@ -7,16 +7,18 @@
 #include "BldsLibrary.h"
 #include "BldsWav.h"
 
-#include <BinaryData.h>
+#include "BldsEmbedded.h"
 #include <juce_events/juce_events.h>
 
 #include <algorithm>
 #include <atomic>
 #include <cmath>
-#include <functional>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
+#include <functional>
+#include <iterator>
 #include <limits>
 #include <new>
 #include <random>
@@ -697,14 +699,9 @@ int runAll (std::uint64_t seconds)
         for (int i = 0; i < blds::numRates; ++i)
         {
             const auto& t = lib.slot (i);
-            const char* blob = nullptr;
-            int size = 0;
+            const auto* embedded = blds::embeddedFileForRate (t.rate);
 
-            for (int r = 0; r < BinaryData::namedResourceListSize; ++r)
-                if (t.fileName == BinaryData::originalFilenames[r])
-                    blob = BinaryData::getNamedResource (BinaryData::namedResourceList[r], size);
-
-            if (blob == nullptr)
+            if (embedded == nullptr)
             {
                 record (t.fileName + " embedded", t.rate, true, "not present (rate will report 'No BLDS file')");
 
@@ -715,6 +712,16 @@ int runAll (std::uint64_t seconds)
                 continue;
             }
 
+            {
+                // The bytes compiled into the binary must equal the file on disk.
+                std::ifstream in (std::string (BLDS_FILES_DIR) + "/" + t.fileName, std::ios::binary);
+                const std::vector<unsigned char> disk ((std::istreambuf_iterator<char> (in)), std::istreambuf_iterator<char>());
+                const bool same = ! disk.empty() && disk.size() == embedded->size()
+                                  && std::equal (disk.begin(), disk.end(), embedded->begin);
+                record (t.fileName + " embedded bytes == file on disk", t.rate, same,
+                        std::to_string (embedded->size()) + " bytes" + (same ? "" : " - MISMATCH (or file missing on disk)"));
+            }
+
             if (! t.isValid())
             {
                 record (t.fileName + " valid", t.rate, false, "INVALID: " + t.reason);
@@ -722,7 +729,7 @@ int runAll (std::uint64_t seconds)
             }
 
             Bits ref;
-            const bool decoded = referenceDecode (reinterpret_cast<const unsigned char*> (blob), (std::size_t) size, ref);
+            const bool decoded = referenceDecode (embedded->begin, embedded->size(), ref);
             const bool same = decoded && ref == tableBits (t);
             record (t.fileName + " valid, matches reference decode", t.rate, same,
                     std::to_string (t.length) + " samples" + (same ? "" : " - MISMATCH vs independent decoder"));
