@@ -293,7 +293,11 @@ public:
         }
 
         juce::AudioBuffer<float> view (storage.getArrayOfWritePointers(), 2, n);
+
+        // MIDI must be ignored: feed notes and controllers every block.
         midi.clear();
+        midi.addEvent (juce::MidiMessage::noteOn (1, 60, (juce::uint8) 127), 0);
+        midi.addEvent (juce::MidiMessage::controllerEvent (1, 7, 0), n - 1);
 
         const auto before = guardViolations.load();
         guardActive = true;
@@ -519,7 +523,8 @@ void testProcessorBasics (const Factory& make)
     auto p = make();
     record ("latency is 0", 0, p->getLatencySamples() == 0, std::to_string (p->getLatencySamples()));
     record ("tail is infinite", 0, std::isinf (p->getTailLengthSeconds()) && p->getTailLengthSeconds() > 0, "");
-    record ("accepts no MIDI", 0, ! p->acceptsMidi() && ! p->producesMidi(), "");
+    record (BLDS_EFFECT ? "accepts no MIDI" : "MIDI input accepted (ignored), no MIDI out", 0,
+            p->acceptsMidi() == (BLDS_EFFECT == 0) && ! p->producesMidi(), "");
     record ("default Output Channel = Right only", 0, p->getOutputChannel() == Processor::OutputChannel::rightOnly, "");
 
     const int ins = p->getTotalNumInputChannels(), outs = p->getTotalNumOutputChannels();

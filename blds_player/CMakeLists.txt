@@ -160,10 +160,14 @@ function(blds_add_variant target product code is_effect)
         set(main_type kAudioUnitType_Effect)
         set(vst3_cat Fx Generator)
         set(synth FALSE)
+        set(midi_in FALSE)
     else()
         set(main_type kAudioUnitType_MusicDevice)
         set(vst3_cat Instrument Generator)
         set(synth TRUE)
+        # auval requires an AU instrument (aumu) to take MIDI. It is accepted
+        # and ignored; it never affects the output.
+        set(midi_in TRUE)
     endif()
 
     juce_add_plugin(${target}
@@ -174,7 +178,7 @@ function(blds_add_variant target product code is_effect)
         PLUGIN_CODE                 ${code}
         FORMATS                     ${BLDS_FORMATS}
         IS_SYNTH                    ${synth}
-        NEEDS_MIDI_INPUT            FALSE
+        NEEDS_MIDI_INPUT            ${midi_in}
         NEEDS_MIDI_OUTPUT           FALSE
         IS_MIDI_EFFECT              FALSE
         EDITOR_WANTS_KEYBOARD_FOCUS FALSE

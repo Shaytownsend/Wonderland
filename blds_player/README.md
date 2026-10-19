@@ -86,6 +86,8 @@ The tests exit non-zero on any failure and finish with a PASS/FAIL table.
 
 1. Create a new **MIDI track** and put **BLDS Player** (Plug-Ins › Lnce) on it.
    It needs no MIDI clip and no input, and plays whether the transport is running or not.
+   It accepts MIDI only because macOS requires that of every AU instrument; any MIDI it
+   receives is ignored and can't affect the output.
 2. In the plugin, set **Output Channel = Right only**. The status line must be
    green: **"BLDS OK — <rate> Hz"**.
 3. Set the track's **Audio To** to your interface, output pair **"31/32"**. The

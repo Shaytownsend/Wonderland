@@ -196,15 +196,16 @@ void BldsPlayerAudioProcessor::advanceSilently (int numSamples) noexcept
 
 void BldsPlayerAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
-    juce::ignoreUnused (midi);   // MIDI is not used; any input is ignored
     render (buffer);
+    midi.clear();   // incoming MIDI is ignored and nothing is sent out
 }
 
-void BldsPlayerAudioProcessor::processBlockBypassed (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
+void BldsPlayerAudioProcessor::processBlockBypassed (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
     // Bypassed: exact silence on every channel (input is never passed through).
     // The loop keeps running in the background so un-bypassing stays free-running.
     buffer.clear();
+    midi.clear();
     advanceSilently (buffer.getNumSamples());
 }
 
