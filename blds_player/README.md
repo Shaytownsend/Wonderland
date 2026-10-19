@@ -82,6 +82,23 @@ For every embedded rate, through the real plugin processor, with no host:
 
 The tests exit non-zero on any failure and finish with a PASS/FAIL table.
 
+### Installing on a second Mac (DMG, no build needed)
+
+On the Mac where `build_and_install.sh` succeeded, run:
+
+```sh
+./make_dmg.sh
+```
+
+This creates `BLDS-Player-<version>.dmg` next to the script. It holds the four
+tested, signed plugins (with the BLDS files already embedded), an
+**Install BLDS Player.command**, an uninstaller, and a README listing the
+SHA-256 of each embedded BLDS file. Copy the DMG to the other Mac, open it,
+then right-click **Install BLDS Player.command** and choose **Open**. It copies
+the plugins into `~/Library/Audio/Plug-Ins`, clears the download quarantine flag,
+and runs auval. If macOS refuses to open the installer, run it from Terminal
+instead: `bash "/Volumes/BLDS Player <version>/Install BLDS Player.command"`.
+
 ## 3. Ableton Live 12 setup (do this identically on both Macs)
 
 1. Create a new **MIDI track** and put **BLDS Player** (Plug-Ins › Lnce) on it.
@@ -138,6 +155,7 @@ Both machines need the same plugin build, the same files, and the same routing.
 ```
 CMakeLists.txt            JUCE via FetchContent (8.0.15), both variants, tests
 build_and_install.sh      build → test → sign → install → auval → pluginval
+make_dmg.sh               package the built plugins + installer into a DMG
 blds_files/               put the six official BLDS_<rate>.wav files here
 Source/BldsWav.*          strict 24-bit mono PCM WAV decoder
 Source/BldsEmbedded.h     access to the files embedded verbatim with .incbin
