@@ -159,10 +159,14 @@ sleep 2
 
 #-------------------------------------------------------------------------------
 run_auval() {
-    local type="$1" sub="$2" manu="$3" log="$BUILD/auval_${type}_${sub}.log"
-    step "auval -v $type $sub $manu"
-    auval -v "$type" "$sub" "$manu" 2>&1 | tee "$log" | tail -n 25
-    grep -q "AU VALIDATION SUCCEEDED" "$log" || die "auval failed for $type $sub $manu (full log: $log)"
+    # Separate 'local' lines: bash 3.2 can't reference one in the same statement.
+    local au_type="$1"
+    local au_sub="$2"
+    local au_manu="$3"
+    local log="$BUILD/auval_${au_type}_${au_sub}.log"
+    step "auval -v $au_type $au_sub $au_manu"
+    auval -v "$au_type" "$au_sub" "$au_manu" 2>&1 | tee "$log" | tail -n 25
+    grep -q "AU VALIDATION SUCCEEDED" "$log" || die "auval failed for $au_type $au_sub $au_manu (full log: $log)"
 }
 run_auval aumu Blds Lnce   # instrument
 run_auval aufx Blde Lnce   # effect variant
