@@ -227,7 +227,7 @@ void WheelControl::paint (juce::Graphics& g)
     if (! img.isValid())
         return;
     const float travel = 18.0f;
-    const float offset = isBend ? -value * travel : -(value - 0.5f) * 2.0f * travel;
+    const float offset = -value * travel; // 0 = the rendered rest position (bend centre, mod down)
     g.reduceClipRegion (getLocalBounds().reduced (0, 30));
     g.drawImage (img, getLocalBounds().toFloat().translated (0.0f, offset));
 }

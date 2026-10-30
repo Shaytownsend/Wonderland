@@ -60,3 +60,12 @@
   2x/128-frame renders needs zero code changes. Keyboard keys are sprites on MidiKeyboardComponent with
   getKeyPosition overridden to the scene geometry. Linux: "opens in AudioPluginHost" replaced by GuiTest
   (editor built headless) + Standalone under xvfb + pluginval editor tests (M8).
+- M7: export_assets.py ran on CPU (4 cores, 24 spp + OIDN) in 717 s; log in docs/export_assets.log.
+  Ortho top-down camera (not the scene's 85 mm persp cam) so sprites align pixel-exactly with the registry.
+  Sprites use film_transparent + every static object as shadow catcher => contact shadows in alpha.
+  Display digits: 7-seg texture drawn by sprites.seven_seg() swapped into the 'disp' material, rendered
+  through the glass; frame d shows "dd", the GUI draws the left/right half per digit.
+  docs/ui.png = editor snapshot 1800x900 (HostBar + 1800x830 panel), made headless via
+  `QUEEN_SNAPSHOT=docs/ui.png build/Tests "[.snapshot]"`; docs/reference.png = full-scene render through the
+  same camera (tools/render_reference.py). Checked side by side: positions match; LED "on" looks pale pink
+  in both (AgX on the scene's emitter) — faithful to the scene, not a bug.

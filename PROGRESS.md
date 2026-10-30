@@ -6,7 +6,7 @@
 - [x] M4 Juno layer — DONE: filter/env/lfo/chorus/arp tests; arp order up/updown/down x range 1-3
 - [x] M5 Memory + factory patches — DONE: PatchRoundTrip, 8 factory patches, .queen save/verify/load
 - [x] M6 GUI on placeholders — DONE: editor opens, every control moves its param, resizes
-- [ ] M7 Real assets — DONE: export ran, placeholder test passes, docs/ui.png checked
+- [x] M7 Real assets — DONE: export ran, placeholder test passes, docs/ui.png checked
 - [ ] M8 Validation — DONE: auval PASS, pluginval strictness 8, CPU < 5%
 - [ ] M9 Packaging — DONE: install.sh, README, all checked
 
