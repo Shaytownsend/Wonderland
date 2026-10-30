@@ -51,3 +51,12 @@
   .queen file = whole memory (40 slots) — SAVE/VERIFY/LOAD act like the Juno tape interface.
   Plugin state = APVTS tree + MEMORY child + oversampling/masterTune props. Host programs: 1 (avoids
   audio-thread program changes); patch selection lives in PatchMemory/HostBar.
+- M6: editor canvas = HostBar 1800x70 + panel 1800x830 => 1800x900 logical, aspect 2:1, min 900x450, opens at
+  80%. (C_host.png sits above the panel at y -70..0 in the scene, and the scene camera is 2:1.) Scaled with
+  one AffineTransform. Switches, radio/toggle/momentary buttons use juce::ParameterAttachment (spec'd
+  Slider/Button attachments don't fit a position->choice map or radio groups); knobs/faders use SliderAttachment.
+  Buttons are per-id sprites (button_<id>_{up,down}) because every cap has its own rendered label.
+  Placeholders are 1x with 32-frame knobs; Filmstrip derives frame count from image size, so swapping in
+  2x/128-frame renders needs zero code changes. Keyboard keys are sprites on MidiKeyboardComponent with
+  getKeyPosition overridden to the scene geometry. Linux: "opens in AudioPluginHost" replaced by GuiTest
+  (editor built headless) + Standalone under xvfb + pluginval editor tests (M8).

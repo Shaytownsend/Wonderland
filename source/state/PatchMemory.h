@@ -18,6 +18,7 @@ public:
     explicit PatchMemory (juce::AudioProcessorValueTreeState& state);
 
     void loadFactory();
+    void applyInit(); // default parameters into the edit buffer (manual)
 
     // panel buttons
     void pressBank (int bank);

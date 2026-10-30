@@ -253,6 +253,8 @@ void SynthEngine::render (juce::AudioBuffer<float>& buffer, const juce::MidiBuff
     }
     for (; it != midi.cend(); ++it)
         handleMidi ((*it).getMessage());
+    bendOut.store (globals.bend);
+    modOut.store (globals.modWheel);
 
     if (oversampler && buffer.getNumChannels() == 2)
         oversampler->processSamplesDown (outerBlock);

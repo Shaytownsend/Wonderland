@@ -108,6 +108,14 @@ void PatchMemory::loadFactory()
     changed();
 }
 
+void PatchMemory::applyInit()
+{
+    applyXml (xmlFor ({}));
+    manual = true;
+    writeArmed = false;
+    changed();
+}
+
 void PatchMemory::changed()
 {
     if (onChange)

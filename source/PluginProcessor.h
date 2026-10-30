@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_audio_utils/juce_audio_utils.h>
 #include "Parameters.h"
 #include "dsp/SynthEngine.h"
 #include "state/PatchMemory.h"
@@ -38,6 +39,10 @@ public:
     juce::AudioProcessorValueTreeState apvts;
     SynthEngine engine;
     queen::PatchMemory memory { apvts };
+    juce::MidiKeyboardState keyboardState;
+
+    // on-screen wheels -> MIDI (picked up at the start of the next block)
+    void setWheel (bool pitchBend, float value);
 
     // host-bar settings (stored with the plugin state, not with patches)
     void setOversampling (int factor); // 1 or 2
@@ -47,6 +52,7 @@ public:
 
 private:
     std::atomic<int> oversampling { 1 };
+    std::atomic<int> pendingBend { -1 }, pendingMod { -1 };
     std::atomic<double> masterTune { 440.0 };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
 };

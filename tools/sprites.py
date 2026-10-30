@@ -100,3 +100,35 @@ def control_sprite(c):
                     black_up="key_black_up@2x.png", black_down="key_black_down@2x.png",
                     whiteW=WHITE_KEY[0], whiteH=WHITE_KEY[1], blackW=BLACK_KEY[0], blackH=BLACK_KEY[1])
     return {}
+
+
+# ------------------------------------------------------------------ seven-segment display art
+SEGMENTS = {"0": "abcdef", "1": "bc", "2": "abged", "3": "abgcd", "4": "fgbc", "5": "afgcd", "6": "afgedc",
+            "7": "abc", "8": "abcdefg", "9": "abcdfg", " ": ""}
+
+
+def seven_seg(text, size=(504, 360)):
+    """Two-cell red LED display in the style of textures/J_disp.png (unlit segments stay faintly visible)."""
+    from PIL import Image, ImageChops, ImageDraw, ImageFilter
+
+    sx, sy = size[0] / 504.0, size[1] / 360.0
+    img = Image.new("RGB", size, (0, 0, 0))
+    glow = Image.new("RGB", size, (0, 0, 0))
+    d, g = ImageDraw.Draw(img), ImageDraw.Draw(glow)
+    t = 18
+    for cell, ch in enumerate(text[:2]):
+        x0 = 70 + cell * 200
+        x1, y0, y1 = x0 + 160, 60, 300
+        ym = (y0 + y1) // 2
+        segs = {"a": (x0 + t, y0, x1 - t, y0 + t), "d": (x0 + t, y1 - t, x1 - t, y1),
+                "g": (x0 + t, ym - t // 2, x1 - t, ym + t // 2), "f": (x0, y0 + t, x0 + t, ym - t // 2),
+                "b": (x1 - t, y0 + t, x1, ym - t // 2), "e": (x0, ym + t // 2, x0 + t, y1 - t),
+                "c": (x1 - t, ym + t // 2, x1, y1 - t)}
+        for s, (a, b, c, e) in segs.items():
+            box = (a * sx, b * sy, c * sx, e * sy)
+            lit = s in SEGMENTS.get(ch, "")
+            d.rounded_rectangle(box, radius=6 * sx, fill=(255, 48, 24) if lit else (44, 8, 6))
+            if lit:
+                g.rounded_rectangle(box, radius=6 * sx, fill=(255, 40, 16))
+    glow = glow.filter(ImageFilter.GaussianBlur(14 * sx))
+    return ImageChops.add(img, glow)

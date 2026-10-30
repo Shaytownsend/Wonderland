@@ -16,7 +16,7 @@ import time
 
 import bpy
 from mathutils import Matrix, Vector
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sprites  # noqa: E402
@@ -193,42 +193,11 @@ def save_strip(frames, name, out_dir):
     print(f"wrote {name} {strip.size[0]}x{strip.size[1]} ({len(frames)} frames)", flush=True)
 
 
-# ------------------------------------------------------------------ seven-segment display texture
-SEGS = {"0": "abcdef", "1": "bc", "2": "abged", "3": "abgcd", "4": "fgbc", "5": "afgcd", "6": "afgedc",
-        "7": "abc", "8": "abcdefg", "9": "abcdfg", " ": ""}
-
-
-def seven_seg_texture(text, path, size=(504, 360)):
-    w, h = size
-    img = Image.new("RGB", size, (0, 0, 0))
-    glow = Image.new("RGB", size, (0, 0, 0))
-    d, g = ImageDraw.Draw(img), ImageDraw.Draw(glow)
-    t = 18
-    for cell, ch in enumerate(text):
-        x0 = 70 + cell * 200
-        x1, y0, y1 = x0 + 160, 60, 300
-        ym = (y0 + y1) // 2
-        segs = {"a": (x0 + t, y0, x1 - t, y0 + t), "d": (x0 + t, y1 - t, x1 - t, y1), "g": (x0 + t, ym - t // 2, x1 - t, ym + t // 2),
-                "f": (x0, y0 + t, x0 + t, ym - t // 2), "b": (x1 - t, y0 + t, x1, ym - t // 2),
-                "e": (x0, ym + t // 2, x0 + t, y1 - t), "c": (x1 - t, ym + t // 2, x1, y1 - t)}
-        for s, box in segs.items():
-            lit = s in SEGS.get(ch, "")
-            d.rounded_rectangle(box, radius=6, fill=(255, 48, 24) if lit else (44, 8, 6))
-            if lit:
-                g.rounded_rectangle(box, radius=6, fill=(255, 40, 16))
-    glow = glow.filter(ImageFilter.GaussianBlur(14))
-    out = Image.blend(img, glow, 0.0)
-    out = Image.eval(Image.merge("RGB", [Image.eval(a, lambda v: v) for a in out.split()]), lambda v: v)
-    from PIL import ImageChops
-    out = ImageChops.add(img, glow)
-    out.save(path)
-    return path
-
-
 def set_display(text):
     m = bpy.data.materials["disp"]
     node = [n for n in m.node_tree.nodes if n.type == "TEX_IMAGE"][0]
-    path = seven_seg_texture(text, os.path.join(TMP, f"disp_{text.strip() or 'blank'}.png"))
+    path = os.path.join(TMP, f"disp_{text.strip() or 'blank'}.png")
+    sprites.seven_seg(text).save(path)
     img = bpy.data.images.load(path, check_existing=False)
     node.image = img
 
@@ -237,7 +206,7 @@ def set_display(text):
 def do_background(cam, reg, out_dir):
     hidden = all_control_parts(reg)
     set_visibility(set(), hidden, catcher_mode=False)
-    set_display("88" if False else "  ")
+    set_display("  ")
     frame_region(cam, 0, 0, sprites.PANEL["w"], sprites.PANEL["h"])
     img = render_to(os.path.join(TMP, "panel.png")).convert("RGB")
     img.save(os.path.join(out_dir, sprites.PANEL["file"]), optimize=True)

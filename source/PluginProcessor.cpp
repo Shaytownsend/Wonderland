@@ -23,6 +23,14 @@ void PluginProcessor::setOversampling (int factor)
     }
 }
 
+void PluginProcessor::setWheel (bool pitchBend, float value)
+{
+    if (pitchBend)
+        pendingBend.store (juce::jlimit (0, 16383, juce::roundToInt ((value + 1.0f) * 8192.0f)));
+    else
+        pendingMod.store (juce::jlimit (0, 127, juce::roundToInt (value * 127.0f)));
+}
+
 void PluginProcessor::setMasterTune (double a4Hz)
 {
     masterTune.store (juce::jlimit (430.0, 450.0, a4Hz));
@@ -45,6 +53,12 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
     juce::ScopedNoDenormals noDenormals;
+    keyboardState.processNextMidiBuffer (midi, 0, buffer.getNumSamples(), true);
+    if (const int b = pendingBend.exchange (-1); b >= 0)
+        midi.addEvent (juce::MidiMessage::pitchWheel (1, b), 0);
+    if (const int m = pendingMod.exchange (-1); m >= 0)
+        midi.addEvent (juce::MidiMessage::controllerEvent (1, 1, m), 0);
+
     double bpm = 0.0;
     if (auto* ph = getPlayHead())
         if (auto pos = ph->getPosition())

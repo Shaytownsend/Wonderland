@@ -37,8 +37,8 @@ public:
     void render (juce::AudioBuffer<float>& buffer, const juce::MidiBuffer& midi, double hostBpm = 0.0);
 
     void setMasterTune (double a4Hz) { a4.store (a4Hz); }
-    float getBend() const { return globals.bend; }
-    float getModWheel() const { return globals.modWheel; }
+    float getBend() const { return bendOut.load(); }         // for the GUI wheels
+    float getModWheel() const { return modOut.load(); }
     int getActiveVoiceCount() const;
 
 private:
@@ -60,6 +60,7 @@ private:
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampler;
     juce::MidiBuffer emptyMidi;
     std::atomic<double> a4 { 440.0 };
+    std::atomic<float> bendOut { 0.0f }, modOut { 0.0f };
 
     double baseRate = 44100.0, internalRate = 44100.0;
     int osFactor = 1;
