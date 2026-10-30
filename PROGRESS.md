@@ -7,7 +7,7 @@
 - [x] M5 Memory + factory patches — DONE: PatchRoundTrip, 8 factory patches, .queen save/verify/load
 - [x] M6 GUI on placeholders — DONE: editor opens, every control moves its param, resizes
 - [x] M7 Real assets — DONE: export ran, placeholder test passes, docs/ui.png checked
-- [ ] M8 Validation — DONE: auval PASS, pluginval strictness 8, CPU < 5%
+- [~] M8 Validation — Linux part done (pluginval VST3 SUCCESS, CPU 2.5%); mac: run tools/validate_mac.sh (auval + AU)
 - [ ] M9 Packaging — DONE: install.sh, README, all checked
 
 ## Build / test

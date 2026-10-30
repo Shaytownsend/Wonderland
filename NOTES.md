@@ -69,3 +69,9 @@
   `QUEEN_SNAPSHOT=docs/ui.png build/Tests "[.snapshot]"`; docs/reference.png = full-scene render through the
   same camera (tools/render_reference.py). Checked side by side: positions match; LED "on" looks pale pink
   in both (AgX on the scene's emitter) — faithful to the scene, not a bug.
+- M8 (Linux, session 1): pluginval v1.0.4 Linux `--strictness-level 8 --validate "The Queen.vst3"` under
+  xvfb-run: all 25 test groups incl. Editor / Open editor whilst processing / Editor Automation / Fuzz
+  parameters completed, exit 0, last line "SUCCESS" (1.0.4 no longer prints "ALL TESTS PASSED").
+  CPU (no sound card here): tests/CpuTest "[.cpu]" times the real processBlock, 6 held notes, 48k/128,
+  10 s, Xeon 2.1 GHz: default 2.4-2.7 % of one core; 2x oversampling 4.6-5.4 % (reported only).
+  auval/codesign/AU-pluginval/top -pid are mac-only: tools/validate_mac.sh does all of it in one go.
