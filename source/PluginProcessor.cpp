@@ -5,6 +5,7 @@ PluginProcessor::PluginProcessor()
     : AudioProcessor (BusesProperties().withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
       apvts (*this, nullptr, "QUEEN", queen::createParameterLayout())
 {
+    engine.bind (apvts);
 }
 
 bool PluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -21,8 +22,12 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
 {
     juce::ScopedNoDenormals noDenormals;
-    buffer.clear();
-    engine.render (buffer, midi);
+    double bpm = 0.0;
+    if (auto* ph = getPlayHead())
+        if (auto pos = ph->getPosition())
+            if (auto b = pos->getBpm())
+                bpm = *b;
+    engine.render (buffer, midi, bpm);
 }
 
 juce::AudioProcessorEditor* PluginProcessor::createEditor()

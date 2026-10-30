@@ -35,3 +35,9 @@
   carry `param` + `value`. Switch `positions` = choice indices top->bottom. arp_sync is the only param with
   onPanel=false (lives in HostBar settings). Unspecified defaults: op velocity .5, pwm_mode man, arp_mode up.
   Log-ish skews are chosen so the slider midpoint = geometric mean of the range.
+- M3: FM depth: modulator level 1 = 1 cycle phase offset; feedback 1 = 0.35 cycle. Carrier sum /numCarriers *0.5.
+  op3 as carrier = SUB (ratio x0.5, gated by wave_sub, x sub_level); op1/op2 carriers gated by pulse/saw.
+  PWM factor on op2/op4 level: man = 2*pwm (0.5 neutral), env = 1+pwm*(2env-1), lfo = 1+pwm*lfo.
+  Engine renders in <=16-sample control chunks split at MIDI/arp events (sample-accurate); voices read a
+  VoiceGlobals snapshot (SmoothedValue 10 ms per float param). 2x oversampling via juce::dsp::Oversampling
+  (render into the upsampled block). Linux: "audibly a synth" verified by pitch test (zero-crossing C4/oct/tune).
