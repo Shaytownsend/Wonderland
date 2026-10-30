@@ -46,3 +46,8 @@
   period at prepare (anti-phase). Arp: updown doesn't repeat end notes; KEY TR = while HOLD-latched and all keys
   released, a new key transposes the pattern relative to its lowest note. HOLD with arp off = sustain pedal.
   LFO delay fade restarts when the first key goes down (auto) or on LFO TRIG press (man).
+- M5: patch = APVTS params as <QUEEN><PARAM id value/></QUEEN> text, floats at 5 decimals so write->recall
+  is string-equal. Factory bank 1 (hand-written overrides in PatchMemory.cpp), banks 2-5 = Init.
+  .queen file = whole memory (40 slots) — SAVE/VERIFY/LOAD act like the Juno tape interface.
+  Plugin state = APVTS tree + MEMORY child + oversampling/masterTune props. Host programs: 1 (avoids
+  audio-thread program changes); patch selection lives in PatchMemory/HostBar.

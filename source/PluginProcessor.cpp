@@ -6,6 +6,27 @@ PluginProcessor::PluginProcessor()
       apvts (*this, nullptr, "QUEEN", queen::createParameterLayout())
 {
     engine.bind (apvts);
+    memory.recall (0, 0);
+}
+
+void PluginProcessor::setOversampling (int factor)
+{
+    factor = factor >= 2 ? 2 : 1;
+    if (factor == oversampling.load())
+        return;
+    oversampling.store (factor);
+    if (getSampleRate() > 0)
+    {
+        suspendProcessing (true);
+        prepareToPlay (getSampleRate(), getBlockSize());
+        suspendProcessing (false);
+    }
+}
+
+void PluginProcessor::setMasterTune (double a4Hz)
+{
+    masterTune.store (juce::jlimit (430.0, 450.0, a4Hz));
+    engine.setMasterTune (masterTune.load());
 }
 
 bool PluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -16,7 +37,9 @@ bool PluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    engine.prepare (sampleRate, samplesPerBlock);
+    engine.prepare (sampleRate, samplesPerBlock, oversampling.load());
+    engine.setMasterTune (masterTune.load());
+    setLatencySamples (engine.getLatencySamples());
 }
 
 void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midi)
@@ -37,15 +60,30 @@ juce::AudioProcessorEditor* PluginProcessor::createEditor()
 
 void PluginProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    if (auto xml = apvts.copyState().createXml())
+    auto state = apvts.copyState();
+    state.removeChild (state.getChildWithName ("MEMORY"), nullptr);
+    state.setProperty ("oversampling", oversampling.load(), nullptr);
+    state.setProperty ("masterTune", masterTune.load(), nullptr);
+    state.appendChild (memory.toValueTree(), nullptr);
+    if (auto xml = state.createXml())
         copyXmlToBinary (*xml, destData);
 }
 
 void PluginProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    if (auto xml = getXmlFromBinary (data, sizeInBytes))
-        if (xml->hasTagName (apvts.state.getType()))
-            apvts.replaceState (juce::ValueTree::fromXml (*xml));
+    auto xml = getXmlFromBinary (data, sizeInBytes);
+    if (xml == nullptr || ! xml->hasTagName (apvts.state.getType()))
+        return;
+    auto state = juce::ValueTree::fromXml (*xml);
+    auto mem = state.getChildWithName ("MEMORY");
+    if (mem.isValid())
+    {
+        memory.fromValueTree (mem);
+        state.removeChild (mem, nullptr);
+    }
+    setMasterTune ((double) state.getProperty ("masterTune", 440.0));
+    setOversampling ((int) state.getProperty ("oversampling", 1));
+    apvts.replaceState (state);
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()

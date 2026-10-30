@@ -3,6 +3,7 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "Parameters.h"
 #include "dsp/SynthEngine.h"
+#include "state/PatchMemory.h"
 
 class PluginProcessor : public juce::AudioProcessor
 {
@@ -36,7 +37,16 @@ public:
 
     juce::AudioProcessorValueTreeState apvts;
     SynthEngine engine;
+    queen::PatchMemory memory { apvts };
+
+    // host-bar settings (stored with the plugin state, not with patches)
+    void setOversampling (int factor); // 1 or 2
+    int getOversampling() const { return oversampling.load(); }
+    void setMasterTune (double a4Hz);
+    double getMasterTune() const { return masterTune.load(); }
 
 private:
+    std::atomic<int> oversampling { 1 };
+    std::atomic<double> masterTune { 440.0 };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
 };

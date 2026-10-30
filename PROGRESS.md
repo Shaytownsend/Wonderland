@@ -4,7 +4,7 @@
 - [x] M2 Parameters — DONE: ParametersTest (registry coverage, no dup ids, defaults in range)
 - [x] M3 FM voice — DONE: VoiceTest per algorithm: non-silent, no NaN, peak < 0 dBFS
 - [x] M4 Juno layer — DONE: filter/env/lfo/chorus/arp tests; arp order up/updown/down x range 1-3
-- [ ] M5 Memory + factory patches — DONE: PatchRoundTrip, 8 factory patches, .queen save/verify/load
+- [x] M5 Memory + factory patches — DONE: PatchRoundTrip, 8 factory patches, .queen save/verify/load
 - [ ] M6 GUI on placeholders — DONE: editor opens, every control moves its param, resizes
 - [ ] M7 Real assets — DONE: export ran, placeholder test passes, docs/ui.png checked
 - [ ] M8 Validation — DONE: auval PASS, pluginval strictness 8, CPU < 5%
