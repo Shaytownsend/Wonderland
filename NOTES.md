@@ -41,3 +41,8 @@
   Engine renders in <=16-sample control chunks split at MIDI/arp events (sample-accurate); voices read a
   VoiceGlobals snapshot (SmoothedValue 10 ms per float param). 2x oversampling via juce::dsp::Oversampling
   (render into the upsampled block). Linux: "audibly a synth" verified by pitch test (zero-crossing C4/oct/tune).
+- M4: VCF cutoff octaves = env*8*pol + lfo*4 + kybd*(note-60)/12 + bend*bend_sens_vcf*2; res -> ladder 0..0.97.
+  Chorus: juce::dsp::Chorus is not stereo, so each mode = mono L + mono R Chorus, R pre-rolled half an LFO
+  period at prepare (anti-phase). Arp: updown doesn't repeat end notes; KEY TR = while HOLD-latched and all keys
+  released, a new key transposes the pattern relative to its lowest note. HOLD with arp off = sustain pedal.
+  LFO delay fade restarts when the first key goes down (auto) or on LFO TRIG press (man).

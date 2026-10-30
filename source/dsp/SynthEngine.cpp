@@ -79,7 +79,6 @@ void SynthEngine::reset()
 {
     synth.allNotesOff (0, false);
     arp.reset();
-    chorus.reset();
     keyDown.fill (false);
     keysHeld = 0;
     if (oversampler)
@@ -260,10 +259,6 @@ void SynthEngine::render (juce::AudioBuffer<float>& buffer, const juce::MidiBuff
 
     const bool c1 = values[(size_t) QP ("chorus_1")]->load() > 0.5f;
     const bool c2 = values[(size_t) QP ("chorus_2")]->load() > 0.5f;
-    if ((c1 && ! chorus1WasOn) || (c2 && ! chorus2WasOn))
-        chorus.reset();
-    chorus1WasOn = c1;
-    chorus2WasOn = c2;
     chorus.process (buffer, 0, numSamples, c1, c2);
 }
 } // namespace queen

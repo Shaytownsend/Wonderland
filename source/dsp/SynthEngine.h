@@ -65,7 +65,7 @@ private:
     int osFactor = 1;
     std::array<bool, 128> keyDown {};
     int keysHeld = 0;
-    bool arpWasOn = false, holdWasOn = false, chorus1WasOn = false, chorus2WasOn = false;
+    bool arpWasOn = false, holdWasOn = false;
 };
 } // namespace queen
 
