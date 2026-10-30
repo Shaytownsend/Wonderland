@@ -66,15 +66,16 @@ def spec():
                           param=f"op{n+1}_{OP_KNOBS[k]}", label=OP_LABELS[k], group=f"FM OPERATOR {n+1}"))
     s.append(dict(id="tune", t="knob", x=1620, y=476, param="tune", label="TUNE", group="CHORUS"))
 
-    sliders = [(162, "volume", "VOL", "CONTROLLERS"), (202, "bend_sens_dco", "DCO", "CONTROLLERS"),
-               (240, "bend_sens_vcf", "VCF", "CONTROLLERS"), (360.8, "arp_rate", "RATE", "ARPEGGIO"),
-               (543.5, "lfo_rate", "RATE", "LFO"), (577.5, "lfo_delay", "DELAY", "LFO"),
-               (678.3, "dco_lfo", "LFO", "DCO"), (714.3, "dco_pwm", "PWM", "DCO"),
+    # x after fix_scale_clearance.py moved the section slider groups 6 units off the borders
+    sliders = [(168, "volume", "VOL", "CONTROLLERS"), (208, "bend_sens_dco", "DCO", "CONTROLLERS"),
+               (246, "bend_sens_vcf", "VCF", "CONTROLLERS"), (366.8, "arp_rate", "RATE", "ARPEGGIO"),
+               (549.5, "lfo_rate", "RATE", "LFO"), (583.5, "lfo_delay", "DELAY", "LFO"),
+               (684.3, "dco_lfo", "LFO", "DCO"), (720.3, "dco_pwm", "PWM", "DCO"),
                (804.3, "sub_level", "SUB", "DCO"), (840.2, "noise_level", "NOISE", "DCO"),
-               (959, "hpf", "HPF", "HPF"), (1019.7, "vcf_freq", "FREQ", "VCF"), (1061.7, "vcf_res", "RES", "VCF"),
-               (1103.7, "vcf_env", "ENV", "VCF"), (1145.7, "vcf_lfo", "LFO", "VCF"), (1187.8, "vcf_kybd", "KYBD", "VCF"),
-               (1290.5, "vca_level", "LEVEL", "VCA"), (1397.2, "attack", "A", "ENV"), (1437.2, "decay", "D", "ENV"),
-               (1477.3, "sustain", "S", "ENV"), (1517.3, "release", "R", "ENV")]
+               (959, "hpf", "HPF", "HPF"), (1025.7, "vcf_freq", "FREQ", "VCF"), (1067.7, "vcf_res", "RES", "VCF"),
+               (1109.7, "vcf_env", "ENV", "VCF"), (1151.7, "vcf_lfo", "LFO", "VCF"), (1193.8, "vcf_kybd", "KYBD", "VCF"),
+               (1296.5, "vca_level", "LEVEL", "VCA"), (1403.2, "attack", "A", "ENV"), (1443.2, "decay", "D", "ENV"),
+               (1483.3, "sustain", "S", "ENV"), (1523.3, "release", "R", "ENV")]
     for x, p, lab, g in sliders:
         s.append(dict(id=p, t="slider", x=x, y=382, param=p, label=lab, group=g))
 

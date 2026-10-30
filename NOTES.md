@@ -79,3 +79,7 @@
   Pamplejuce installer leftovers (packaging/* except icon.png). macOS deployment target forced to 13.0
   after PamplejuceMacOS (which forces 10.14). Final clean Linux build: 0 warnings in source/, 28/28 tests,
   pluginval VST3 strictness 8 SUCCESS again.
+- Fix (user request): scale numbers touched section borders. queen_blender/scripts/fix_scale_clearance.py
+  shifts the slider group in 7 sections +6 units (ink + slot/cap objects), re-stamps the leftmost "10"/"0",
+  and redraws HPF's 3/2/1/0 in Oswald (generic 10/0 had overprinted them). Edits the .blend; idempotent.
+  Then: extract_registry.py, make_layout.py, export_assets.py --only background,slidercap.

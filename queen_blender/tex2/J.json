@@ -292,7 +292,7 @@
   {
    "id": "volume",
    "t": "slider",
-   "x": 162.0,
+   "x": 168.0,
    "y": 382.0,
    "param": "volume",
    "label": "VOL",
@@ -306,7 +306,7 @@
   {
    "id": "bend_sens_dco",
    "t": "slider",
-   "x": 202.0,
+   "x": 208.0,
    "y": 382.0,
    "param": "bend_sens_dco",
    "label": "DCO",
@@ -320,7 +320,7 @@
   {
    "id": "bend_sens_vcf",
    "t": "slider",
-   "x": 240.0,
+   "x": 246.0,
    "y": 382.0,
    "param": "bend_sens_vcf",
    "label": "VCF",
@@ -334,7 +334,7 @@
   {
    "id": "arp_rate",
    "t": "slider",
-   "x": 360.75,
+   "x": 366.75,
    "y": 382.0,
    "param": "arp_rate",
    "label": "RATE",
@@ -348,7 +348,7 @@
   {
    "id": "lfo_rate",
    "t": "slider",
-   "x": 543.5,
+   "x": 549.5,
    "y": 382.0,
    "param": "lfo_rate",
    "label": "RATE",
@@ -362,7 +362,7 @@
   {
    "id": "lfo_delay",
    "t": "slider",
-   "x": 577.5,
+   "x": 583.5,
    "y": 382.0,
    "param": "lfo_delay",
    "label": "DELAY",
@@ -376,7 +376,7 @@
   {
    "id": "dco_lfo",
    "t": "slider",
-   "x": 678.25,
+   "x": 684.25,
    "y": 382.0,
    "param": "dco_lfo",
    "label": "LFO",
@@ -390,7 +390,7 @@
   {
    "id": "dco_pwm",
    "t": "slider",
-   "x": 714.25,
+   "x": 720.25,
    "y": 382.0,
    "param": "dco_pwm",
    "label": "PWM",
@@ -446,7 +446,7 @@
   {
    "id": "vcf_freq",
    "t": "slider",
-   "x": 1019.75,
+   "x": 1025.75,
    "y": 382.0,
    "param": "vcf_freq",
    "label": "FREQ",
@@ -460,7 +460,7 @@
   {
    "id": "vcf_res",
    "t": "slider",
-   "x": 1061.75,
+   "x": 1067.75,
    "y": 382.0,
    "param": "vcf_res",
    "label": "RES",
@@ -474,7 +474,7 @@
   {
    "id": "vcf_env",
    "t": "slider",
-   "x": 1103.75,
+   "x": 1109.75,
    "y": 382.0,
    "param": "vcf_env",
    "label": "ENV",
@@ -488,7 +488,7 @@
   {
    "id": "vcf_lfo",
    "t": "slider",
-   "x": 1145.75,
+   "x": 1151.75,
    "y": 382.0,
    "param": "vcf_lfo",
    "label": "LFO",
@@ -502,7 +502,7 @@
   {
    "id": "vcf_kybd",
    "t": "slider",
-   "x": 1187.75,
+   "x": 1193.75,
    "y": 382.0,
    "param": "vcf_kybd",
    "label": "KYBD",
@@ -516,7 +516,7 @@
   {
    "id": "vca_level",
    "t": "slider",
-   "x": 1290.5,
+   "x": 1296.5,
    "y": 382.0,
    "param": "vca_level",
    "label": "LEVEL",
@@ -530,7 +530,7 @@
   {
    "id": "attack",
    "t": "slider",
-   "x": 1397.25,
+   "x": 1403.25,
    "y": 382.0,
    "param": "attack",
    "label": "A",
@@ -544,7 +544,7 @@
   {
    "id": "decay",
    "t": "slider",
-   "x": 1437.25,
+   "x": 1443.25,
    "y": 382.0,
    "param": "decay",
    "label": "D",
@@ -558,7 +558,7 @@
   {
    "id": "sustain",
    "t": "slider",
-   "x": 1477.25,
+   "x": 1483.25,
    "y": 382.0,
    "param": "sustain",
    "label": "S",
@@ -572,7 +572,7 @@
   {
    "id": "release",
    "t": "slider",
-   "x": 1517.25,
+   "x": 1523.25,
    "y": 382.0,
    "param": "release",
    "label": "R",
