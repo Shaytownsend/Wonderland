@@ -30,3 +30,8 @@
 - Dropped from template: IPP (not needed), benchmarks, melatonin_inspector (build time).
 - M1 Linux check: VST3/CLAP/Standalone built; Standalone ran 8 s under xvfb-run without crashing (no sound
   card in container); "plays a sine from MIDI" proven by tests/SkeletonTest (processBlock with note-on).
+- M2: registry = queen_blender/tex2/J.json from extract_registry.py (121 controls + keys). Memory buttons
+  (bank/patch/manual/write/save/verify/load) carry `action`, not `param`. Radio buttons (algo_1..8, range_16/8/4)
+  carry `param` + `value`. Switch `positions` = choice indices top->bottom. arp_sync is the only param with
+  onPanel=false (lives in HostBar settings). Unspecified defaults: op velocity .5, pwm_mode man, arp_mode up.
+  Log-ish skews are chosen so the slider midpoint = geometric mean of the range.

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include "Parameters.h"
 #include "dsp/SynthEngine.h"
 
 class PluginProcessor : public juce::AudioProcessor
@@ -33,6 +34,7 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    juce::AudioProcessorValueTreeState apvts;
     SynthEngine engine;
 
 private:
