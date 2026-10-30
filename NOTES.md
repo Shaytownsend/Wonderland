@@ -75,3 +75,7 @@
   CPU (no sound card here): tests/CpuTest "[.cpu]" times the real processBlock, 6 held notes, 48k/128,
   10 s, Xeon 2.1 GHz: default 2.4-2.7 % of one core; 2x oversampling 4.6-5.4 % (reported only).
   auval/codesign/AU-pluginval/top -pid are mac-only: tools/validate_mac.sh does all of it in one go.
+- M9: build/install.sh is configure_file'd from tools/install.sh.in (build/ is not in git). Removed the
+  Pamplejuce installer leftovers (packaging/* except icon.png). macOS deployment target forced to 13.0
+  after PamplejuceMacOS (which forces 10.14). Final clean Linux build: 0 warnings in source/, 28/28 tests,
+  pluginval VST3 strictness 8 SUCCESS again.

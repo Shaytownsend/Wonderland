@@ -21,19 +21,19 @@ public:
     void applyInit(); // default parameters into the edit buffer (manual)
 
     // panel buttons
-    void pressBank (int bank);
-    void pressPatch (int patch);
+    void pressBank (int b);
+    void pressPatch (int p);
     void pressManual();
     void pressWrite();
 
     // direct access
-    void recall (int bank, int patch);
-    void store (int bank, int patch);
+    void recall (int b, int p);
+    void store (int b, int p);
     juce::String captureXml() const;     // current edit buffer (parameters only)
     void applyXml (const juce::String&); // set every parameter, notifying the host
-    juce::String getPatchXml (int bank, int patch) const { return slots[(size_t) bank][(size_t) patch].xml; }
-    juce::String getPatchName (int bank, int patch) const { return slots[(size_t) bank][(size_t) patch].name; }
-    void setPatchName (int bank, int patch, const juce::String& n);
+    juce::String getPatchXml (int b, int p) const { return slots[(size_t) b][(size_t) p].xml; }
+    juce::String getPatchName (int b, int p) const { return slots[(size_t) b][(size_t) p].name; }
+    void setPatchName (int b, int p, const juce::String& n);
     juce::String getCurrentName() const;
 
     int getBank() const { return bank; }

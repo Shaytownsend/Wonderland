@@ -2,8 +2,8 @@
 
 namespace queen
 {
-QueenKeyboard::QueenKeyboard (juce::MidiKeyboardState& state, const ControlSpec& keys, const QueenLookAndFeel& lnf)
-    : juce::MidiKeyboardComponent (state, horizontalKeyboard), spec (keys), lookAndFeel (lnf)
+QueenKeyboard::QueenKeyboard (juce::MidiKeyboardState& keyState, const ControlSpec& keys, const QueenLookAndFeel& lnf)
+    : juce::MidiKeyboardComponent (keyState, horizontalKeyboard), spec (keys), lookAndFeel (lnf)
 {
     whiteW = spec.spriteFloat ("whiteW", 43.33f);
     whiteH = spec.spriteFloat ("whiteH", 242.0f);
@@ -25,16 +25,16 @@ QueenKeyboard::QueenKeyboard (juce::MidiKeyboardState& state, const ControlSpec&
     setOpaque (false);
 }
 
-juce::Range<float> QueenKeyboard::getKeyPosition (int note, float keyWidth) const
+juce::Range<float> QueenKeyboard::getKeyPosition (int note, float kw) const
 {
     static constexpr int whiteIndex[12] { 0, 1, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6 };
     static constexpr bool isBlack[12] { false, true, false, true, false, false, true, false, true, false, true, false };
     const int octave = note / 12, n = note % 12;
-    const float octaveStart = (float) octave * 7.0f * keyWidth;
+    const float octaveStart = (float) octave * 7.0f * kw;
     if (! isBlack[n])
-        return { octaveStart + (float) whiteIndex[n] * keyWidth, octaveStart + (float) (whiteIndex[n] + 1) * keyWidth };
-    const float centre = octaveStart + (float) whiteIndex[n] * keyWidth; // on the boundary
-    const float half = keyWidth * blackRatio * 0.5f;
+        return { octaveStart + (float) whiteIndex[n] * kw, octaveStart + (float) (whiteIndex[n] + 1) * kw };
+    const float centre = octaveStart + (float) whiteIndex[n] * kw; // on the boundary
+    const float half = kw * blackRatio * 0.5f;
     return { centre - half, centre + half };
 }
 

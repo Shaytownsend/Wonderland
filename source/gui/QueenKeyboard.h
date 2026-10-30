@@ -10,9 +10,9 @@ namespace queen
 class QueenKeyboard : public juce::MidiKeyboardComponent
 {
 public:
-    QueenKeyboard (juce::MidiKeyboardState& state, const ControlSpec& keys, const QueenLookAndFeel& lnf);
+    QueenKeyboard (juce::MidiKeyboardState& keyState, const ControlSpec& keys, const QueenLookAndFeel& lnf);
 
-    juce::Range<float> getKeyPosition (int midiNoteNumber, float keyWidth) const override;
+    juce::Range<float> getKeyPosition (int midiNoteNumber, float kw) const override;
     void drawWhiteNote (int note, juce::Graphics&, juce::Rectangle<float> area, bool isDown, bool isOver,
                         juce::Colour, juce::Colour) override;
     void drawBlackNote (int note, juce::Graphics&, juce::Rectangle<float> area, bool isDown, bool isOver,

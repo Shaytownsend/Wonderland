@@ -4,6 +4,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include (PamplejuceVersion)
 include (CPM)
 include (PamplejuceMacOS)
+if (APPLE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "13.0" CACHE STRING "Minimum macOS version" FORCE)
+endif ()
 include (JUCEDefaults)
 
 set(PROJECT_NAME "TheQueen")
@@ -90,3 +93,7 @@ target_link_libraries(SharedCode
 target_link_libraries("${PROJECT_NAME}" PRIVATE SharedCode)
 
 pamplejuce_add_tests()
+
+# build/install.sh: copies AU / VST3 / CLAP into the user plug-in folders
+configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/tools/install.sh.in" "${CMAKE_BINARY_DIR}/install.sh"
+    FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE @ONLY)

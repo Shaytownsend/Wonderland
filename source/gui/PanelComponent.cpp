@@ -428,11 +428,11 @@ void PanelComponent::runFileAction (const juce::String& action)
     chooser = std::make_unique<juce::FileChooser> (saving ? "Save memory" : (action == "load" ? "Load memory" : "Verify memory"),
                                                    dir.getChildFile ("Memory").withFileExtension (PatchMemory::fileExtension),
                                                    juce::String ("*") + PatchMemory::fileExtension);
-    const int flags = (saving ? juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::warnAboutOverwriting
+    const int chooserFlags = (saving ? juce::FileBrowserComponent::saveMode | juce::FileBrowserComponent::warnAboutOverwriting
                               : juce::FileBrowserComponent::openMode)
                       | juce::FileBrowserComponent::canSelectFiles;
     juce::Component::SafePointer<PanelComponent> safe (this);
-    chooser->launchAsync (flags, [safe, action] (const juce::FileChooser& fc) {
+    chooser->launchAsync (chooserFlags, [safe, action] (const juce::FileChooser& fc) {
         if (safe == nullptr || fc.getResult() == juce::File())
             return;
         auto file = fc.getResult();

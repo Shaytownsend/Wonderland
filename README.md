@@ -1,57 +1,115 @@
-![PAMPLEJUCE](assets/images/pamplejuce.png)
-[![](https://github.com/sudara/pamplejuce/actions/workflows/build_and_test.yml/badge.svg)](https://github.com/sudara/pamplejuce/actions)
+# The Queen
 
-Pamplejuce is a ~~template~~ lifestyle for creating and building JUCE plugins in 2026.
+4-operator FM + Juno-60-style polysynth (6 voices) with a photoreal panel rendered from
+`queen_blender/THE_QUEEN.blend`. Formats: AU (macOS), VST3, CLAP, Standalone. JUCE 8.0.15 on the
+[Pamplejuce](https://github.com/sudara/pamplejuce) template.
 
-Out-of-the-box, it:
+![The Queen](docs/ui.png)
 
-1. Runs C++23
-2. Uses JUCE 9.x as a git submodule (tracking develop).
-3. Uses CPM for dependency management.
-3. Relies on CMake 3.25 and higher for cross-platform building.
-4. Has [Catch2](https://github.com/catchorg/Catch2) v3.8.1 for the test framework and runner.
-5. Includes a `Tests` target and a `Benchmarks` target with examples to get started quickly.
-6. Has [Melatonin Inspector](https://github.com/sudara/melatonin_inspector) installed as a JUCE module to help relieve headaches when building plugin UI.
+> The repository also contains `ace_rack_mount/`, an unrelated project.
 
-It also has integration with GitHub Actions, specifically:
+## Build
 
-1. Building and testing cross-platform (linux, macOS, Windows) binaries
-2. Running tests and benchmarks in CI
-3. Running [pluginval](http://github.com/tracktion/pluginval) 1.x against the binaries for plugin validation
-4. Config for [installing Intel IPP](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ipp.html)
-5. [Code signing and notarization on macOS](https://melatonin.dev/blog/how-to-code-sign-and-notarize-macos-audio-plugins-in-ci/)
-6. [Windows code signing via Azure Trusted Signing](https://melatonin.dev/blog/code-signing-on-windows-with-azure-trusted-signing/)
+Requirements: CMake ≥ 3.25, Ninja, Xcode 16 command line tools (macOS 13+), Python 3 for the asset tools.
 
-It also contains:
+```bash
+git submodule update --init --recursive
+```
 
-1. A `.gitignore` for all platforms.
-2. A `.clang-format` file for keeping code tidy.
-3. A `VERSION` file that will propagate through JUCE and your app.
-4. A ton of useful comments and options around the CMake config.
+```bash
+cmake -B build -G Xcode -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release
+```
 
-## How does this all work at a high level?
+```bash
+ctest --test-dir build -C Release
+```
 
-Check out the [official Pamplejuce documentation](https://melatonin.dev/manuals/pamplejuce/how-does-this-all-work/).
+```bash
+build/install.sh
+```
 
-[![Arc - 2024-10-01 51@2x](https://github.com/user-attachments/assets/01d19d2d-fbac-481f-8cec-e9325b2abe57)](https://melatonin.dev/manuals/pamplejuce/how-does-this-all-work/)
+`build/install.sh` copies the AU, VST3 and CLAP into `~/Library/Audio/Plug-Ins/{Components,VST3,CLAP}`
+(on Linux: `~/.vst3`, `~/.clap`) and ad-hoc signs the AU. On Linux use `-G Ninja` instead of `-G Xcode`
+(AU is skipped automatically).
 
-## Setting up for YOUR project
+Validation on a Mac (ad-hoc codesign, `auval -v aumu Quen Lshp`, pluginval strictness 8 on AU + VST3,
+Standalone CPU with `top`):
 
-This is a template repo!
+```bash
+tools/validate_mac.sh
+```
 
-That means you can click "[Use this template](https://github.com/sudara/pamplejuce/generate)" here or at the top of the page to get your own copy (not fork) of the repo. Then you can make it private or keep it public, up to you.
+Hidden tests: `build/Tests "[.cpu]"` (DSP load, 6 notes, 48 kHz/128) and
+`QUEEN_SNAPSHOT=docs/ui.png build/Tests "[.snapshot]"` (headless editor screenshot).
 
-Then check out the [documentation](https://melatonin.dev/manuals/pamplejuce/setting-your-project-up/) so you know what to tweak.
+## Layout of the code
 
-**Using an AI coding agent?** The included `CLAUDE.md` / `AGENTS.md` has a first-time setup wizard — just ask your agent to set up the project and it will walk you through naming, CI configuration, and code signing.
+| Path | What |
+| --- | --- |
+| `source/Parameters.h` | the one table every parameter comes from (ids, ranges, defaults, groups) |
+| `source/dsp/` | FM operators + 8 algorithms, Juno filter/env/LFO/chorus, arpeggiator, `SynthEngine` |
+| `source/state/PatchMemory.*` | 5 banks × 8 patches, MANUAL/WRITE, `.queen` save/verify/load, factory bank |
+| `source/gui/` | `layout.json` reader, filmstrip LookAndFeel, panel controls, host bar, sprite keyboard |
+| `queen_blender/` | the scene, its packed textures, and `tex2/J.json` (the control registry) |
+| `tools/` | registry → layout, Blender asset export, placeholders, install/validate scripts |
 
-> [!NOTE]
-> Tests will immediately run and fail (go red) until you [set up code signing](https://melatonin.dev/manuals/pamplejuce/getting-started/code-signing/).
+## Re-rendering the GUI assets
 
-## Having Issues?
+All sprite names/sizes are defined in `tools/sprites.py`; the editor reads positions from
+`assets/layout.json`, so new renders need no code changes.
 
-Thanks to everyone who has contributed to the repository. 
+```bash
+python3 -m venv .venv && .venv/bin/pip install bpy pillow
+```
 
-This repository covers a _lot_ of ground. JUCE itself has a lot of surface area. It's a group effort to maintain the garden and keep things nice!
+1. If the scene's controls moved, regenerate the registry (`queen_blender/tex2/J.json`):
 
-If something isn't just working out of the box — *it's probably not just you* — others are running into the problem, too, I promise. Check out [the official docs](https://melatonin.dev/manuals/pamplejuce), then please do [open an issue](https://github.com/sudara/pamplejuce/issues/new)!
+   ```bash
+   .venv/bin/python queen_blender/scripts/extract_registry.py
+   ```
+
+2. Regenerate `assets/layout.json`:
+
+   ```bash
+   python3 tools/make_layout.py
+   ```
+
+3. Render everything into `assets/` (Cycles, 24 samples + denoise; uses Metal/CUDA/OptiX if available,
+   otherwise CPU, about 12 minutes on 4 cores). `--only knob,button` re-renders some kinds; `--out dir`
+   renders elsewhere:
+
+   ```bash
+   .venv/bin/python tools/export_assets.py
+   ```
+
+4. Rebuild. `tests/AssetsTest` fails if placeholder art (from `tools/make_placeholders.py`) is embedded.
+
+`tools/render_reference.py out.png` renders the untouched scene through the same camera for side-by-side checks.
+
+## Signing and notarizing (later)
+
+Needs a paid Apple Developer account with a "Developer ID Application" certificate (and "Developer ID
+Installer" for a .pkg).
+
+1. Sign each bundle with the hardened runtime and a timestamp:
+
+   ```bash
+   codesign --force --deep --options runtime --timestamp -s "Developer ID Application: Lance Shipp (TEAMID)" "build/TheQueen_artefacts/Release/AU/The Queen.component"
+   ```
+
+   Repeat for `VST3/The Queen.vst3`, `CLAP/The Queen.clap` and `Standalone/The Queen.app`.
+2. Zip (or build a signed .pkg with `pkgbuild`/`productbuild --sign "Developer ID Installer: …"`) and submit:
+
+   ```bash
+   xcrun notarytool submit TheQueen.zip --apple-id you@example.com --team-id TEAMID --password APP_SPECIFIC_PASSWORD --wait
+   ```
+
+3. Staple the ticket to each bundle (or to the .pkg):
+
+   ```bash
+   xcrun stapler staple "build/TheQueen_artefacts/Release/AU/The Queen.component"
+   ```
+
+4. Check: `spctl -a -vvv -t install <bundle>` should report `source=Notarized Developer ID`.
+
+Pamplejuce's `.github/workflows.disabled/build_and_test.yml` shows the same steps for CI if you ever re-enable it.
