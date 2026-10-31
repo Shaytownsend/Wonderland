@@ -88,3 +88,22 @@ One entry per milestone. Each links to that milestone's 13-option UI contact she
 **pluginval** — strictness 10: VST3 SUCCESS, LV2 SUCCESS.
 **CPU** — unchanged from M4.
 **Decisions** — DECISIONS.md #41–44.
+
+---
+
+## M6 — UI checkpoint  ·  [UI previews — all 13 options](ui_previews/m6_ui_checkpoint/index.html)
+
+**Built**
+- **8 flat options at full detail.** Section layouts are now balanced grids (no orphan knobs; neighbouring sections share one knob size). Per-theme hardware detail, all flat vector: Putty Classic (moulding seam, corner screws, vents), Studio Black Rack (rack handles, louvres, 2U plate), Cream Workstation (pinstripes, badge, spacious), **Pad Station** (new full-width 12-pad PAD BANK: enable, duck mode and the 7 curve shapes with big icons, colour-coded groups), Sunbleached '89 (sun-fade patches, pastel function-coded pads, masking-tape label), Night Session (minimal, status LEDs, 7-segment readouts), Service Manual (line art, printed REVERB → DUCK → GATE → TONE → SPACE → MIX arrows, drawing title block), **Floppy Era Pro** (re-balanced to 1560×920, numbered colour stage stripes, large clickable disk-drive IR slot).
+- **5 photoreal options at final detail** (`panel_forge` M6 pass): curve icons on the shape keys, broadcast knurled knobs + VU faces, sculpted chicken-heads with rotating shadows, hammered paint, readable toggles and illuminated rockers, procedural handwriting on tape notes, fixed readout glow, gentler glass overlay. 1.8–3.2 MB per skin.
+- WCAG AA contrast for every label/readout in all 13 themes; envelope duck/gate/combined/bloom colours distinguishable in all 13 (both enforced by tests). 7-segment decimal point fixed.
+- Steppers abbreviate long names like hardware LCDs only when needed; everything readable at 75 %, sharp at 200 %.
+- **Fix found by pluginval's randomised mode:** bool/choice parameters holding fractional host values were not re-synced by `setStateInformation` (APVTS only notifies changed tree values). Now every saved value is pushed explicitly; unit test added.
+- EQ coefficient recomputation now skipped when its parameters are settled.
+- Installer scripts: macOS `.pkg` (`packaging/macos/build_pkg.sh`) and Windows Inno Setup (`packaging/windows/FreddyVerb.iss`), built by CI.
+
+**Tests** — 50 test cases / 3 467 assertions green (new: theme count/order, WCAG AA contrast, visualizer colour separation, state re-sync).
+**pluginval** — VST3 and LV2 strictness 10: SUCCESS (standard order, repeated). Randomised order: see BLOCKERS #7 (JUCE VST3 cache artefact on a 2-option choice) and #8 (one unreproduced crash; investigate with `gdb -batch -ex run -ex bt --args pluginval --strictness-level 10 --repeat 8 --randomise <plugin>`).
+**CPU** (48 kHz / 128, 3 s true-stereo IR, EQ on, quiet machine): Zero Latency 2.04 % (audio thread), all-inline 3.41 %, Efficient 3.86 %.
+
+**⏸ Waiting for the UI choice** — pick one of the 13 options (or a combination) to polish to release quality in M7. The others stay selectable as alternate skins unless you say otherwise.

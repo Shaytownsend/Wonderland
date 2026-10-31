@@ -208,7 +208,19 @@ void FreddyVerbProcessor::setStateInformation (const void* data, int size)
 
     auto params = root.getChildWithName (apvts.state.getType());
     if (params.isValid())
+    {
         apvts.replaceState (params);
+        // replaceState only notifies parameters whose stored value *changed* in the tree.
+        // A bool/choice parameter holding e.g. 0.85 (= "on") stores 1, so restoring 1
+        // would not update it. Push every saved value explicitly.
+        for (auto* p : getParameters())
+            if (auto* rp = dynamic_cast<juce::RangedAudioParameter*> (p))
+            {
+                const auto child = params.getChildWithProperty ("id", rp->getParameterID());
+                if (child.isValid() && child.hasProperty ("value"))
+                    rp->setValueNotifyingHost (rp->convertTo0to1 ((float) (double) child.getProperty ("value")));
+            }
+    }
     auto ui = root.getChildWithName ("UI");
     if (ui.isValid())
         uiState.copyPropertiesAndChildrenFrom (ui, nullptr);

@@ -92,3 +92,17 @@ TEST_CASE ("Bus layouts: mono->stereo and stereo->stereo only", "[layout]")
     l.outputBuses.getReference (0) = juce::AudioChannelSet::mono();
     CHECK_FALSE (p.checkBusesLayoutSupported (l));
 }
+
+TEST_CASE ("State restore re-syncs bool/choice parameters holding fractional host values", "[state]")
+{
+    // pluginval's randomised state test: values are set to arbitrary normalised floats
+    FreddyVerbProcessor p;
+    auto* b = p.getAPVTS().getParameter (pid::gateOn);
+    b->setValueNotifyingHost (0.96f);
+    juce::MemoryBlock mb;
+    p.getStateInformation (mb);
+    b->setValueNotifyingHost (0.85f);          // same meaning ("on"), different raw value
+    p.setStateInformation (mb.getData(), (int) mb.getSize());
+    CHECK (std::abs (b->getValue() - 0.96f) < 0.1f);
+}
+
