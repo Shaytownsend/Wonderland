@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Reverse Non-Lin Suck" category="Non-Linear" author="Freddy Verb Factory">
+  <PARAM id="duck_on" value="0"/>
+  <PARAM id="eq_hpf_freq" value="200"/>
+  <PARAM id="gate_hold_ms" value="40"/>
+  <PARAM id="gate_release_ms" value="30"/>
+  <PARAM id="mix_pct" value="40"/>
+  <IR kind="factory" id="nonlin_reverse"/>
+</FreddyPreset>

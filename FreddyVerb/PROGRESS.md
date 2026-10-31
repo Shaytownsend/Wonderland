@@ -72,3 +72,19 @@ One entry per milestone. Each links to that milestone's 13-option UI contact she
 **pluginval** — VST3 strictness 10: SUCCESS.
 **CPU** (48 kHz / 128, 3 s true-stereo IR, EQ on with default HPF 24 + LPF 12, audio thread): Zero Latency 2.55 %, all-inline 3.85 %, Efficient 4.17 %. The oversampled EQ costs ≈ 1 %; it is the first optimisation target for M8.
 **Decisions** — DECISIONS.md #38–40.
+
+---
+
+## M5 — Content  ·  [UI previews](ui_previews/m5_content/index.html)
+
+**Built**
+- `tools/ir_forge` and the 37-IR factory library landed in M2 (see there).
+- `PresetManager`: factory + user presets, categories, Init, Save As / Delete / Reveal folder, prev/next stepping, dirty flag, Mix Lock, A/B compare with copy, undo/redo integration (one transaction per gesture / preset load).
+- **35 factory presets** (`tools/presets/make_presets.py`) across Snare, Kick, Toms, Perc, Vintage, Non-Linear, FX and Utility — including all eight examples from the brief (Snare Bloom Plate, Kick Room Pump, Tom Swell Hall, Tight Gated '80s Snare, Rim Chamber Flick, Clap Reverse Bloom, Perc Spring Pop, Hat Air Room). Each pairs a factory IR with its own duck/gate/tone settings.
+- IR browser: remembered user folders (add/remove), recent files, favourites, search, category column, drag-and-drop, prev/next.
+- Preset LCD shows A/B slot, name and modified marker; preset menu with category sub-menus.
+
+**Tests** — 46 test cases / 3 280 assertions green. New: ≥ 30 factory presets, every preset's parameter IDs and ranges valid and its IR present, the brief's eight named presets exist, load applies values and defaults the rest + loads the IR, dirty flag, Mix Lock, A/B round trip and copy, user save/rescan/load/delete, undo/redo.
+**pluginval** — strictness 10: VST3 SUCCESS, LV2 SUCCESS.
+**CPU** — unchanged from M4.
+**Decisions** — DECISIONS.md #41–44.

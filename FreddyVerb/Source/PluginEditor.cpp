@@ -13,6 +13,14 @@ FreddyVerbEditor::FreddyVerbEditor (FreddyVerbProcessor& p)
     panel->onSettings = [this] { showSettingsMenu(); };
     panel->onUndo = [this] { proc.getUndoManager().undo(); };
     panel->onRedo = [this] { proc.getUndoManager().redo(); };
+    panel->onPresetMenu = [this] { showPresetMenu(); };
+    panel->onPresetStep = [this] (int d) { proc.getPresetManager().step (d); };
+    panel->onABSelect = [this] (int s)
+    {
+        if (s == 2) proc.getPresetManager().copyAToB();
+        else proc.getPresetManager().selectAB (s);
+    };
+    hub.addListener (this);
 
     auto& ui = proc.getUIState();
     scale = (float) (double) ui.getProperty ("scale", 1.0);
@@ -24,6 +32,7 @@ FreddyVerbEditor::FreddyVerbEditor (FreddyVerbProcessor& p)
 FreddyVerbEditor::~FreddyVerbEditor()
 {
     stopTimer();
+    hub.removeListener (this);
     panel->setLookAndFeel (nullptr);
     setLookAndFeel (nullptr);
     tooltips.reset();
@@ -91,6 +100,60 @@ void FreddyVerbEditor::resized()
 void FreddyVerbEditor::timerCallback()
 {
     panel->tick();
+    if (++presetTick % 15 == 0)   // 4 Hz is plenty for the dirty flag
+    {
+        auto& pm = proc.getPresetManager();
+        panel->setPresetDisplay (pm.getCurrentName(), pm.isDirty(), pm.getABSlot());
+    }
+}
+
+void FreddyVerbEditor::controlTouched (const juce::String&)
+{
+    // every new gesture is its own undo step
+    proc.getUndoManager().beginNewTransaction();
+}
+
+void FreddyVerbEditor::showPresetMenu()
+{
+    auto& pm = proc.getPresetManager();
+    juce::PopupMenu m;
+    m.addItem (1, "Init (Medium Plate)");
+    std::map<juce::String, juce::PopupMenu> cats;
+    const auto& list = pm.getPresets();
+    for (int i = 0; i < (int) list.size(); ++i)
+        cats[list[(size_t) i].category].addItem (1000 + i, list[(size_t) i].name, true, i == pm.getCurrentIndex());
+    m.addSectionHeader ("FACTORY");
+    for (auto& [name, sub] : cats) if (name != "User") m.addSubMenu (name, sub);
+    if (cats.count ("User")) { m.addSectionHeader ("USER"); m.addSubMenu ("User", cats["User"]); }
+    m.addSeparator();
+    m.addItem (2, "Save As...");
+    const bool canDelete = pm.getCurrentIndex() >= 0 && ! list[(size_t) pm.getCurrentIndex()].factory;
+    m.addItem (3, "Delete Current User Preset", canDelete);
+    m.addItem (4, "Reveal User Preset Folder");
+    m.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (this).withMousePosition(),
+                     [safe = juce::Component::SafePointer<FreddyVerbEditor> (this)] (int r)
+    {
+        if (safe == nullptr || r == 0) return;
+        auto& p = safe->proc.getPresetManager();
+        if (r == 1) p.loadInit();
+        else if (r >= 1000) p.load (r - 1000);
+        else if (r == 3) p.deleteUser (p.getCurrentIndex());
+        else if (r == 4) { PresetManager::userFolder().createDirectory(); PresetManager::userFolder().revealToUser(); }
+        else if (r == 2)
+        {
+            safe->saveDialog = std::make_unique<juce::AlertWindow> ("Save preset", "Name for the new user preset:", juce::MessageBoxIconType::NoIcon);
+            safe->saveDialog->addTextEditor ("name", p.getCurrentName());
+            safe->saveDialog->addButton ("Save", 1, juce::KeyPress (juce::KeyPress::returnKey));
+            safe->saveDialog->addButton ("Cancel", 0, juce::KeyPress (juce::KeyPress::escapeKey));
+            safe->saveDialog->enterModalState (true, juce::ModalCallbackFunction::create ([safe] (int res)
+            {
+                if (safe == nullptr || safe->saveDialog == nullptr) return;
+                const auto name = safe->saveDialog->getTextEditorContents ("name").trim();
+                if (res == 1 && name.isNotEmpty()) safe->proc.getPresetManager().saveUser (name, "User");
+                safe->saveDialog.reset();
+            }), false);
+        }
+    });
 }
 
 void FreddyVerbEditor::showSettingsMenu()

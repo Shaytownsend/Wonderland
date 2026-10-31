@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Shaker Shimmer" category="Perc" author="Freddy Verb Factory">
+  <PARAM id="duck_depth_db" value="-15"/>
+  <PARAM id="duck_release_ms" value="140"/>
+  <PARAM id="eq_hpf_freq" value="900"/>
+  <PARAM id="gate_hold_ms" value="90"/>
+  <PARAM id="gate_release_ms" value="220"/>
+  <PARAM id="key_hpf" value="1500"/>
+  <PARAM id="mix_pct" value="18"/>
+  <PARAM id="width_pct" value="170"/>
+  <IR kind="factory" id="fx_metallic"/>
+</FreddyPreset>

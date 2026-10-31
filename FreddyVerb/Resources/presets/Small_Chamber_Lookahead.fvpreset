@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Small Chamber Lookahead" category="Utility" author="Freddy Verb Factory">
+  <PARAM id="duck_attack_ms" value="0.3"/>
+  <PARAM id="duck_depth_db" value="-30"/>
+  <PARAM id="duck_release_ms" value="220"/>
+  <PARAM id="gate_hold_ms" value="180"/>
+  <PARAM id="gate_release_ms" value="250"/>
+  <PARAM id="lookahead_ms" value="3"/>
+  <PARAM id="mix_pct" value="34"/>
+  <IR kind="factory" id="chamber_small"/>
+</FreddyPreset>

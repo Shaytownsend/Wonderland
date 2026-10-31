@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Big Hall Ducked" category="Utility" author="Freddy Verb Factory">
+  <PARAM id="duck_depth_db" value="-24"/>
+  <PARAM id="duck_release_ms" value="500"/>
+  <PARAM id="gate_hold_ms" value="600"/>
+  <PARAM id="gate_release_ms" value="1200"/>
+  <PARAM id="mix_pct" value="32"/>
+  <PARAM id="predelay_ms" value="25"/>
+  <IR kind="factory" id="hall_large"/>
+</FreddyPreset>

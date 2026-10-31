@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Tight Gated '80s Snare" category="Snare" author="Freddy Verb Factory">
+  <PARAM id="duck_on" value="0"/>
+  <PARAM id="eq_hpf_freq" value="220"/>
+  <PARAM id="eq_ls_freq" value="300"/>
+  <PARAM id="eq_ls_gain" value="-3"/>
+  <PARAM id="eq_ls_on" value="1"/>
+  <PARAM id="gate_hold_ms" value="60"/>
+  <PARAM id="gate_rel_curve" value="0"/>
+  <PARAM id="gate_release_ms" value="40"/>
+  <PARAM id="gate_threshold_db" value="-36"/>
+  <PARAM id="ir_length_pct" value="85"/>
+  <PARAM id="mix_pct" value="45"/>
+  <IR kind="factory" id="gated_80s"/>
+</FreddyPreset>

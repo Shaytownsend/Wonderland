@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Kick Hold-Ramp Hall" category="Kick" author="Freddy Verb Factory">
+  <PARAM id="curve_duration_ms" value="400"/>
+  <PARAM id="curve_shape" value="4"/>
+  <PARAM id="curve_tension" value="0.2"/>
+  <PARAM id="duck_depth_db" value="-61"/>
+  <PARAM id="duck_mode" value="1"/>
+  <PARAM id="eq_hpf_freq" value="90"/>
+  <PARAM id="gate_hold_ms" value="250"/>
+  <PARAM id="gate_release_ms" value="400"/>
+  <PARAM id="mix_pct" value="26"/>
+  <PARAM id="mono_below_hz" value="200"/>
+  <PARAM id="mono_below_on" value="1"/>
+  <IR kind="factory" id="hall_tom"/>
+</FreddyPreset>

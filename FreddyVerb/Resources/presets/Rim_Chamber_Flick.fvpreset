@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Rim Chamber Flick" category="Perc" author="Freddy Verb Factory">
+  <PARAM id="duck_attack_ms" value="0.5"/>
+  <PARAM id="duck_depth_db" value="-21"/>
+  <PARAM id="duck_release_ms" value="160"/>
+  <PARAM id="eq_hpf_freq" value="300"/>
+  <PARAM id="gate_hold_ms" value="110"/>
+  <PARAM id="gate_release_ms" value="180"/>
+  <PARAM id="key_hpf" value="400"/>
+  <PARAM id="mix_pct" value="36"/>
+  <IR kind="factory" id="chamber_rim"/>
+</FreddyPreset>

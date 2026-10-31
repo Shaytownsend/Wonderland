@@ -250,7 +250,44 @@ MainPanel::MainPanel (FreddyVerbProcessor& p, ControlHub& h) : proc (p), hub (h)
         if (it.factory) proc.getIRManager().loadFactory (it.id);
         else loadUserIR (juce::File (it.id));
     };
-    irBrowser->onBrowse = [this] { chooseIRFile (false); };
+    irBrowser->onBrowse = [this]
+    {
+        juce::PopupMenu m;
+        m.addItem (1, "Load IR file...");
+        m.addItem (2, "Add IR folder...");
+        const auto folders = juce::StringArray::fromTokens (proc.getUIState().getProperty ("irFolders").toString(), "|", "");
+        if (! folders.isEmpty())
+        {
+            juce::PopupMenu rm;
+            for (int i = 0; i < folders.size(); ++i) rm.addItem (100 + i, folders[i]);
+            m.addSubMenu ("Remove IR folder", rm);
+        }
+        m.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (irBrowser.get()), [this, folders] (int r)
+        {
+            if (r == 1) chooseIRFile (false);
+            else if (r == 2)
+            {
+                chooser = std::make_unique<juce::FileChooser> ("Add IR folder", juce::File::getSpecialLocation (juce::File::userHomeDirectory));
+                chooser->launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectDirectories,
+                                      [this] (const juce::FileChooser& fc)
+                                      {
+                                          const auto d = fc.getResult();
+                                          if (! d.isDirectory()) return;
+                                          auto list = juce::StringArray::fromTokens (proc.getUIState().getProperty ("irFolders").toString(), "|", "");
+                                          list.addIfNotAlreadyThere (d.getFullPathName());
+                                          proc.getUIState().setProperty ("irFolders", list.joinIntoString ("|"), nullptr);
+                                          refreshIRBrowser();
+                                      });
+            }
+            else if (r >= 100)
+            {
+                auto list = folders;
+                list.remove (r - 100);
+                proc.getUIState().setProperty ("irFolders", list.joinIntoString ("|"), nullptr);
+                refreshIRBrowser();
+            }
+        });
+    };
     irBrowser->onFilesDropped = [this] (const juce::StringArray& files) { if (! files.isEmpty()) loadUserIR (juce::File (files[0])); };
     irBrowser->onFavourite = [this] (const IRListItem& it, bool fav)
     {
@@ -268,7 +305,23 @@ void MainPanel::refreshIRBrowser()
     const auto favs = juce::StringArray::fromTokens (proc.getUIState().getProperty ("irFavourites").toString(), "|", "");
     std::vector<IRListItem> list;
     for (auto& e : proc.getIRLibrary().factory())
-        list.push_back ({ e.id, e.name, e.category, e.description, e.rt60, favs.contains (e.id), true });
+    {
+        // RT60 is meaningless for gated / non-linear / reversed IRs: show their length instead
+        const bool shaped = e.category == "Non-Linear" || e.id.contains ("reverse");
+        list.push_back ({ e.id, e.name, e.category, e.description, shaped ? e.lengthSeconds : e.rt60, favs.contains (e.id), true });
+    }
+    // remembered user folders (scanned recursively, capped)
+    for (auto& folder : juce::StringArray::fromTokens (proc.getUIState().getProperty ("irFolders").toString(), "|", ""))
+    {
+        int count = 0;
+        for (const auto& entry : juce::RangedDirectoryIterator (juce::File (folder), true, "*.wav;*.aif;*.aiff;*.flac"))
+        {
+            const auto f = entry.getFile();
+            list.push_back ({ f.getFullPathName(), f.getFileNameWithoutExtension(), "User", f.getParentDirectory().getFileName(),
+                              0.0, favs.contains (f.getFullPathName()), false });
+            if (++count >= 1000) break;
+        }
+    }
     // recently used user IRs
     for (auto& path : juce::StringArray::fromTokens (proc.getUIState().getProperty ("irRecent").toString(), "|", ""))
         if (juce::File (path).existsAsFile())

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Snare Pump Chamber" category="Snare" author="Freddy Verb Factory">
+  <PARAM id="curve_duration_ms" value="280"/>
+  <PARAM id="curve_shape" value="5"/>
+  <PARAM id="duck_depth_db" value="-36"/>
+  <PARAM id="duck_mode" value="1"/>
+  <PARAM id="eq_hpf_freq" value="250"/>
+  <PARAM id="gate_hold_ms" value="200"/>
+  <PARAM id="gate_release_ms" value="260"/>
+  <PARAM id="mix_pct" value="36"/>
+  <IR kind="factory" id="chamber_echo"/>
+</FreddyPreset>

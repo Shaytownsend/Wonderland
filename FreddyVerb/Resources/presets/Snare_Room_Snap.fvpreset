@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Snare Room Snap" category="Snare" author="Freddy Verb Factory">
+  <PARAM id="duck_depth_db" value="-12"/>
+  <PARAM id="duck_release_ms" value="120"/>
+  <PARAM id="eq_hpf_freq" value="200"/>
+  <PARAM id="gate_hold_ms" value="90"/>
+  <PARAM id="gate_release_ms" value="150"/>
+  <PARAM id="mix_pct" value="30"/>
+  <IR kind="factory" id="room_studio_snare"/>
+</FreddyPreset>

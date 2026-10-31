@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Tom Big Room" category="Toms" author="Freddy Verb Factory">
+  <PARAM id="duck_depth_db" value="-20"/>
+  <PARAM id="duck_release_ms" value="300"/>
+  <PARAM id="eq_hpf_freq" value="80"/>
+  <PARAM id="gate_hold_ms" value="260"/>
+  <PARAM id="gate_release_ms" value="450"/>
+  <PARAM id="mix_pct" value="35"/>
+  <IR kind="factory" id="room_live"/>
+</FreddyPreset>

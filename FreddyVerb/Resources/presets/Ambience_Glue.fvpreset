@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Ambience Glue" category="Vintage" author="Freddy Verb Factory">
+  <PARAM id="duck_depth_db" value="-8"/>
+  <PARAM id="duck_release_ms" value="120"/>
+  <PARAM id="gate_on" value="0"/>
+  <PARAM id="mix_pct" value="22"/>
+  <PARAM id="width_pct" value="120"/>
+  <IR kind="factory" id="vintage_ambience"/>
+</FreddyPreset>

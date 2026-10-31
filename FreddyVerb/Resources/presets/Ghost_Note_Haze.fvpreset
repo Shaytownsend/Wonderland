@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Ghost Note Haze" category="Snare" author="Freddy Verb Factory">
+  <PARAM id="duck_amount" value="0.5"/>
+  <PARAM id="duck_depth_db" value="-9"/>
+  <PARAM id="duck_release_ms" value="500"/>
+  <PARAM id="gate_on" value="0"/>
+  <PARAM id="ir_damping_pct" value="35"/>
+  <PARAM id="mix_pct" value="22"/>
+  <IR kind="factory" id="plate_dark"/>
+</FreddyPreset>

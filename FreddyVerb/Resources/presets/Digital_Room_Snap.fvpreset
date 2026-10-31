@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Digital Room Snap" category="Vintage" author="Freddy Verb Factory">
+  <PARAM id="duck_depth_db" value="-14"/>
+  <PARAM id="duck_release_ms" value="150"/>
+  <PARAM id="gate_hold_ms" value="110"/>
+  <PARAM id="gate_release_ms" value="160"/>
+  <PARAM id="mix_pct" value="30"/>
+  <IR kind="factory" id="vintage_digital_room"/>
+</FreddyPreset>

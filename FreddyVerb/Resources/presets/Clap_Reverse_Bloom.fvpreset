@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Clap Reverse Bloom" category="Perc" author="Freddy Verb Factory">
+  <PARAM id="curve_duration_ms" value="350"/>
+  <PARAM id="curve_shape" value="2"/>
+  <PARAM id="duck_depth_db" value="-40"/>
+  <PARAM id="duck_mode" value="1"/>
+  <PARAM id="eq_hpf_freq" value="250"/>
+  <PARAM id="gate_hold_ms" value="300"/>
+  <PARAM id="gate_release_ms" value="200"/>
+  <PARAM id="mix_pct" value="40"/>
+  <IR kind="factory" id="fx_reverse_clap"/>
+</FreddyPreset>

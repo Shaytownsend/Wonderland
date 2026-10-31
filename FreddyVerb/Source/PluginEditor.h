@@ -7,7 +7,7 @@
 
 namespace fv
 {
-class FreddyVerbEditor : public juce::AudioProcessorEditor, private juce::Timer
+class FreddyVerbEditor : public juce::AudioProcessorEditor, private juce::Timer, private ui::ControlHub::Listener
 {
 public:
     explicit FreddyVerbEditor (FreddyVerbProcessor&);
@@ -32,6 +32,10 @@ public:
 private:
     void timerCallback() override;
     void showSettingsMenu();
+    void showPresetMenu();
+    void controlTouched (const juce::String&) override;
+    std::unique_ptr<juce::AlertWindow> saveDialog;
+    int presetTick = 0;
     void applyScale();
 
     FreddyVerbProcessor& proc;

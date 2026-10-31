@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Bright Hall Snare Throw" category="Utility" author="Freddy Verb Factory">
+  <PARAM id="curve_duration_ms" value="700"/>
+  <PARAM id="curve_note" value="13"/>
+  <PARAM id="curve_shape" value="0"/>
+  <PARAM id="curve_sync" value="1"/>
+  <PARAM id="duck_depth_db" value="-40"/>
+  <PARAM id="duck_mode" value="1"/>
+  <PARAM id="gate_hold_ms" value="400"/>
+  <PARAM id="gate_hold_note" value="13"/>
+  <PARAM id="gate_hold_sync" value="1"/>
+  <PARAM id="gate_release_ms" value="500"/>
+  <PARAM id="mix_pct" value="36"/>
+  <IR kind="factory" id="hall_bright"/>
+</FreddyPreset>

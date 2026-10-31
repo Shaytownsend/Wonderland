@@ -55,6 +55,7 @@ FreddyVerbProcessor::FreddyVerbProcessor()
 {
     cacheParameterPointers();
     irManager = std::make_unique<IRManager> (apvts, engine, irLibrary);
+    presetManager = std::make_unique<PresetManager> (apvts, *irManager);
     for (auto* id : { pid::quality, pid::lookahead })
         apvts.addParameterListener (id, this);
 }
@@ -64,6 +65,7 @@ FreddyVerbProcessor::~FreddyVerbProcessor()
     for (auto* id : { pid::quality, pid::lookahead })
         apvts.removeParameterListener (id, this);
     cancelPendingUpdate();
+    presetManager.reset();
     irManager.reset();
 }
 
@@ -189,6 +191,7 @@ void FreddyVerbProcessor::getStateInformation (juce::MemoryBlock& dest)
     root.appendChild (apvts.copyState(), nullptr);
     root.appendChild (uiState.createCopy(), nullptr);
     root.appendChild (irManager->getState(), nullptr);
+    root.setProperty ("presetName", presetManager->getCurrentName(), nullptr);
     if (auto xml = root.createXml())
         copyXmlToBinary (*xml, dest);
 }
@@ -210,6 +213,8 @@ void FreddyVerbProcessor::setStateInformation (const void* data, int size)
     if (ui.isValid())
         uiState.copyPropertiesAndChildrenFrom (ui, nullptr);
     irManager->setState (root.getChildWithName ("IR"));
+    if (root.hasProperty ("presetName"))
+        presetManager->markLoaded (root.getProperty ("presetName").toString());
     updateLatency();
 }
 

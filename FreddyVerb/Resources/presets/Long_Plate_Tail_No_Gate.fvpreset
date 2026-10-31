@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Long Plate Tail (No Gate)" category="Utility" author="Freddy Verb Factory">
+  <PARAM id="duck_depth_db" value="-18"/>
+  <PARAM id="duck_release_ms" value="400"/>
+  <PARAM id="gate_on" value="0"/>
+  <PARAM id="mix_pct" value="30"/>
+  <IR kind="factory" id="plate_long"/>
+</FreddyPreset>

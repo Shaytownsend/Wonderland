@@ -4,6 +4,7 @@
 #include "dsp/FreddyEngine.h"
 #include "state/Parameters.h"
 #include "state/IRManager.h"
+#include "state/PresetManager.h"
 
 namespace fv
 {
@@ -57,6 +58,7 @@ public:
     double getCurrentIRRt60() const noexcept { return irManager ? irManager->getRt60() : 1.0; }
     IRManager& getIRManager() noexcept { return *irManager; }
     const IRLibrary& getIRLibrary() const noexcept { return irLibrary; }
+    PresetManager& getPresetManager() noexcept { return *presetManager; }
 
 private:
     void parameterChanged (const juce::String& id, float) override;
@@ -70,6 +72,7 @@ private:
     dsp::FreddyEngine engine;
     IRLibrary irLibrary;
     std::unique_ptr<IRManager> irManager;
+    std::unique_ptr<PresetManager> presetManager;
     std::atomic<int64_t> lastProcessMs { 0 };
 
     struct Ptrs;

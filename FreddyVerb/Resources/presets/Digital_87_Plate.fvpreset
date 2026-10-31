@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FreddyPreset version="1" name="Digital '87 Plate" category="Vintage" author="Freddy Verb Factory">
+  <PARAM id="duck_depth_db" value="-20"/>
+  <PARAM id="duck_release_ms" value="280"/>
+  <PARAM id="eq_lpf_freq" value="11000"/>
+  <PARAM id="gate_hold_ms" value="220"/>
+  <PARAM id="gate_release_ms" value="380"/>
+  <PARAM id="mix_pct" value="36"/>
+  <IR kind="factory" id="vintage_digital_plate"/>
+</FreddyPreset>
