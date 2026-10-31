@@ -58,3 +58,17 @@ One entry per milestone. Each links to that milestone's 13-option UI contact she
 **pluginval** — VST3 strictness 10: SUCCESS.
 **CPU** (48 kHz / 128, 3 s true-stereo IR, audio thread): Zero Latency 1.55 %, all-inline 2.40 %, Efficient 3.20 %.
 **Decisions** — DECISIONS.md #32–37.
+
+---
+
+## M4 — Tone & space  ·  [UI previews](ui_previews/m4_tone_space/index.html)
+
+**Built**
+- `WetEQ`: HPF 20 Hz–2 kHz and LPF 1–20 kHz at 12/24/48 dB/oct, low & high shelf (freq, ±18 dB, Q), two bells (freq, ±18 dB, Q); TPT SVF, 2× oversampled, decramped bells, smoothed parameters (coefficients every 8 samples); Pre/Post placement with crossfade.
+- `WidthStage`: width 0–200 % (M/S), mono-below 20–500 Hz (LR4 on the side), wet balance.
+- Mix section, peak + RMS metering (input / wet post-gate / output), correlation meter and click-free latency-compensated bypass were completed in M1 and now see the full wet chain.
+
+**Tests** — 40 test cases / 2 387 assertions green. New: measured EQ response vs analogue bell / shelf prototypes (incl. a 15 kHz bell at 48 kHz within 0.5 dB), Butterworth −3 dB points and slopes for 12/24/48 dB/oct, worst-case automation (bell frequency jumping every 64 samples) without zipper, width 0/100/200 %, balance, mono-below (50 Hz side < −30 dB, 2 kHz side untouched).
+**pluginval** — VST3 strictness 10: SUCCESS.
+**CPU** (48 kHz / 128, 3 s true-stereo IR, EQ on with default HPF 24 + LPF 12, audio thread): Zero Latency 2.55 %, all-inline 3.85 %, Efficient 4.17 %. The oversampled EQ costs ≈ 1 %; it is the first optimisation target for M8.
+**Decisions** — DECISIONS.md #38–40.

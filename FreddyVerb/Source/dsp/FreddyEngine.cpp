@@ -1,6 +1,7 @@
 #include "FreddyEngine.h"
 #include "../state/Parameters.h"
 #include "Dynamics.h"
+#include "ToneSpace.h"
 
 namespace fv::dsp
 {
@@ -23,6 +24,8 @@ struct FreddyEngine::Impl
     Ducker ducker;
     Gate gate;
     std::vector<float> gateGBuf;
+    WetEQ eqPre, eqPost;
+    WidthStage width;
     float* x[2] {};       // input (stereo)
     float* dry[2] {};     // latency-compensated dry
     float* key[2] {};     // detector key (aligned with the wet output)
@@ -91,6 +94,9 @@ void FreddyEngine::prepare (double sr, int maxBlockSize, int /*numInputChannels*
     d.detector.prepare (sr);
     d.ducker.prepare (sr);
     d.gate.prepare (sr);
+    d.eqPre.prepare (sr, kSubBlock);
+    d.eqPost.prepare (sr, kSubBlock);
+    d.width.prepare (sr);
 
     for (auto* s : { &d.dryGain, &d.wetGain, &d.outGain, &d.bypassMix, &d.soloMix, &d.listenMix })
         s->reset (sr, 20.0);
@@ -110,6 +116,7 @@ void FreddyEngine::reset()
     if (d.current) d.current->reset();
     if (d.next) { d.current = std::move (d.next); d.current->reset(); }
     d.detector.reset(); d.ducker.reset(); d.gate.reset();
+    d.eqPre.reset(); d.eqPost.reset(); d.width.reset();
     inMeter = wetMeter = outMeter = {};
     d.vizCount = 0; d.vizAcc = {};
     d.snap = true;
@@ -223,6 +230,7 @@ void FreddyEngine::process (const float* const* in, int numIn, float* const* out
         d.wetInDelay.process (d.wet, 2, n);
 
         // 3) wet path: [EQ pre] -> pre-delay -> convolution (with IR crossfade)
+        d.eqPre.process (d.wet[0], d.wet[1], n, p, p.eqOn && p.eqPosition == choices::pre);
         d.predelay.process (d.wet, 2, n);
         if (d.current != nullptr)
         {
@@ -259,6 +267,10 @@ void FreddyEngine::process (const float* const* in, int numIn, float* const* out
             d.wet[0][i] *= gg;
             d.wet[1][i] *= gg;
         }
+
+        // 3c) tone + space on the wet only
+        d.eqPost.process (d.wet[0], d.wet[1], n, p, p.eqOn && p.eqPosition == choices::post);
+        d.width.process (d.wet[0], d.wet[1], n, p);
 
         // 4) metering + visualizer feed (wet is post duck/gate here)
         accumulateMeters (d.x, d.wet, n);
