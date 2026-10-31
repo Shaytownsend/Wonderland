@@ -71,8 +71,22 @@ void WetEQ::updateCoefficients (const EngineParams& p) noexcept
                              std::log2 (p.hsHz), p.hsGainDb, p.hsQ, std::log2 (p.b1Hz), p.b1GainDb, p.b1Q,
                              std::log2 (p.b2Hz), p.b2GainDb, p.b2Q, 0, 0 };
     const double a = first ? 1.0 : 0.25;   // per update (every 8 samples): ~1 ms smoothing
-    for (int i = 0; i < 14; ++i) sm[i] += (tgt[i] - sm[i]) * a;
+    bool moving = first;
+    for (int i = 0; i < 14; ++i)
+    {
+        const double d = tgt[i] - sm[i];
+        if (std::abs (d) > 1.0e-6) { sm[i] += d * a; moving = true; }
+        else sm[i] = tgt[i];
+    }
+    const int slopeKey = p.hpfSlope * 3 + p.lpfSlope;
     first = false;
+    // coefficients only change while a parameter is still gliding (or a slope changed)
+    if (! moving && slopeKey == lastSlopeKey)
+    {
+        hpOn = p.hpfOn; lpOn = p.lpfOn; lsOn = p.lsOn; hsOn = p.hsOn; b1On = p.b1On; b2On = p.b2On;
+        return;
+    }
+    lastSlopeKey = slopeKey;
 
     hpOn = p.hpfOn; lpOn = p.lpfOn; lsOn = p.lsOn; hsOn = p.hsOn; b1On = p.b1On; b2On = p.b2On;
     hpN = kStages[std::clamp (p.hpfSlope, 0, 2)];

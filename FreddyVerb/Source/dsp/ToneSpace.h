@@ -51,6 +51,7 @@ private:
     // smoothed parameter state (log-frequency, dB)
     double sm[16] {};
     bool first = true;
+    int lastSlopeKey = -1;
 };
 
 /** Wet stereo stage: M/S width 0..200 %, Linkwitz-Riley mono-below, balance. */

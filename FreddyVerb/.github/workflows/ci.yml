@@ -74,6 +74,18 @@ jobs:
             $PV --strictness-level 10 --validate-in-process ~/Library/Audio/Plug-Ins/Components/"Freddy Verb.component"
           fi
 
+      - name: Installer (macOS pkg)
+        if: runner.os == 'macOS'
+        run: packaging/macos/build_pkg.sh build "$(grep -m1 -oE 'VERSION [0-9.]+' CMakeLists.txt | cut -d' ' -f2)"
+
+      - name: Installer (Windows Inno Setup)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          $v = (Select-String -Path CMakeLists.txt -Pattern 'VERSION ([0-9.]+)').Matches[0].Groups[1].Value
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DVersion=$v /DBuildDir=..\..\build packaging\windows\FreddyVerb.iss
+
       - name: UI previews
         if: runner.os == 'Linux'
         run: xvfb-run -a build/FreddyVerb_Snapshots_artefacts/Release/FreddyVerb_Snapshots --out build/ui_previews --milestone ci
@@ -84,4 +96,5 @@ jobs:
           path: |
             FreddyVerb/build/FreddyVerb_artefacts/Release
             FreddyVerb/build/ui_previews
+            FreddyVerb/build/installer
           if-no-files-found: ignore
