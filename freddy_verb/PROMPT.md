@@ -6,7 +6,7 @@
 
 ## Role and goal
 
-You are a senior audio DSP engineer and plugin developer. Build **Freddy Verb**, a professional-grade drum reverb plugin, in **C++ with JUCE 8** (CMake build). Targets: **VST3, AU, AAX (if SDK present), and Standalone**, on macOS (Universal Binary) and Windows x64.
+You are a senior audio DSP engineer and plugin developer. Build **Freddy Verb**, a professional-grade drum reverb plugin, in **C++ with JUCE 8** (CMake build). Targets: **VST3, AU, CLAP, AAX (if SDK present), and Standalone**, on macOS (Universal Binary) and Windows x64.
 
 Freddy Verb is an **insert effect for individual drum tracks** (kick, snare, toms, percussion), not a send/return reverb. It recreates in one plugin an Ableton rack I use:
 
@@ -213,6 +213,41 @@ The look is inspired by **late-'80s / early-'90s rack samplers and MPC-era hardw
 
 ---
 
+## 8A. Eight UI design options — show them to me as the code is written
+
+I want to **see and choose between 8 different UI directions**, all following the brief in section 8: inspired by vintage sampler hardware, flat 2D, no real brand names or logos. Don't pick one for me. Build them so I can compare them side by side and watch them evolve as the plugin gets built.
+
+### How to build them
+- Write the UI so **all controls, layout logic and the visualizer are shared**. Each option is a **theme**: a `FreddyTheme` struct (colors, fonts, knob and button drawing style, LCD style, panel layout variant) plus its own `LookAndFeel` subclass. Swapping options must never touch DSP or parameter code.
+- Add a **theme switcher** (hidden in Settings, or a dev-only dropdown) so I can flip between all 8 live in the standalone app while audio plays.
+- Add a **screenshot tool**: a command-line target or test, e.g. `FreddyVerb_Snapshots`, that renders the editor offscreen in each of the 8 themes and writes PNGs to `ui_previews/<milestone>/<nn>_<theme>.png`. Render them with a realistic state: a drum hit visible in the envelope display, the bloom window shaded, and an IR loaded.
+- Also generate `ui_previews/<milestone>/index.html`, a contact sheet that shows all 8 side by side with names and short descriptions.
+
+### When to show them
+- **Early, before deep UI work** (right after milestone 1): rough but recognizable static mockups of all 8, drawn with real JUCE components and placeholder data.
+- **At every milestone after that**, re-render all 8 with whatever controls exist so far, so I see them fill in as the code is written.
+- **At milestone 6**, render all 8 at full detail. Then **stop and ask me to choose** one, or to combine elements of several. Polish only the chosen direction to final quality, but keep the others selectable as alternate skins unless I say to remove them.
+
+### The 8 directions
+Each must be a distinct take on vintage sampler / drum-machine hardware, flat and 2D. Use these as starting points; you may refine them, but keep 8 clearly different options.
+
+1. **Putty Classic**: warm grey-beige chassis, green-yellow backlit LCD, red-orange accent, black screen-printed labels. The baseline look.
+2. **Studio Black Rack**: charcoal 2U rackmount front panel with flat rack ears and screw dots, an amber LCD, orange pad LEDs, and dense, small labels.
+3. **Cream Workstation**: off-white or cream body, a blue-backlit LCD with white pixels, soft grey pads, teal secondary accent. Clean and spacious.
+4. **Pad Station**: drum-machine style. A prominent row or grid of large square rubber pads serves as the curve-shape and mode selectors. Chunky, playful, high-contrast pads on a dark grey body.
+5. **Sunbleached '89**: aged, slightly yellowed plastic tones, muted pastel buttons, an orange LCD, and a subtly worn feel achieved with flat color only, no textures.
+6. **Night Session**: dark mode. Near-black panel, red 7-segment/LED-style readouts, a dim red-on-black LCD, minimal labels. For dark studios.
+7. **Service Manual**: drawn like a vintage hardware manual or schematic. Two-tone line art, signal-flow arrows printed on the panel between sections (REVERB → DUCK → GATE → TONE → SPACE → MIX), a monochrome LCD.
+8. **Floppy Era Pro**: wide, horizontal and sectioned. Colored section stripes (each stage gets its own color band), a large central LCD and a "disk drive" style slot as the IR loader/browser button, inspired by the floppy-loading samplers of that era.
+
+### Rules for every option
+- Every option has the same functionality and every control. Only the presentation differs.
+- All are fully vector-drawn, resizable, HiDPI-correct, and readable at 75% scale.
+- Text contrast meets WCAG AA for labels and readouts.
+- The envelope visualizer's duck, gate, combined-gain and bloom-window colors stay clearly distinguishable in every theme.
+
+---
+
 ## 9. Presets
 - XML/JSON preset format, factory and user folders, categories, A/B compare, and undo/redo across all parameters.
 - Factory presets (at least 30), each pairing an IR with duck/gate settings. Examples:
@@ -229,6 +264,10 @@ The look is inspired by **late-'80s / early-'90s rack samplers and MPC-era hardw
 ---
 
 ## 10. Engineering requirements
+- **Framework: JUCE 8** is required (not iPlug2, nih-plug or others). Also build **CLAP** through `clap-juce-extensions`.
+- **FFT backends**: use Apple vDSP (Accelerate) on macOS, and Intel IPP or PFFFT on Windows, for the convolution engine. Do not rely on JUCE's fallback FFT.
+- **Resampling**: use **r8brain-free-src** for IR sample-rate conversion.
+- **Licensing**: check and note in `README.md` the current JUCE 8 license terms (Starter tier vs. paid vs. AGPL) before release. Keep all third-party licenses in `CREDITS.md`.
 - Use the JUCE `AudioProcessorValueTreeState` for every parameter. All parameters are automatable and smoothed (no zipper noise). Use sensible skew curves and units.
 - **Real-time safety**: no allocation, locks, file I/O or logging on the audio thread. IR loading, resampling and shaping happen on background threads with atomic pointer swaps.
 - Handle any buffer size (1–8192), including variable block sizes, and host sample-rate changes.
@@ -255,10 +294,11 @@ FreddyVerb/
     PluginProcessor.{h,cpp}
     PluginEditor.{h,cpp}
     dsp/      Convolver, IRProcessor, Resampler, Detector, Ducker, Gate, WetEQ, Width, LatencyDelay
-    ui/       LookAndFeelFreddy, LCDPanel, EnvelopeVisualizer, IRBrowser, IRDisplay, Knob, PadButton, DataSlider
+    ui/       themes/ (8 FreddyTheme + LookAndFeel variants), SnapshotTool, LookAndFeelFreddy, LCDPanel, EnvelopeVisualizer, IRBrowser, IRDisplay, Knob, PadButton, DataSlider
     state/    Parameters, PresetManager, IRLibrary
   Resources/  factory IRs, presets, fonts (open-licensed)
   tools/ir_forge/
+  ui_previews/   (generated 8-theme PNGs + contact sheets per milestone)
   tests/
   CREDITS.md
 ```
@@ -266,13 +306,13 @@ FreddyVerb/
 ---
 
 ## 12. Milestones (deliver and verify each one before moving on)
-1. Project skeleton, parameters, pass-through, latency-compensated dry/wet mix.
-2. Zero-latency convolution engine, IR loading and resampling, tests.
-3. Shared detector, the Ducker (Follow and Curve modes) and the Gate, tests.
-4. Wet EQ, width, metering.
-5. IR shaping (pre-delay, trim, length, decay, size, damping, early/late, reverse).
-6. UI: look-and-feel, layout, LCD, envelope visualizer, IR browser.
+1. Project skeleton, parameters, pass-through, latency-compensated dry/wet mix. Also the theme system and the snapshot tool, with **first rough mockups of all 8 UI options** (section 8A).
+2. Zero-latency convolution engine, IR loading and resampling, tests. Re-render the 8 UI previews.
+3. Shared detector, the Ducker (Follow and Curve modes) and the Gate, tests. Re-render the 8 UI previews; the envelope visualizer is now live.
+4. Wet EQ, width, metering. Re-render the 8 UI previews.
+5. IR shaping (pre-delay, trim, length, decay, size, damping, early/late, reverse). Re-render the 8 UI previews.
+6. UI: look-and-feel, layout, LCD, envelope visualizer, IR browser. All 8 options at full detail. **Stop and ask me to choose one direction**, then polish the chosen one.
 7. `ir_forge`, the factory IR library, factory presets.
 8. Polish, CPU optimization, pluginval, CI, installers.
 
-At each milestone, summarize what was built, how it was tested, and any trade-offs you made. Ask me before deviating from this spec.
+At each milestone, summarize what was built, how it was tested, and any trade-offs you made, and **show me the updated 8-option UI contact sheet** (`ui_previews/<milestone>/index.html`). Ask me before deviating from this spec.
