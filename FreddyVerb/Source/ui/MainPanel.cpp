@@ -243,6 +243,80 @@ MainPanel::MainPanel (FreddyVerbProcessor& p, ControlHub& h) : proc (p), hub (h)
 
     updateEqBandKnobs (1);
     updateDuckModeDimming();
+
+    // --- IR browser / display wiring -------------------------------------------------
+    irBrowser->onSelect = [this] (const IRListItem& it)
+    {
+        if (it.factory) proc.getIRManager().loadFactory (it.id);
+        else loadUserIR (juce::File (it.id));
+    };
+    irBrowser->onBrowse = [this] { chooseIRFile (false); };
+    irBrowser->onFilesDropped = [this] (const juce::StringArray& files) { if (! files.isEmpty()) loadUserIR (juce::File (files[0])); };
+    irBrowser->onFavourite = [this] (const IRListItem& it, bool fav)
+    {
+        auto favs = juce::StringArray::fromTokens (proc.getUIState().getProperty ("irFavourites").toString(), "|", "");
+        favs.removeString (it.id);
+        if (fav) favs.add (it.id);
+        proc.getUIState().setProperty ("irFavourites", favs.joinIntoString ("|"), nullptr);
+    };
+    irDisplay->onRelinkRequested = [this] { chooseIRFile (true); };
+    refreshIRBrowser();
+}
+
+void MainPanel::refreshIRBrowser()
+{
+    const auto favs = juce::StringArray::fromTokens (proc.getUIState().getProperty ("irFavourites").toString(), "|", "");
+    std::vector<IRListItem> list;
+    for (auto& e : proc.getIRLibrary().factory())
+        list.push_back ({ e.id, e.name, e.category, e.description, e.rt60, favs.contains (e.id), true });
+    // recently used user IRs
+    for (auto& path : juce::StringArray::fromTokens (proc.getUIState().getProperty ("irRecent").toString(), "|", ""))
+        if (juce::File (path).existsAsFile())
+            list.push_back ({ path, juce::File (path).getFileNameWithoutExtension(), "User", path, 0.0, favs.contains (path), false });
+    irBrowser->setItems (std::move (list));
+    irBrowser->setCurrent (proc.getIRManager().getStatus().id);
+}
+
+void MainPanel::loadUserIR (const juce::File& f)
+{
+    juce::String err;
+    if (! proc.getIRManager().loadFile (f, err))
+    {
+        juce::AlertWindow::showMessageBoxAsync (juce::MessageBoxIconType::WarningIcon, "Freddy Verb", "Could not load IR:\n" + err);
+        return;
+    }
+    auto recent = juce::StringArray::fromTokens (proc.getUIState().getProperty ("irRecent").toString(), "|", "");
+    recent.removeString (f.getFullPathName());
+    recent.insert (0, f.getFullPathName());
+    while (recent.size() > 32) recent.remove (recent.size() - 1);
+    proc.getUIState().setProperty ("irRecent", recent.joinIntoString ("|"), nullptr);
+    proc.getUIState().setProperty ("irLastFolder", f.getParentDirectory().getFullPathName(), nullptr);
+    refreshIRBrowser();
+}
+
+void MainPanel::chooseIRFile (bool relink)
+{
+    const juce::File start (proc.getUIState().getProperty ("irLastFolder",
+                             juce::File::getSpecialLocation (juce::File::userHomeDirectory).getFullPathName()).toString());
+    chooser = std::make_unique<juce::FileChooser> (relink ? "Relink missing IR" : "Load impulse response", start, "*.wav;*.aif;*.aiff;*.flac");
+    chooser->launchAsync (juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+                          [this] (const juce::FileChooser& fc)
+                          {
+                              const auto f = fc.getResult();
+                              if (f.existsAsFile()) loadUserIR (f);
+                          });
+}
+
+void MainPanel::syncIRDisplay()
+{
+    const int v = proc.getIRManager().getVersion();
+    if (v == irVersionSeen) return;
+    irVersionSeen = v;
+    const auto st = proc.getIRManager().getStatus();
+    irDisplay->setThumbnail (st.display.peaks, st.display.lengthSeconds, st.name.toUpperCase(), st.display.rt60);
+    irDisplay->setSpectrogram (st.display.spectrogram);
+    irDisplay->setMissing (st.missing, st.path);
+    irBrowser->setCurrent (st.id);
 }
 
 MainPanel::~MainPanel()
@@ -394,6 +468,7 @@ void MainPanel::tick()
     setMeter (*meterOut, m.output);
     correlation->setValue (m.correlation.load());
 
+    syncIRDisplay();
     visualizer->pull (proc.isAudioRunning(), proc.snapshotParams(), eng.getSampleRate(), proc.getCurrentIRRt60());
     updateDuckModeDimming();
 }

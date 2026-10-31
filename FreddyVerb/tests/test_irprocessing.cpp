@@ -221,3 +221,19 @@ TEST_CASE ("Synthetic fallback IR exists for the default id", "[ir][library]")
     CHECK (lib.loadFactory (fv::IRLibrary::defaultIRId, s));
     CHECK (s.length() > 1000);
 }
+
+TEST_CASE ("Factory library is embedded and every IR decodes as 4-channel", "[ir][library]")
+{
+    fv::IRLibrary lib;
+    REQUIRE (lib.factory().size() >= 32);
+    CHECK (lib.find ("plate_medium") != nullptr);
+    for (auto& e : lib.factory())
+    {
+        IRSource s;
+        INFO (e.id.toStdString());
+        REQUIRE (lib.loadFactory (e.id, s));
+        CHECK (s.channels.size() == 4);
+        CHECK (s.sampleRate == 96000.0);
+        CHECK (s.length() > 1000);
+    }
+}

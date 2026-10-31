@@ -38,3 +38,7 @@ Ambiguities in the spec, what was chosen, why, and how to change it. Newest at t
 27. **Photoreal labels** are baked into the rendered panel (silkscreen with wear); flat themes draw labels in code.
 28. **Selected-band EQ knobs** — the four shelf/bell bands share one row of Freq/Gain/Q knobs that follow the node selected in the EQ display; HPF/LPF have permanent knobs. Every parameter stays reachable and automatable.
 29. **Undo/redo** — APVTS with a `juce::UndoManager`.
+
+## Content pipelines (M2)
+30. **panel_forge pipeline** — Blender isn't installed, so the photoreal skins use the procedural Python pipeline (numpy/scipy/Pillow, no downloaded textures): height map + material per surface, rendered at 3× with one fixed top-left key light (cast shadow + AO), @2x/@1x are Lanczos downscales. Knob filmstrips rotate geometry under fixed lighting (128 frames, 270°; jog 360°). Wear is driven by a seeded "hand-time" map around the most-used controls; scratches are suppressed over text and labels always keep ≥ 55 % ink. Panels ship as JPEG, parts as PNG; each skin is 1.9–3.0 MB. *Change:* `tools/panel_forge/pf_skins.py`.
+31. **Factory IR measurement** — `library.json` RT60 is T30 in the 1 kHz octave (Schroeder, −5…−35 dB). For gated/non-linear/reverse IRs that number is not a real decay time; the IR display shows the measured broadband RT60 of the *shaped* IR instead.

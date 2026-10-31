@@ -305,9 +305,9 @@ void EnvelopeVisualizer::paint (juce::Graphics& g)
                       + "   BLOOM " + txt (pid::duckRelease)
                       + "   HOLD " + (lastParams.gateOn ? txt (pid::gateHold) : juce::String ("OFF"))
                       + "   REL " + txt (pid::gateRelease);
-    lnf->drawDisplayText (g, head, header.withTrimmedRight (110.0f), juce::Justification::centredLeft);
+    lnf->drawDisplayText (g, head, header, juce::Justification::centredLeft);
     juce::String mode = previewMode ? "PREVIEW" : (frozen ? "FREEZE" : "LIVE");
-    lnf->drawDisplayText (g, mode + " " + juce::String (timeScaleMs) + "MS", header.removeFromRight (104.0f), juce::Justification::centredRight, true);
+    lnf->drawDisplayText (g, mode + " " + juce::String (timeScaleMs) + "MS", legend.removeFromRight (96.0f), juce::Justification::centredRight, true);
 
     // legend: colour chip + text for each trace
     struct L { const char* t; juce::Colour col; };

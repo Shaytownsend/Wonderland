@@ -71,6 +71,12 @@ private:
     void layoutSection (int section, juce::Rectangle<float> r);
     void updateDuckModeDimming();
     void updateEqBandKnobs (int band);
+    void refreshIRBrowser();
+    void syncIRDisplay();
+    void chooseIRFile (bool relink);
+    void loadUserIR (const juce::File&);
+    std::unique_ptr<juce::FileChooser> chooser;
+    int irVersionSeen = -1;
 
     FreddyVerbProcessor& proc;
     ControlHub& hub;

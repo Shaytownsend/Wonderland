@@ -154,7 +154,7 @@ void PixelFont::drawSevenSegment (juce::Graphics& g, const juce::String& text, j
             { l + gap, md, r - gap, md } };
         for (int b = 0; b < 7; ++b)
             seg ((s >> b) & 1 ? onP : offP, segs[b].x0, segs[b].y0, segs[b].x1, segs[b].y1);
-        (dot ? onP : offP).addEllipse (r + t * 0.45f, bt - t * 0.5f, t, t);
+        { const float dd = std::max (2.5f, t * 1.35f); (dot ? onP : offP).addEllipse (r + t * 0.3f, bt - dd * 0.55f, dd, dd); }
         x += cw;
     }
     if (! off.isTransparent()) { g.setColour (off); g.fillPath (offP, shear); }

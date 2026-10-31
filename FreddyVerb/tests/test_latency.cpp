@@ -87,3 +87,27 @@ TEST_CASE ("Bypass outputs the latency-compensated dry signal", "[latency][bypas
     for (size_t i = (size_t) L; i < in.size(); ++i) ref[i] = in[i - (size_t) L];
     CHECK (maxAbsDiff (oL, ref, 2000) < 1.0e-6);
 }
+
+TEST_CASE ("Wet/dry alignment: 100% wet through a unit IR nulls against the delayed input", "[latency][null]")
+{
+    const int q = GENERATE (0, 1);
+    const float la = GENERATE (0.0f, 4.0f);
+    const double sr = 48000.0;
+    fv::dsp::FreddyEngine e;
+    e.prepare (sr, 512, 2);
+    fv::dsp::IRData ir;
+    ir.path[fv::dsp::IRData::LL] = ir.path[fv::dsp::IRData::RR] = { 1.0 };
+    ir.active[0] = ir.active[3] = true;
+    e.installConvolverNow (std::make_unique<fv::dsp::Convolver> (ir, fv::dsp::Convolver::Config { q, 512, false }, nullptr));
+    auto p = neutralParams();
+    p.quality = q; p.lookaheadMs = la; p.mixPct = 100.0f;
+    auto in = noise (20000, 8);
+    std::vector<float> oL, oR;
+    runEngine (e, p, in, in, oL, oR, 512, true);
+    const int L = e.computeLatency (p);
+    std::vector<float> ref (in.size(), 0.0f);
+    for (size_t i = (size_t) L; i < in.size(); ++i) ref[i] = in[i - (size_t) L];
+    INFO ("quality " << q << " lookahead " << la << " latency " << L);
+    CHECK (maxAbsDiff (oL, ref, L + 10) < 1.0e-6);
+    CHECK (maxAbsDiff (oR, ref, L + 10) < 1.0e-6);
+}

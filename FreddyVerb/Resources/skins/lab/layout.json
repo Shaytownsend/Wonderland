@@ -1,0 +1,906 @@
+{
+ "skin": "lab",
+ "width": 1600,
+ "height": 589,
+ "knob_frames": 128,
+ "controls": [
+  {
+   "id": "preset_prev",
+   "kind": "button",
+   "x": 373.0,
+   "y": 23.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "preset",
+   "kind": "display",
+   "x": 410,
+   "y": 14,
+   "w": 300,
+   "h": 34
+  },
+  {
+   "id": "preset_next",
+   "kind": "button",
+   "x": 717.0,
+   "y": 23.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "ab_a",
+   "kind": "button",
+   "x": 771.0,
+   "y": 23.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "ab_b",
+   "kind": "button",
+   "x": 811.0,
+   "y": 23.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "ab_copy",
+   "kind": "button",
+   "x": 855.0,
+   "y": 23.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "undo",
+   "kind": "button",
+   "x": 915.0,
+   "y": 23.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "redo",
+   "kind": "button",
+   "x": 961.0,
+   "y": 23.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "settings",
+   "kind": "button",
+   "x": 1483.0,
+   "y": 23.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "ir_browser",
+   "kind": "display",
+   "x": 82,
+   "y": 64,
+   "w": 264,
+   "h": 152
+  },
+  {
+   "id": "ir_display",
+   "kind": "display",
+   "x": 82,
+   "y": 232,
+   "w": 264,
+   "h": 102
+  },
+  {
+   "id": "envelope",
+   "kind": "display",
+   "x": 372,
+   "y": 64,
+   "w": 568,
+   "h": 210
+  },
+  {
+   "id": "readout",
+   "kind": "display",
+   "x": 372,
+   "y": 292,
+   "w": 340,
+   "h": 38
+  },
+  {
+   "id": "viz_scale",
+   "kind": "button",
+   "x": 739.0,
+   "y": 305.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "viz_freeze",
+   "kind": "button",
+   "x": 803.0,
+   "y": 305.0,
+   "w": 30,
+   "h": 24,
+   "art": "key"
+  },
+  {
+   "id": "jog",
+   "kind": "jog",
+   "x": 891,
+   "y": 289.0,
+   "w": 44,
+   "h": 44,
+   "art": "jog"
+  },
+  {
+   "id": "eq_display",
+   "kind": "display",
+   "x": 966,
+   "y": 78,
+   "w": 250,
+   "h": 96
+  },
+  {
+   "id": "eq_hpf_slope@stepper",
+   "kind": "stepper",
+   "x": 1230,
+   "y": 87,
+   "w": 96,
+   "h": 24
+  },
+  {
+   "id": "eq_lpf_slope@stepper",
+   "kind": "stepper",
+   "x": 1230,
+   "y": 137,
+   "w": 96,
+   "h": 24
+  },
+  {
+   "id": "eq_on",
+   "kind": "pad",
+   "x": 972.0,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_position#0",
+   "kind": "choicepad",
+   "x": 1014.0,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_position#1",
+   "kind": "choicepad",
+   "x": 1056.0,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_hpf_on",
+   "kind": "pad",
+   "x": 1104.3,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_ls_on",
+   "kind": "pad",
+   "x": 1143.0,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_b1_on",
+   "kind": "pad",
+   "x": 1181.7,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_b2_on",
+   "kind": "pad",
+   "x": 1220.3,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_hs_on",
+   "kind": "pad",
+   "x": 1259.0,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_lpf_on",
+   "kind": "pad",
+   "x": 1297.7,
+   "y": 199,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "eq_hpf_freq",
+   "kind": "knob",
+   "x": 977.2,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "eq_lpf_freq",
+   "kind": "knob",
+   "x": 1049.6,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "eqsel_freq",
+   "kind": "knob",
+   "x": 1122.0,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "eqsel_gain",
+   "kind": "knob",
+   "x": 1194.4,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "eqsel_q",
+   "kind": "knob",
+   "x": 1266.8,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "mix_pct",
+   "kind": "knob",
+   "x": 1346.0,
+   "y": 91,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "dry_level_db",
+   "kind": "knob",
+   "x": 1404.0,
+   "y": 91,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "wet_level_db",
+   "kind": "knob",
+   "x": 1346.0,
+   "y": 161,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "output_gain_db",
+   "kind": "knob",
+   "x": 1404.0,
+   "y": 161,
+   "w": 46,
+   "h": 46,
+   "art": "knob_chicken_large"
+  },
+  {
+   "id": "meter_in",
+   "kind": "meter",
+   "x": 1458,
+   "y": 80,
+   "w": 14,
+   "h": 122
+  },
+  {
+   "id": "meter_wet",
+   "kind": "meter",
+   "x": 1481,
+   "y": 80,
+   "w": 14,
+   "h": 122
+  },
+  {
+   "id": "meter_out",
+   "kind": "meter",
+   "x": 1504,
+   "y": 80,
+   "w": 14,
+   "h": 122
+  },
+  {
+   "id": "mix_lock",
+   "kind": "pad",
+   "x": 1359.7,
+   "y": 241,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "wet_solo",
+   "kind": "pad",
+   "x": 1421.0,
+   "y": 241,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "bypass",
+   "kind": "pad",
+   "x": 1482.3,
+   "y": 241,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "quality@stepper",
+   "kind": "stepper",
+   "x": 82,
+   "y": 381,
+   "w": 118,
+   "h": 24
+  },
+  {
+   "id": "ir_reverse",
+   "kind": "pad",
+   "x": 225.0,
+   "y": 381,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "ir_normalize",
+   "kind": "pad",
+   "x": 271.0,
+   "y": 381,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "predelay_sync",
+   "kind": "pad",
+   "x": 319.0,
+   "y": 381,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "predelay_note@stepper",
+   "kind": "stepper",
+   "x": 384,
+   "y": 381,
+   "w": 86,
+   "h": 24
+  },
+  {
+   "id": "predelay_ms",
+   "kind": "knob",
+   "x": 96.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_start_ms",
+   "kind": "knob",
+   "x": 176.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_length_pct",
+   "kind": "knob",
+   "x": 256.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_size_pct",
+   "kind": "knob",
+   "x": 336.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_decay_pct",
+   "kind": "knob",
+   "x": 416.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_xover_ms",
+   "kind": "knob",
+   "x": 96.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_early_db",
+   "kind": "knob",
+   "x": 176.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_late_db",
+   "kind": "knob",
+   "x": 256.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_damping_pct",
+   "kind": "knob",
+   "x": 336.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "ir_damp_freq",
+   "kind": "knob",
+   "x": 416.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "det_mode@stepper",
+   "kind": "stepper",
+   "x": 496,
+   "y": 381,
+   "w": 74,
+   "h": 24
+  },
+  {
+   "id": "key_listen",
+   "kind": "pad",
+   "x": 595.0,
+   "y": 381,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "key_hpf",
+   "kind": "knob",
+   "x": 507.5,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "key_lpf",
+   "kind": "knob",
+   "x": 582.5,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "det_rms_ms",
+   "kind": "knob",
+   "x": 507.5,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "lookahead_ms",
+   "kind": "knob",
+   "x": 582.5,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "duck_on",
+   "kind": "pad",
+   "x": 673.0,
+   "y": 381,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "duck_mode#0",
+   "kind": "choicepad",
+   "x": 729.0,
+   "y": 381,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "duck_mode#1",
+   "kind": "choicepad",
+   "x": 783.0,
+   "y": 381,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_retrigger@stepper",
+   "kind": "stepper",
+   "x": 840,
+   "y": 381,
+   "w": 96,
+   "h": 24
+  },
+  {
+   "id": "duck_depth_db",
+   "kind": "knob",
+   "x": 664.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "duck_threshold_db",
+   "kind": "knob",
+   "x": 724.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "duck_attack_ms",
+   "kind": "knob",
+   "x": 784.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "duck_release_ms",
+   "kind": "knob",
+   "x": 844.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "duck_amount",
+   "kind": "knob",
+   "x": 904.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "duck_rel_curve@stepper",
+   "kind": "stepper",
+   "x": 960,
+   "y": 435,
+   "w": 118,
+   "h": 24
+  },
+  {
+   "id": "curve_shape#0",
+   "kind": "choicepad",
+   "x": 666.6,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_shape#1",
+   "kind": "choicepad",
+   "x": 713.7,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_shape#2",
+   "kind": "choicepad",
+   "x": 760.9,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_shape#3",
+   "kind": "choicepad",
+   "x": 808.0,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_shape#4",
+   "kind": "choicepad",
+   "x": 855.1,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_shape#5",
+   "kind": "choicepad",
+   "x": 902.3,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_shape#6",
+   "kind": "choicepad",
+   "x": 949.4,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_sync",
+   "kind": "pad",
+   "x": 1011.0,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "curve_duration_ms",
+   "kind": "knob",
+   "x": 664.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "curve_tension",
+   "kind": "knob",
+   "x": 724.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "curve_guard_ms",
+   "kind": "knob",
+   "x": 784.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "curve_hyst_db",
+   "kind": "knob",
+   "x": 844.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "curve_note@stepper",
+   "kind": "stepper",
+   "x": 960,
+   "y": 541,
+   "w": 86,
+   "h": 24
+  },
+  {
+   "id": "gate_on",
+   "kind": "pad",
+   "x": 1119.0,
+   "y": 381,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "gate_rel_curve@stepper",
+   "kind": "stepper",
+   "x": 1230,
+   "y": 381,
+   "w": 120,
+   "h": 24
+  },
+  {
+   "id": "gate_threshold_db",
+   "kind": "knob",
+   "x": 1121.3,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "gate_hyst_db",
+   "kind": "knob",
+   "x": 1208.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "gate_attack_ms",
+   "kind": "knob",
+   "x": 1294.7,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "gate_hold_sync",
+   "kind": "pad",
+   "x": 1139.0,
+   "y": 487,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  },
+  {
+   "id": "gate_hold_note@stepper",
+   "kind": "stepper",
+   "x": 1230,
+   "y": 487,
+   "w": 86,
+   "h": 24
+  },
+  {
+   "id": "gate_hold_ms",
+   "kind": "knob",
+   "x": 1121.3,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "gate_release_ms",
+   "kind": "knob",
+   "x": 1208.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "gate_floor_db",
+   "kind": "knob",
+   "x": 1294.7,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "correlation",
+   "kind": "meter",
+   "x": 1382,
+   "y": 386,
+   "w": 132,
+   "h": 12
+  },
+  {
+   "id": "width_pct",
+   "kind": "knob",
+   "x": 1390.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "wet_balance",
+   "kind": "knob",
+   "x": 1466.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "mono_below_hz",
+   "kind": "knob",
+   "x": 1390.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_chicken"
+  },
+  {
+   "id": "mono_below_on",
+   "kind": "pad",
+   "x": 1475.0,
+   "y": 539,
+   "w": 22,
+   "h": 28,
+   "art": "rocker"
+  }
+ ]
+}

@@ -233,14 +233,6 @@ void PhotorealLookAndFeel::drawDisplayText (juce::Graphics& g, const juce::Strin
     const bool vfd = t.lcdStyle == LcdStyle::vfdCyan || t.lcdStyle == LcdStyle::vfdAmber || t.lcdStyle == LcdStyle::crtGreen;
     const auto col = dim ? t.c.lcdDim : t.c.lcdFg;
     const auto shape = vfd ? PixelFont::DotShape::round : PixelFont::DotShape::square;
-    if (vfd && ! dim)
-    {
-        // phosphor glow: a wider, faint pass under the text
-        g.saveState();
-        g.addTransform (juce::AffineTransform::translation (0.0f, 0.0f));
-        PixelFont::drawFitted (g, s.toUpperCase(), b.expanded (0.6f), j, col.withAlpha (0.25f), {}, PixelFont::DotShape::round, 2.4f);
-        g.restoreState();
-    }
     PixelFont::drawFitted (g, s.toUpperCase(), b, j, col, {}, shape, 2.2f);
 }
 

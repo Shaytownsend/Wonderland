@@ -1,0 +1,906 @@
+{
+ "skin": "broadcast",
+ "width": 1600,
+ "height": 589,
+ "knob_frames": 128,
+ "controls": [
+  {
+   "id": "preset_prev",
+   "kind": "button",
+   "x": 373.0,
+   "y": 22,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "preset",
+   "kind": "display",
+   "x": 410,
+   "y": 14,
+   "w": 300,
+   "h": 34
+  },
+  {
+   "id": "preset_next",
+   "kind": "button",
+   "x": 717.0,
+   "y": 22,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "ab_a",
+   "kind": "button",
+   "x": 771.0,
+   "y": 22,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "ab_b",
+   "kind": "button",
+   "x": 811.0,
+   "y": 22,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "ab_copy",
+   "kind": "button",
+   "x": 855.0,
+   "y": 22,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "undo",
+   "kind": "button",
+   "x": 915.0,
+   "y": 22,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "redo",
+   "kind": "button",
+   "x": 961.0,
+   "y": 22,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "settings",
+   "kind": "button",
+   "x": 1483.0,
+   "y": 22,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "ir_browser",
+   "kind": "display",
+   "x": 82,
+   "y": 64,
+   "w": 264,
+   "h": 152
+  },
+  {
+   "id": "ir_display",
+   "kind": "display",
+   "x": 82,
+   "y": 232,
+   "w": 264,
+   "h": 102
+  },
+  {
+   "id": "envelope",
+   "kind": "display",
+   "x": 372,
+   "y": 64,
+   "w": 568,
+   "h": 210
+  },
+  {
+   "id": "readout",
+   "kind": "display",
+   "x": 372,
+   "y": 292,
+   "w": 340,
+   "h": 38
+  },
+  {
+   "id": "viz_scale",
+   "kind": "button",
+   "x": 739.0,
+   "y": 304,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "viz_freeze",
+   "kind": "button",
+   "x": 803.0,
+   "y": 304,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "jog",
+   "kind": "jog",
+   "x": 891,
+   "y": 289.0,
+   "w": 44,
+   "h": 44,
+   "art": "jog"
+  },
+  {
+   "id": "eq_display",
+   "kind": "display",
+   "x": 966,
+   "y": 78,
+   "w": 250,
+   "h": 96
+  },
+  {
+   "id": "eq_hpf_slope@stepper",
+   "kind": "stepper",
+   "x": 1230,
+   "y": 87,
+   "w": 96,
+   "h": 24
+  },
+  {
+   "id": "eq_lpf_slope@stepper",
+   "kind": "stepper",
+   "x": 1230,
+   "y": 137,
+   "w": 96,
+   "h": 24
+  },
+  {
+   "id": "eq_on",
+   "kind": "pad",
+   "x": 968.0,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_position#0",
+   "kind": "choicepad",
+   "x": 1010.0,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_position#1",
+   "kind": "choicepad",
+   "x": 1052.0,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_hpf_on",
+   "kind": "pad",
+   "x": 1100.3,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_ls_on",
+   "kind": "pad",
+   "x": 1139.0,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_b1_on",
+   "kind": "pad",
+   "x": 1177.7,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_b2_on",
+   "kind": "pad",
+   "x": 1216.3,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_hs_on",
+   "kind": "pad",
+   "x": 1255.0,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_lpf_on",
+   "kind": "pad",
+   "x": 1293.7,
+   "y": 199,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "eq_hpf_freq",
+   "kind": "knob",
+   "x": 977.2,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_large"
+  },
+  {
+   "id": "eq_lpf_freq",
+   "kind": "knob",
+   "x": 1049.6,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_large"
+  },
+  {
+   "id": "eqsel_freq",
+   "kind": "knob",
+   "x": 1122.0,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_large"
+  },
+  {
+   "id": "eqsel_gain",
+   "kind": "knob",
+   "x": 1194.4,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_large"
+  },
+  {
+   "id": "eqsel_q",
+   "kind": "knob",
+   "x": 1266.8,
+   "y": 253,
+   "w": 46,
+   "h": 46,
+   "art": "knob_large"
+  },
+  {
+   "id": "meter_in",
+   "kind": "meter",
+   "x": 1344,
+   "y": 76,
+   "w": 84,
+   "h": 58
+  },
+  {
+   "id": "meter_wet",
+   "kind": "meter",
+   "x": 1436,
+   "y": 76,
+   "w": 84,
+   "h": 58
+  },
+  {
+   "id": "mix_pct",
+   "kind": "knob",
+   "x": 1343.0,
+   "y": 174,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "dry_level_db",
+   "kind": "knob",
+   "x": 1389.0,
+   "y": 174,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "wet_level_db",
+   "kind": "knob",
+   "x": 1435.0,
+   "y": 174,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "output_gain_db",
+   "kind": "knob",
+   "x": 1481.0,
+   "y": 174,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "mix_lock",
+   "kind": "pad",
+   "x": 1350.0,
+   "y": 239,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "wet_solo",
+   "kind": "pad",
+   "x": 1400.0,
+   "y": 239,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "bypass",
+   "kind": "pad",
+   "x": 1450.0,
+   "y": 239,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "meter_out",
+   "kind": "meter",
+   "x": 1504,
+   "y": 222,
+   "w": 12,
+   "h": 82
+  },
+  {
+   "id": "quality@stepper",
+   "kind": "stepper",
+   "x": 82,
+   "y": 381,
+   "w": 118,
+   "h": 24
+  },
+  {
+   "id": "ir_reverse",
+   "kind": "pad",
+   "x": 221.0,
+   "y": 381,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "ir_normalize",
+   "kind": "pad",
+   "x": 267.0,
+   "y": 381,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "predelay_sync",
+   "kind": "pad",
+   "x": 315.0,
+   "y": 381,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "predelay_note@stepper",
+   "kind": "stepper",
+   "x": 384,
+   "y": 381,
+   "w": 86,
+   "h": 24
+  },
+  {
+   "id": "predelay_ms",
+   "kind": "knob",
+   "x": 96.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_start_ms",
+   "kind": "knob",
+   "x": 176.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_length_pct",
+   "kind": "knob",
+   "x": 256.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_size_pct",
+   "kind": "knob",
+   "x": 336.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_decay_pct",
+   "kind": "knob",
+   "x": 416.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_xover_ms",
+   "kind": "knob",
+   "x": 96.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_early_db",
+   "kind": "knob",
+   "x": 176.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_late_db",
+   "kind": "knob",
+   "x": 256.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_damping_pct",
+   "kind": "knob",
+   "x": 336.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "ir_damp_freq",
+   "kind": "knob",
+   "x": 416.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "det_mode@stepper",
+   "kind": "stepper",
+   "x": 496,
+   "y": 381,
+   "w": 74,
+   "h": 24
+  },
+  {
+   "id": "key_listen",
+   "kind": "pad",
+   "x": 591.0,
+   "y": 381,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "key_hpf",
+   "kind": "knob",
+   "x": 507.5,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "key_lpf",
+   "kind": "knob",
+   "x": 582.5,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "det_rms_ms",
+   "kind": "knob",
+   "x": 507.5,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "lookahead_ms",
+   "kind": "knob",
+   "x": 582.5,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "duck_on",
+   "kind": "pad",
+   "x": 669.0,
+   "y": 381,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "duck_mode#0",
+   "kind": "choicepad",
+   "x": 725.0,
+   "y": 381,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "duck_mode#1",
+   "kind": "choicepad",
+   "x": 779.0,
+   "y": 381,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_retrigger@stepper",
+   "kind": "stepper",
+   "x": 840,
+   "y": 381,
+   "w": 96,
+   "h": 24
+  },
+  {
+   "id": "duck_depth_db",
+   "kind": "knob",
+   "x": 664.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "duck_threshold_db",
+   "kind": "knob",
+   "x": 724.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "duck_attack_ms",
+   "kind": "knob",
+   "x": 784.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "duck_release_ms",
+   "kind": "knob",
+   "x": 844.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "duck_amount",
+   "kind": "knob",
+   "x": 904.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "duck_rel_curve@stepper",
+   "kind": "stepper",
+   "x": 960,
+   "y": 435,
+   "w": 118,
+   "h": 24
+  },
+  {
+   "id": "curve_shape#0",
+   "kind": "choicepad",
+   "x": 662.6,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_shape#1",
+   "kind": "choicepad",
+   "x": 709.7,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_shape#2",
+   "kind": "choicepad",
+   "x": 756.9,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_shape#3",
+   "kind": "choicepad",
+   "x": 804.0,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_shape#4",
+   "kind": "choicepad",
+   "x": 851.1,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_shape#5",
+   "kind": "choicepad",
+   "x": 898.3,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_shape#6",
+   "kind": "choicepad",
+   "x": 945.4,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_sync",
+   "kind": "pad",
+   "x": 1007.0,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "curve_duration_ms",
+   "kind": "knob",
+   "x": 664.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "curve_tension",
+   "kind": "knob",
+   "x": 724.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "curve_guard_ms",
+   "kind": "knob",
+   "x": 784.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "curve_hyst_db",
+   "kind": "knob",
+   "x": 844.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "curve_note@stepper",
+   "kind": "stepper",
+   "x": 960,
+   "y": 541,
+   "w": 86,
+   "h": 24
+  },
+  {
+   "id": "gate_on",
+   "kind": "pad",
+   "x": 1115.0,
+   "y": 381,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "gate_rel_curve@stepper",
+   "kind": "stepper",
+   "x": 1230,
+   "y": 381,
+   "w": 120,
+   "h": 24
+  },
+  {
+   "id": "gate_threshold_db",
+   "kind": "knob",
+   "x": 1121.3,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "gate_hyst_db",
+   "kind": "knob",
+   "x": 1208.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "gate_attack_ms",
+   "kind": "knob",
+   "x": 1294.7,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "gate_hold_sync",
+   "kind": "pad",
+   "x": 1135.0,
+   "y": 487,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  },
+  {
+   "id": "gate_hold_note@stepper",
+   "kind": "stepper",
+   "x": 1230,
+   "y": 487,
+   "w": 86,
+   "h": 24
+  },
+  {
+   "id": "gate_hold_ms",
+   "kind": "knob",
+   "x": 1121.3,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "gate_release_ms",
+   "kind": "knob",
+   "x": 1208.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "gate_floor_db",
+   "kind": "knob",
+   "x": 1294.7,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "correlation",
+   "kind": "meter",
+   "x": 1382,
+   "y": 386,
+   "w": 132,
+   "h": 12
+  },
+  {
+   "id": "width_pct",
+   "kind": "knob",
+   "x": 1390.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "wet_balance",
+   "kind": "knob",
+   "x": 1466.0,
+   "y": 430,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "mono_below_hz",
+   "kind": "knob",
+   "x": 1390.0,
+   "y": 536,
+   "w": 40,
+   "h": 40,
+   "art": "knob_small"
+  },
+  {
+   "id": "mono_below_on",
+   "kind": "pad",
+   "x": 1471.0,
+   "y": 539,
+   "w": 30,
+   "h": 26,
+   "art": "lamp"
+  }
+ ]
+}
