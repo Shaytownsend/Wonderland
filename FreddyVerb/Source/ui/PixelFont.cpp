@@ -113,7 +113,7 @@ void PixelFont::drawSevenSegment (juce::Graphics& g, const juce::String& text, j
     for (auto ch : text) if (ch != '.') ++cells;
     if (cells == 0) return;
     const float h = box.getHeight();
-    const float cw = std::min (box.getWidth() / (float) cells, h * 0.62f);
+    const float cw = std::min (box.getWidth() / (float) cells, h * 0.7f);
     const float t = std::max (1.0f, cw * 0.16f); // segment thickness
     float x = box.getRight() - cw * (float) cells; // right-aligned like real readouts
 
@@ -145,7 +145,9 @@ void PixelFont::drawSevenSegment (juce::Graphics& g, const juce::String& text, j
         if (ch == '.') continue;
         const bool dot = i + 1 < text.length() && text[i + 1] == '.';
         const uint8_t s = segmentsFor (ch);
-        const float l = x + t, r = x + cw - t * 1.4f;
+        // every cell reserves a gap on the right for its decimal point so the dot
+        // never merges into the digit's right-hand segments at small sizes
+        const float l = x + t, r = x + cw - t * 2.2f;
         const float tp = box.getY() + t * 0.6f, md = box.getCentreY(), bt = box.getBottom() - t * 0.6f;
         const float gap = t * 0.25f;
         struct S { float x0, y0, x1, y1; } segs[7] = {
@@ -154,7 +156,7 @@ void PixelFont::drawSevenSegment (juce::Graphics& g, const juce::String& text, j
             { l + gap, md, r - gap, md } };
         for (int b = 0; b < 7; ++b)
             seg ((s >> b) & 1 ? onP : offP, segs[b].x0, segs[b].y0, segs[b].x1, segs[b].y1);
-        { const float dd = std::max (2.5f, t * 1.35f); (dot ? onP : offP).addEllipse (r + t * 0.3f, bt - dd * 0.55f, dd, dd); }
+        { const float dd = std::max (1.6f, t * 1.4f); (dot ? onP : offP).addEllipse (r + t * 0.8f, bt - dd * 0.5f, dd, dd); }
         x += cw;
     }
     if (! off.isTransparent()) { g.setColour (off); g.fillPath (offP, shear); }

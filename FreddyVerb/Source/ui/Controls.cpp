@@ -260,10 +260,21 @@ void ChoiceStepper::paint (juce::Graphics& g)
     if (label.isNotEmpty() && hub.drawLabels)
         lnf->drawControlLabel (g, b.removeFromTop (std::min (15.0f, b.getHeight() * 0.42f)), label, true);
     auto inner = lnf->drawDisplayFrame (g, b);
-    auto txt = param->choices[index];
-    lnf->drawDisplayText (g, "<", inner.removeFromLeft (10.0f).reduced (1, 3), juce::Justification::centred, true);
-    lnf->drawDisplayText (g, ">", inner.removeFromRight (10.0f).reduced (1, 3), juce::Justification::centred, true);
-    lnf->drawDisplayText (g, txt, inner.reduced (2.0f, inner.getHeight() * 0.18f), juce::Justification::centred);
+    auto txt = param->choices[index].toUpperCase();
+    const float arrowW = std::max (7.0f, inner.getHeight() * 0.42f);
+    lnf->drawDisplayText (g, "<", inner.removeFromLeft (arrowW).reduced (1, inner.getHeight() * 0.22f), juce::Justification::centred, true);
+    lnf->drawDisplayText (g, ">", inner.removeFromRight (arrowW).reduced (1, inner.getHeight() * 0.22f), juce::Justification::centred, true);
+    auto box = inner.reduced (1.0f, inner.getHeight() * 0.16f);
+    // Like real hardware LCDs, abbreviate long names rather than shrinking them
+    // below a readable dot pitch (the popup menu and tooltip show the full name).
+    const float minPx = std::min (1.25f, box.getHeight() / 7.0f);
+    if (PixelFont::textWidth (txt, minPx) - minPx > box.getWidth())
+    {
+        txt = txt.replace ("EXPONENTIAL", "EXPON").replace ("LOGARITHMIC", "LOGAR").replace ("ZERO LATENCY", "ZERO LAT")
+                 .replace ("LINEAR", "LIN").replace (" DB/OCT", "DB").replace ("CONTINUE", "CONT").replace ("RESTART", "RSTRT");
+        while (txt.length() > 3 && PixelFont::textWidth (txt, minPx) - minPx > box.getWidth()) txt = txt.dropLastCharacters (1);
+    }
+    lnf->drawDisplayText (g, txt, box, juce::Justification::centred);
     lnf->drawDisplayOverlay (g, inner);
 }
 

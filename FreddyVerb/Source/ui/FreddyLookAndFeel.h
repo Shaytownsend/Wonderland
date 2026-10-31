@@ -58,12 +58,24 @@ public:
 
     const FreddyTheme& theme() const noexcept { return t; }
 
+    /** Height of the top bar in logical pixels (shared by MainPanel and chassis art). */
+    static constexpr float topBarHeight = 54.0f;
+
     // --- Panels -----------------------------------------------------------
     virtual void drawChassis (juce::Graphics&, juce::Rectangle<float> bounds);
     virtual void drawSection (juce::Graphics&, juce::Rectangle<float> bounds, const SectionInfo&);
     virtual void drawSignalArrow (juce::Graphics&, juce::Point<float> from, juce::Point<float> to);
     virtual void drawLogo (juce::Graphics&, juce::Rectangle<float> bounds);
     virtual void drawRackEars (juce::Graphics&, juce::Rectangle<float> full, float earWidth);
+    /** Free space in the top bar (between REDO and SETUP): vents, model plates, stripes. */
+    virtual void drawPanelDetail (juce::Graphics&, juce::Rectangle<float> area);
+    /** Disk-drive style IR loader slot (Floppy Era Pro). */
+    virtual void drawDiskSlot (juce::Graphics&, juce::Rectangle<float> bounds, bool hover, bool down);
+    /** Small printed caption on a section (pad-bank group names, step numbers). */
+    virtual void drawCaption (juce::Graphics&, juce::Rectangle<float> bounds, const juce::String& text,
+                              juce::Justification = juce::Justification::centred);
+    /** Flat screw head (circle + slot). */
+    virtual void drawScrew (juce::Graphics&, juce::Point<float> centre, float diameter, float slotAngle = 0.6f);
 
     /** Photoreal skins return their layout; flat themes return nullptr. */
     virtual const SkinLayout* skinLayout() const { return nullptr; }

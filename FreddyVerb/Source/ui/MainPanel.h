@@ -4,6 +4,7 @@
 #include "EnvelopeVisualizer.h"
 #include "Displays.h"
 #include "IRBrowser.h"
+#include <set>
 
 namespace fv { class FreddyVerbProcessor; }
 
@@ -68,7 +69,10 @@ private:
     void layoutFloppy (juce::Rectangle<float> full);
     void layoutPhotoreal (const SkinLayout&);
     void layoutTopBar (juce::Rectangle<float>);
-    void layoutSection (int section, juce::Rectangle<float> r);
+    float layoutSection (int section, juce::Rectangle<float> r, float maxFit = 1.2f, bool place = true);
+    void layoutSections (const std::vector<std::pair<int, juce::Rectangle<float>>>&);
+    void layoutPadBank (juce::Rectangle<float> r);
+    Item* findItem (const juce::String& componentID);
     void updateDuckModeDimming();
     void updateEqBandKnobs (int band);
     void refreshIRBrowser();
@@ -105,7 +109,11 @@ private:
 
     std::map<int, juce::Rectangle<float>> sectionRects;
     std::vector<std::pair<juce::Point<float>, juce::Point<float>>> arrows;
-    juce::Rectangle<float> logoArea, floppySlot;
+    juce::Rectangle<float> logoArea, detailArea;
+    std::set<juce::Component*> placedElsewhere;     // laid out outside their own section (pad bank)
+    std::vector<std::pair<juce::Rectangle<float>, juce::String>> captions;
+    struct DiskSlot;
+    std::unique_ptr<DiskSlot> diskSlot;             // Floppy Era Pro IR loader (not a manifest control)
     const FreddyTheme* theme = nullptr;
     int lastDuckMode = -1;
 };

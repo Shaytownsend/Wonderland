@@ -24,7 +24,7 @@ namespace
         t.id = "studio_black_rack"; t.name = "Studio Black Rack"; t.number = 2;
         t.description = "Charcoal 2U-style rack front with flat ears and screw dots, amber LCD, orange pad LEDs, dense small labels.";
         t.width = 1360; t.height = 800;
-        t.rackEars = true; t.denseLabels = true; t.labelSize = 11.5f; t.layout = LayoutVariant::rack;
+        t.rackEars = true; t.denseLabels = true; t.labelSize = 12.0f; t.layout = LayoutVariant::rack;
         t.cornerRadius = 2.0f;
         auto& c = t.c;
         c.chassis = C (0xff2a2a2b); c.chassisEdge = C (0xff3a3a3c); c.section = C (0xff1c1c1d); c.sectionEdge = C (0xff121213);
@@ -63,7 +63,7 @@ namespace
         FreddyTheme t;
         t.id = "pad_station"; t.name = "Pad Station"; t.number = 4;
         t.description = "Drum-machine style: big square rubber pads select mode and curve shapes. Chunky, playful, high contrast on dark grey.";
-        t.height = 860; t.layout = LayoutVariant::padStation; t.padStyle = PadStyle::chunky; t.knobStyle = KnobStyle::chunky;
+        t.height = 920; t.layout = LayoutVariant::padStation; t.padStyle = PadStyle::chunky; t.knobStyle = KnobStyle::chunky;
         t.labelSize = 13.5f; t.cornerRadius = 4.0f;
         auto& c = t.c;
         c.chassis = C (0xff3b3c3f); c.chassisEdge = C (0xff2c2d30); c.section = C (0xff2a2b2e); c.sectionEdge = C (0xff1f2022);
@@ -83,7 +83,7 @@ namespace
         t.description = "Aged, slightly yellowed plastic, muted pastel buttons, orange LCD, worn feel from flat colour only.";
         t.cornerRadius = 7.0f;
         auto& c = t.c;
-        c.chassis = C (0xffe2d6b2); c.chassisEdge = C (0xffcfc19a); c.section = C (0xff7d7262); c.sectionEdge = C (0xff6d6354);
+        c.chassis = C (0xffe2d6b2); c.chassisEdge = C (0xffcfc19a); c.section = C (0xff736857); c.sectionEdge = C (0xff62584a);
         c.sectionLabel = C (0xfffbf3dd); c.chassisLabel = C (0xff3b3426); c.text = C (0xfffbf3dd); c.textDim = C (0xffd6ccb4);
         c.accent = C (0xffd9653a); c.secondary = C (0xff4f8f8c);
         c.knobBody = C (0xffefe6cc); c.knobLine = C (0xff3b3426); c.knobArc = C (0xfff0a070); c.knobTrack = C (0xff665d4f);
@@ -138,11 +138,11 @@ namespace
         FreddyTheme t;
         t.id = "floppy_era_pro"; t.name = "Floppy Era Pro"; t.number = 8;
         t.description = "Wide, horizontal and sectioned: a colour band per stage, a big central LCD and a disk-drive slot IR loader.";
-        t.width = 1560; t.height = 760; t.layout = LayoutVariant::floppyWide; t.sectionStripes = true; t.floppySlot = true;
+        t.width = 1560; t.height = 920; t.layout = LayoutVariant::floppyWide; t.sectionStripes = true; t.floppySlot = true;
         t.cornerRadius = 3.0f; t.labelSize = 12.5f;
         auto& c = t.c;
         c.chassis = C (0xffcdc8bc); c.chassisEdge = C (0xffb5afa2); c.section = C (0xff36363b); c.sectionEdge = C (0xff27272b);
-        c.sectionLabel = C (0xff141414); c.chassisLabel = C (0xff1c1c1c); c.text = C (0xffe9e5da); c.textDim = C (0xff9e9a90);
+        c.sectionLabel = C (0xffe9e5da); c.chassisLabel = C (0xff1c1c1c); c.text = C (0xffe9e5da); c.textDim = C (0xff9e9a90);
         c.accent = C (0xffe2532d); c.secondary = C (0xff2fa6a0);
         c.knobBody = C (0xff4a4a50); c.knobLine = C (0xfff0ece2); c.knobArc = C (0xffe2532d); c.knobTrack = C (0xff55555b);
         c.pad = C (0xff4c4c52); c.padText = C (0xffe9e5da);

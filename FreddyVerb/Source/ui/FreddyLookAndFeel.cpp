@@ -75,9 +75,94 @@ void FreddyLookAndFeel::drawChassis (juce::Graphics& g, juce::Rectangle<float> b
     g.fillRect (b);
     // flat seam lines like moulded plastic panel joins
     g.setColour (t.c.chassisEdge);
-    g.fillRect (b.removeFromTop (2.0f));
-    g.fillRect (b.removeFromBottom (2.0f));
-    if (t.rackEars) drawRackEars (g, b.expanded (0, 2), 34.0f);
+    g.fillRect (b.withHeight (2.0f));
+    g.fillRect (b.withTop (b.getBottom() - 2.0f));
+    // seam between the top-bar moulding and the main panel
+    g.fillRect (b.getX(), b.getY() + topBarHeight - 1.0f, b.getWidth(), 1.5f);
+    if (t.rackEars) drawRackEars (g, b, 34.0f);
+    else
+    {
+        // four corner screws holding the top moulding
+        for (auto p : { juce::Point<float> (b.getX() + 7.0f, b.getY() + 8.0f), juce::Point<float> (b.getRight() - 7.0f, b.getY() + 8.0f),
+                        juce::Point<float> (b.getX() + 7.0f, b.getBottom() - 8.0f), juce::Point<float> (b.getRight() - 7.0f, b.getBottom() - 8.0f) })
+            drawScrew (g, p, 7.0f);
+    }
+}
+
+void FreddyLookAndFeel::drawScrew (juce::Graphics& g, juce::Point<float> c, float d, float slotAngle)
+{
+    auto r = juce::Rectangle<float> (d, d).withCentre (c);
+    g.setColour (t.c.chassisEdge.darker (0.25f));
+    g.fillEllipse (r);
+    g.setColour (t.c.chassisEdge.brighter (0.15f));
+    g.fillEllipse (r.reduced (d * 0.14f));
+    g.setColour (t.c.chassisEdge.darker (0.55f));
+    const float rad = d * 0.32f;
+    g.drawLine ({ c.getPointOnCircumference (rad, slotAngle), c.getPointOnCircumference (rad, slotAngle + juce::MathConstants<float>::pi) },
+                std::max (1.0f, d * 0.14f));
+}
+
+void FreddyLookAndFeel::drawPanelDetail (juce::Graphics& g, juce::Rectangle<float> area)
+{
+    // moulded ventilation slots, right-aligned in the free top-bar space
+    if (area.getWidth() < 40.0f) return;
+    auto r = area.withSizeKeepingCentre (std::min (area.getWidth(), 150.0f), area.getHeight() * 0.62f);
+    const int n = 12;
+    const float pitch = r.getWidth() / (float) n;
+    g.setColour (t.c.chassisEdge.darker (0.18f));
+    for (int i = 0; i < n; ++i)
+        g.fillRoundedRectangle (juce::Rectangle<float> (r.getX() + (float) i * pitch + pitch * 0.3f, r.getY(), pitch * 0.4f, r.getHeight()), pitch * 0.2f);
+}
+
+void FreddyLookAndFeel::drawCaption (juce::Graphics& g, juce::Rectangle<float> b, const juce::String& text, juce::Justification j)
+{
+    g.setColour (t.c.sectionLabel.withAlpha (0.85f));
+    g.setFont (labelFont (std::min (t.labelSize, b.getHeight())).withExtraKerningFactor (0.14f));
+    g.drawFittedText (text.toUpperCase(), b.toNearestInt(), j, 1, 0.8f);
+}
+
+void FreddyLookAndFeel::drawDiskSlot (juce::Graphics& g, juce::Rectangle<float> b, bool hover, bool down)
+{
+    // flat 3.5" drive faceplate: slot with flap, busy LED, eject button, printed legend
+    auto face = b;
+    g.setColour (t.c.section);
+    g.fillRoundedRectangle (face, 3.0f);
+    g.setColour (t.c.sectionEdge);
+    g.drawRoundedRectangle (face.reduced (0.5f), 3.0f, 1.0f);
+
+    auto inner = face.reduced (10.0f, 7.0f);
+    auto legend = inner.removeFromBottom (std::min (14.0f, inner.getHeight() * 0.32f));
+    auto right = inner.removeFromRight (std::min (74.0f, inner.getWidth() * 0.3f));
+    inner.removeFromRight (8.0f);
+
+    // slot opening + flap
+    auto slot = inner.withSizeKeepingCentre (inner.getWidth(), std::max (8.0f, inner.getHeight() * 0.36f));
+    g.setColour (t.c.chassisEdge.darker (0.75f));
+    g.fillRoundedRectangle (slot, slot.getHeight() * 0.5f);
+    g.setColour (juce::Colours::black);
+    g.fillRoundedRectangle (slot.reduced (3.0f, slot.getHeight() * 0.28f), 2.0f);
+    g.setColour ((hover ? t.c.accent : t.c.knobBody).withAlpha (hover ? 0.9f : 0.6f));
+    g.fillRect (slot.reduced (slot.getHeight() * 0.6f, 0).withHeight (2.0f).withY (slot.getY() + 2.0f));
+
+    // busy LED + eject button
+    auto led = juce::Rectangle<float> (10.0f, 5.0f).withCentre ({ right.getX() + 10.0f, right.getCentreY() });
+    g.setColour (down ? t.c.ledOn : (hover ? t.c.ledOn.withAlpha (0.7f) : t.c.ledOff));
+    g.fillRect (led);
+    auto ej = right.withTrimmedLeft (24.0f).withSizeKeepingCentre (std::min (44.0f, right.getWidth() - 24.0f), std::min (18.0f, right.getHeight()));
+    g.setColour (down ? t.c.pad.darker (0.2f) : t.c.pad);
+    g.fillRoundedRectangle (ej, 2.0f);
+    juce::Path tri;
+    const auto ec = ej.getCentre();
+    tri.addTriangle (ec.x - 5.0f, ec.y + 1.0f, ec.x + 5.0f, ec.y + 1.0f, ec.x, ec.y - 5.0f);
+    g.setColour (t.c.padText);
+    g.fillPath (tri);
+    g.fillRect (ec.x - 5.0f, ec.y + 3.0f, 10.0f, 2.0f);
+
+    g.setColour (t.c.sectionLabel);
+    g.setFont (labelFont (std::min (13.0f, legend.getHeight())).withExtraKerningFactor (0.16f));
+    g.drawText ("IR DISK  -  CLICK TO LOAD", legend, juce::Justification::centredLeft);
+    g.setColour (t.c.textDim);
+    g.drawText ("3.5\" 2HD", legend, juce::Justification::centredRight);
 }
 
 void FreddyLookAndFeel::drawRackEars (juce::Graphics& g, juce::Rectangle<float> full, float earW)
@@ -316,7 +401,7 @@ void FreddyLookAndFeel::drawCurveGlyph (juce::Graphics& g, juce::Rectangle<float
         if (i == 0) p.startNewSubPath (px, py); else p.lineTo (px, py);
     }
     g.setColour (col);
-    g.strokePath (p, juce::PathStrokeType (1.6f, juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
+    g.strokePath (p, juce::PathStrokeType (juce::jlimit (1.6f, 4.0f, b.getHeight() * 0.07f), juce::PathStrokeType::curved, juce::PathStrokeType::rounded));
 }
 
 // ---------------------------------------------------------------------------
@@ -324,9 +409,10 @@ void FreddyLookAndFeel::drawCurveGlyph (juce::Graphics& g, juce::Rectangle<float
 // ---------------------------------------------------------------------------
 juce::Rectangle<float> FreddyLookAndFeel::drawDisplayFrame (juce::Graphics& g, juce::Rectangle<float> b)
 {
+    const float bz = juce::jlimit (2.5f, 5.0f, b.getHeight() * 0.11f);
     g.setColour (t.c.lcdBezel);
-    g.fillRoundedRectangle (b, 4.0f);
-    auto inner = b.reduced (5.0f);
+    g.fillRoundedRectangle (b, std::min (4.0f, bz));
+    auto inner = b.reduced (bz);
     g.setColour (t.c.lcdBg);
     g.fillRect (inner);
     return inner;

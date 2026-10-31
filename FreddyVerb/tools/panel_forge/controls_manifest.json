@@ -140,7 +140,7 @@
       "id": "quality@stepper",
       "kind": "stepper",
       "section": "REVERB",
-      "w": 118.0,
+      "w": 128.0,
       "h": 38.0,
       "label": "QUALITY"
     },
@@ -380,7 +380,7 @@
       "id": "duck_rel_curve@stepper",
       "kind": "stepper",
       "section": "DUCK",
-      "w": 100.0,
+      "w": 116.0,
       "h": 38.0,
       "label": "B.CURVE"
     },
@@ -500,7 +500,7 @@
       "id": "gate_rel_curve@stepper",
       "kind": "stepper",
       "section": "GATE",
-      "w": 100.0,
+      "w": 116.0,
       "h": 38.0,
       "label": "CURVE"
     },

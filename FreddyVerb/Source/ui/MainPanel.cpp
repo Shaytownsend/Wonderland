@@ -6,14 +6,14 @@ namespace fv::ui
 {
 namespace
 {
-    enum Sec { REVERB = 0, DUCK, GATE, TONE, SPACE, MIX, DETECT, TOP, IRCOL, LCD };
+    enum Sec { REVERB = 0, DUCK, GATE, TONE, SPACE, MIX, DETECT, TOP, IRCOL, LCD, PADS };
     const char* sectionTitle (int s)
     {
         switch (s)
         {
             case REVERB: return "REVERB"; case DUCK: return "DUCK"; case GATE: return "GATE";
             case TONE: return "TONE"; case SPACE: return "SPACE"; case MIX: return "MIX";
-            case DETECT: return "DETECT"; default: return "";
+            case DETECT: return "DETECT"; case PADS: return "PAD BANK"; default: return "";
         }
     }
 }
@@ -60,6 +60,31 @@ struct MainPanel::PresetLcd : public juce::Component
     bool dirty = false;
     int ab = 0;
     std::function<void()> onClick;
+};
+
+/** Disk-drive style IR loader (Floppy Era Pro): click to load an IR / add a folder. */
+struct MainPanel::DiskSlot : public juce::Component, public juce::SettableTooltipClient
+{
+    DiskSlot()
+    {
+        setMouseCursor (juce::MouseCursor::PointingHandCursor);
+        setRepaintsOnMouseActivity (true);
+        setTooltip ("IR disk drive: load an impulse response file or add an IR folder");
+        setTitle ("Load IR");
+    }
+    void paint (juce::Graphics& g) override
+    {
+        if (auto* lnf = freddyLnf (*this)) lnf->drawDiskSlot (g, getLocalBounds().toFloat(), isMouseOver (true), down);
+    }
+    void mouseDown (const juce::MouseEvent&) override { down = true; repaint(); }
+    void mouseUp (const juce::MouseEvent& e) override
+    {
+        down = false;
+        repaint();
+        if (getLocalBounds().contains (e.getPosition()) && onClick) onClick();
+    }
+    std::function<void()> onClick;
+    bool down = false;
 };
 
 MainPanel::MainPanel (FreddyVerbProcessor& p, ControlHub& h) : proc (p), hub (h)
@@ -119,7 +144,7 @@ MainPanel::MainPanel (FreddyVerbProcessor& p, ControlHub& h) : proc (p), hub (h)
     }
 
     // --- REVERB ---------------------------------------------------------------------
-    addStepper (quality, REVERB, 0, 118);
+    addStepper (quality, REVERB, 0, 128);
     addPad (irReverse, "REVERSE", REVERB, 0, 70);
     addPad (irNormalize, "NORM", REVERB, 0, 56);
     addKnob (predelay, REVERB, 1);
@@ -153,7 +178,7 @@ MainPanel::MainPanel (FreddyVerbProcessor& p, ControlHub& h) : proc (p), hub (h)
     addKnob (duckAttack, DUCK, 1);
     duckFollowOnly.push_back (addKnob (duckRelease, DUCK, 1));
     duckFollowOnly.push_back (addKnob (duckAmount, DUCK, 1));
-    duckFollowOnlyOther.push_back (addStepper (duckRelCurve, DUCK, 1, 100));
+    duckFollowOnlyOther.push_back (addStepper (duckRelCurve, DUCK, 0, 116));
     {
         const char* shortNames[] = { "LIN", "EXP", "LOG", "S", "HOLD", "PUMP", "SWELL" };
         for (int i = 0; i < choices::numCurveShapes; ++i)
@@ -168,8 +193,8 @@ MainPanel::MainPanel (FreddyVerbProcessor& p, ControlHub& h) : proc (p), hub (h)
     duckCurveOnly.push_back (addKnob (curveTension, DUCK, 3, true));
     duckCurveOnly.push_back (addKnob (curveGuard, DUCK, 3));
     duckCurveOnly.push_back (addKnob (curveHyst, DUCK, 3));
-    duckCurveOnlyOther.push_back (addPad (curveSync, "SYNC", DUCK, 3, 52));
-    duckCurveOnlyOther.push_back (addStepper (curveNote, DUCK, 3, 78));
+    duckCurveOnlyOther.push_back (addPad (curveSync, "SYNC", DUCK, 4, 52));
+    duckCurveOnlyOther.push_back (addStepper (curveNote, DUCK, 4, 78));
     for (auto& it : items)
         if (it.section == DUCK)
         {
@@ -178,7 +203,7 @@ MainPanel::MainPanel (FreddyVerbProcessor& p, ControlHub& h) : proc (p), hub (h)
 
     // --- GATE ---------------------------------------------------------------------------
     addPad (gateOn, "GATE", GATE, 0, 62);
-    addStepper (gateRelCurve, GATE, 0, 100);
+    addStepper (gateRelCurve, GATE, 0, 116);
     addKnob (gateThresh, GATE, 1);
     addKnob (gateHyst, GATE, 1);
     addKnob (gateAttack, GATE, 1);
@@ -297,6 +322,9 @@ MainPanel::MainPanel (FreddyVerbProcessor& p, ControlHub& h) : proc (p), hub (h)
         proc.getUIState().setProperty ("irFavourites", favs.joinIntoString ("|"), nullptr);
     };
     irDisplay->onRelinkRequested = [this] { chooseIRFile (true); };
+    diskSlot = std::make_unique<DiskSlot>();
+    diskSlot->onClick = [this] { if (irBrowser->onBrowse) irBrowser->onBrowse(); };
+    addChildComponent (*diskSlot);
     refreshIRBrowser();
 }
 
@@ -487,7 +515,7 @@ void MainPanel::updateDuckModeDimming()
     const int mode = (int) hub.apvts.getRawParameterValue (pid::duckMode)->load();
     if (mode == lastDuckMode) return;
     lastDuckMode = mode;
-    const float dim = 0.38f;
+    const float dim = theme != nullptr && theme->layout == LayoutVariant::padStation ? 0.5f : 0.4f;
     for (auto* k : duckFollowOnly) k->setAlpha (mode == choices::follow ? 1.0f : dim);
     for (auto* c : duckFollowOnlyOther) c->setAlpha (mode == choices::follow ? 1.0f : dim);
     for (auto* k : duckCurveOnly) k->setAlpha (mode == choices::curve ? 1.0f : dim);
@@ -546,6 +574,8 @@ void MainPanel::themeChanged (const FreddyTheme& t)
             if (it.section == DUCK) pb->setAccent (lnf ? lnf->sectionAccent (1) : juce::Colour());
             else if (it.section == GATE) pb->setAccent (lnf ? lnf->sectionAccent (2) : juce::Colour());
         }
+    lastDuckMode = -1;
+    updateDuckModeDimming();
     resized();
     repaint();
 }
@@ -555,8 +585,11 @@ void MainPanel::resized()
     if (theme == nullptr) return;
     sectionRects.clear();
     arrows.clear();
-    floppySlot = {};
+    captions.clear();
+    placedElsewhere.clear();
+    detailArea = {};
     for (auto& it : items) it.comp->setVisible (true);
+    diskSlot->setVisible (false);
     updateEqBandKnobs (eqSelBand);
 
     auto full = getLocalBounds().toFloat();
@@ -568,6 +601,13 @@ void MainPanel::resized()
         layoutStandard (full);
 }
 
+MainPanel::Item* MainPanel::findItem (const juce::String& id)
+{
+    for (auto& it : items)
+        if (it.comp->getComponentID() == id) return &it;
+    return nullptr;
+}
+
 void MainPanel::layoutTopBar (juce::Rectangle<float> bar)
 {
     sectionRects[TOP] = bar;
@@ -575,8 +615,7 @@ void MainPanel::layoutTopBar (juce::Rectangle<float> bar)
     logoArea = r.removeFromLeft (290.0f);
     auto place = [&] (const juce::String& id, float w, float gap = 6.0f)
     {
-        for (auto& it : items)
-            if (it.comp->getComponentID() == id) { it.comp->setBounds (r.removeFromLeft (w).toNearestInt()); r.removeFromLeft (gap); }
+        if (auto* it = findItem (id)) { it->comp->setBounds (r.removeFromLeft (w).toNearestInt()); r.removeFromLeft (gap); }
     };
     r.removeFromLeft (10.0f);
     place ("preset_prev", 30, 4);
@@ -585,112 +624,266 @@ void MainPanel::layoutTopBar (juce::Rectangle<float> bar)
     place ("ab_a", 32, 4); place ("ab_b", 32, 4); place ("ab_copy", 46, 18);
     place ("undo", 52, 4); place ("redo", 52, 18);
     // settings at far right
-    for (auto& it : items)
-        if (it.comp->getComponentID() == "settings")
-            it.comp->setBounds (bar.reduced (10.0f, 9.0f).removeFromRight (64.0f).toNearestInt());
+    auto settings = bar.reduced (10.0f, 9.0f).removeFromRight (64.0f);
+    if (auto* it = findItem ("settings")) it->comp->setBounds (settings.toNearestInt());
+    detailArea = r.withRight (settings.getX() - 18.0f);
+    if (detailArea.getWidth() < 30.0f) detailArea = {};
 }
 
-void MainPanel::layoutSection (int section, juce::Rectangle<float> r)
+/*  Grid layout of one section. Each item group becomes one or more rows; a group
+    that does not fit on one line is split into *balanced* rows (5 -> 3+2, 7 -> 4+3,
+    never a lone orphan) and uniform knob rows share equal-width cells so columns
+    line up. Everything is scaled by one factor (up to 1.2x when there is room,
+    down to 0.6x when crowded) so all controls in a section stay the same size. */
+float MainPanel::layoutSection (int section, juce::Rectangle<float> r, float maxFit, bool place)
 {
     sectionRects[section] = r;
     const float ks = theme->knobScale;
     const bool pads = theme->layout == LayoutVariant::padStation;
-    auto content = r.reduced (8.0f, 4.0f).withTrimmedTop (theme->labelSize + 8.0f);
+    const float header = theme->labelSize + (theme->sectionStripes ? 16.0f : 10.0f);
+    auto content = r.reduced (10.0f, 6.0f).withTrimmedTop (header);
 
-    // gather this section's items by group
     std::map<int, std::vector<Item*>> groups;
     for (auto& it : items)
-        if (it.section == section && it.comp->isVisible()) groups[it.group].push_back (&it);
-    if (groups.empty()) return;
+        if (it.section == section && it.comp->isVisible() && placedElsewhere.count (it.comp) == 0)
+            groups[it.group].push_back (&it);
+    if (groups.empty()) return 1.0f;
+    {
+        // merge consecutive knob-only groups so they share one balanced grid
+        auto allKnobs = [] (const std::vector<Item*>& v) { return ! v.empty() && std::all_of (v.begin(), v.end(), [] (Item* i) { return i->kind == "knob"; }); };
+        std::map<int, std::vector<Item*>> merged;
+        int prev = -1;
+        for (auto& [gid, list] : groups)
+        {
+            if (prev >= 0 && allKnobs (list) && allKnobs (merged[prev]))
+                merged[prev].insert (merged[prev].end(), list.begin(), list.end());
+            else { merged[gid] = list; prev = gid; }
+        }
+        groups = std::move (merged);
+    }
 
-    // special: TONE puts the EQ display on top
     if (section == TONE)
         for (auto& g : groups)
             for (auto it = g.second.begin(); it != g.second.end(); )
             {
                 if ((*it)->comp == eqDisplay.get())
                 {
-                    eqDisplay->setBounds (content.removeFromTop (std::max (70.0f, content.getHeight() * 0.36f)).toNearestInt());
-                    content.removeFromTop (4.0f);
+                    if (place) eqDisplay->setBounds (content.removeFromTop (std::max (70.0f, content.getHeight() * 0.36f)).toNearestInt());
+                    content.removeFromTop (6.0f);
                     it = g.second.erase (it);
                 }
                 else ++it;
             }
-    // special: MIX meters on the right
     if (section == MIX)
     {
-        auto meters = content.removeFromRight (84.0f);
+        auto meters = content.removeFromRight (86.0f).reduced (0, 2.0f);
+        content.removeFromRight (6.0f);
         const float mw = 22.0f;
         int i = 0;
         for (auto* m : { meterIn.get(), meterWet.get(), meterOut.get() })
-            m->setBounds (juce::Rectangle<float> (meters.getX() + (float) i++ * (mw + 6.0f), meters.getY() + 2, mw, meters.getHeight() - 4).toNearestInt());
+            if (place) m->setBounds (juce::Rectangle<float> (meters.getX() + (float) i++ * (mw + 6.0f), meters.getY(), mw, meters.getHeight()).toNearestInt());
         for (auto& g : groups)
             g.second.erase (std::remove_if (g.second.begin(), g.second.end(), [] (Item* it) { return it->kind == "meter"; }), g.second.end());
     }
 
-    // flex rows: one FlexBox per group, stacked vertically. If the content does
-    // not fit, everything is scaled down uniformly until it does.
-    auto build = [&] (float fit, juce::FlexBox& column, std::vector<std::unique_ptr<juce::FlexBox>>& rows) -> float
+    auto baseSize = [&] (const Item* it)
     {
-        column = {};
+        float w = it->w, h = it->h;
+        if (it->kind == "knob") { w *= ks; h *= ks; }
+        if (pads && (it->kind == "choicepad" || it->kind == "pad")) { w *= 1.15f; h *= 1.4f; }
+        if (it->kind == "stepper") h = std::max (h, 40.0f);
+        return std::pair<float, float> { w, h };
+    };
+    // only knobs grow beyond their preferred size; pads/steppers/displays keep it
+    auto scaleOf = [] (const Item* it, float f) { return it->kind == "knob" ? f : std::min (f, 1.0f); };
+
+    struct Row { std::vector<Item*> list; float h = 0; bool uniform = false; int cols = 0; float cellW = 0; };
+    const float W = content.getWidth(), H = content.getHeight();
+    const float gapX = 6.0f, gapY = 6.0f;
+
+    // returns the height needed, or a huge value if a row is too wide at this scale
+    auto arrange = [&] (float f, std::vector<Row>& rows) -> float
+    {
         rows.clear();
-        column.flexDirection = juce::FlexBox::Direction::column;
-        column.justifyContent = juce::FlexBox::JustifyContent::spaceAround;
-        float needed = 0;
+        const float fl = std::min (f, 1.0f);   // line breaks are decided at <= preferred size
+        bool tooWide = false;
         for (auto& [gid, list] : groups)
         {
-            if (list.empty()) continue;
-            auto row = std::make_unique<juce::FlexBox>();
-            row->flexWrap = juce::FlexBox::Wrap::wrap;
-            row->justifyContent = juce::FlexBox::JustifyContent::spaceAround;
-            row->alignContent = juce::FlexBox::AlignContent::center;
-            row->alignItems = juce::FlexBox::AlignItems::center;
-            float rowH = 0, x = 0;
-            int lines = 1;
-            for (auto* it : list)
+            const int n = (int) list.size();
+            if (n == 0) continue;
+            bool uniform = true;
+            for (auto* it : list) uniform = uniform && it->kind == list.front()->kind && it->w == list.front()->w;
+            auto rowWidth = [&] (int from, int cnt, float sc)
             {
-                float w = it->w, h = it->h;
-                if (it->kind == "knob") { w *= ks; h *= ks; }
-                if (pads && (it->kind == "choicepad" || it->kind == "pad")) { w *= 1.2f; h *= 1.5f; }
-                if (pads && it->comp->getComponentID().startsWith ("curve_shape#")) { w = 56; h = 50; }
-                w *= fit; h *= fit;
-                row->items.add (juce::FlexItem (*it->comp).withWidth (w).withHeight (h).withMargin (2.0f));
-                rowH = std::max (rowH, h + 4.0f);
-                if (x + w + 4.0f > content.getWidth() && x > 0) { ++lines; x = 0; }
-                x += w + 4.0f;
+                float w = 0;
+                for (int k = 0; k < cnt; ++k)
+                {
+                    auto* it = list[(size_t) (from + k)];
+                    w += baseSize (it).first * scaleOf (it, sc) + (k > 0 ? (uniform ? 2.0f : gapX) : 0.0f);
+                }
+                return w;
+            };
+            // smallest number of balanced lines in which every line fits
+            int lines = 1;
+            for (; lines < n; ++lines)
+            {
+                bool fits = true;
+                const int base = n / lines, extra = n % lines;
+                for (int l = 0, idx = 0; l < lines && fits; ++l)
+                {
+                    const int cnt = base + (l < extra ? 1 : 0);
+                    fits = rowWidth (idx, cnt, fl) <= W + 0.5f;
+                    idx += cnt;
+                }
+                if (fits) break;
             }
-            const float hh = rowH * (float) lines;
-            needed += hh;
-            column.items.add (juce::FlexItem (*row).withMinHeight (hh).withFlex (hh));
-            rows.push_back (std::move (row));
+            const int base = n / lines, extra = n % lines;
+            const int cols = base + (extra > 0 ? 1 : 0);
+            float maxW = 0;
+            for (auto* it : list) maxW = std::max (maxW, baseSize (it).first * scaleOf (it, f));
+            for (int l = 0, idx = 0; l < lines; ++l)
+            {
+                Row row;
+                row.uniform = uniform;
+                row.cols = cols;
+                row.cellW = uniform ? std::min (W / (float) cols, maxW * 1.9f) : 0.0f;
+                const int cnt = base + (l < extra ? 1 : 0);
+                if (rowWidth (idx, cnt, f) > W + 0.5f) tooWide = true;
+                for (int k = 0; k < cnt; ++k)
+                {
+                    auto* it = list[(size_t) idx++];
+                    row.list.push_back (it);
+                    row.h = std::max (row.h, baseSize (it).second * scaleOf (it, f));
+                }
+                rows.push_back (std::move (row));
+            }
         }
-        return needed;
+        float total = 0;
+        for (auto& row : rows) total += row.h;
+        total += gapY * (float) std::max (0, (int) rows.size() - 1);
+        return tooWide ? 1.0e9f : total;
     };
-    juce::FlexBox column;
-    std::vector<std::unique_ptr<juce::FlexBox>> rows;
-    float fit = 1.0f;
-    for (int iter = 0; iter < 6; ++iter)
+
+    std::vector<Row> rows;
+    float f = maxFit;
+    for (; f > 0.6f; f -= 0.02f)
+        if (arrange (f, rows) <= H) break;
+    f = std::max (0.6f, f);
+    if (! place) return f;
+    float needed = arrange (f, rows);
+    if (needed > 1.0e8f) { f = 0.6f; needed = arrange (f, rows); }
+
+    // distribute spare height evenly between and around rows (capped so sparse
+    // sections stay grouped rather than drifting apart)
+    const float spare = std::max (0.0f, H - needed);
+    const float gap = std::min (spare / (float) (rows.size() + 1), 26.0f);
+    float y = content.getY() + (H - needed - gap * (float) (rows.size() - 1)) * 0.5f;
+    for (auto& row : rows)
     {
-        const float needed = build (fit, column, rows);
-        if (needed <= content.getHeight() + 0.5f) break;
-        fit *= std::max (0.6f, content.getHeight() / needed);
+        if (row.uniform)
+        {
+            const float blockW = row.cellW * (float) row.list.size();
+            float x = content.getCentreX() - blockW * 0.5f;
+            for (auto* it : row.list)
+            {
+                auto [w, h] = baseSize (it);
+                const float sc = scaleOf (it, f);
+                it->comp->setBounds (juce::Rectangle<float> (w * sc, h * sc)
+                                        .withCentre ({ x + row.cellW * 0.5f, y + row.h * 0.5f }).toNearestInt());
+                x += row.cellW;
+            }
+        }
+        else
+        {
+            float sum = 0;
+            for (auto* it : row.list) sum += baseSize (it).first * scaleOf (it, f);
+            const float sp = std::min ((W - sum) / (float) (row.list.size() + 1), 40.0f);
+            float x = content.getCentreX() - (sum + sp * (float) (row.list.size() - 1)) * 0.5f;
+            for (auto* it : row.list)
+            {
+                auto [w, h] = baseSize (it);
+                const float sc = scaleOf (it, f);
+                it->comp->setBounds (juce::Rectangle<float> (x, y + (row.h - h * sc) * 0.5f, w * sc, h * sc).toNearestInt());
+                x += w * sc + sp;
+            }
+        }
+        y += row.h + gap;
     }
-    column.performLayout (content);
+    return f;
+}
+
+/*  Lays out several sections with a shared knob scale so neighbouring panels use
+    the same knob size (like real hardware); a roomy section may go up to 12 %
+    larger than the most crowded one. */
+void MainPanel::layoutSections (const std::vector<std::pair<int, juce::Rectangle<float>>>& list)
+{
+    float minFit = 1.2f;
+    for (auto& [sec, r] : list) minFit = std::min (minFit, layoutSection (sec, r, 1.2f, false));
+    for (auto& [sec, r] : list) layoutSection (sec, r, std::min (1.2f, minFit * 1.12f), true);
+}
+
+/*  Pad Station: a full-width bank of large square rubber pads, drum-machine style.
+    ENABLE (duck, gate) | DUCK MODE (follow, curve) | CURVE SHAPE (7) | CURVE SYNC. */
+void MainPanel::layoutPadBank (juce::Rectangle<float> r)
+{
+    using namespace fv::pid;
+    sectionRects[PADS] = r;
+    std::vector<std::pair<juce::String, std::vector<juce::String>>> bank {
+        { "ENABLE",      { duckOn, gateOn } },
+        { "DUCK MODE",   { juce::String (duckMode) + "#0", juce::String (duckMode) + "#1" } },
+        { "CURVE SHAPE", {} },
+        { "SYNC",        { curveSync } } };
+    for (int i = 0; i < choices::numCurveShapes; ++i) bank[2].second.push_back (juce::String (curveShape) + "#" + juce::String (i));
+
+    auto content = r.reduced (14.0f, 6.0f).withTrimmedTop (theme->labelSize + 10.0f);
+    auto capRow = content.removeFromTop (16.0f);
+    auto numRow = content.removeFromBottom (15.0f);
+    content.removeFromBottom (3.0f);
+    int n = 0; for (auto& b : bank) n += (int) b.second.size();
+    const float gap = 10.0f, groupGap = 30.0f;
+    const float cell = (content.getWidth() - gap * (float) (n - (int) bank.size()) - groupGap * (float) (bank.size() - 1)) / (float) n;
+    const float pad = std::min (cell, content.getHeight());
+    float x = content.getX();
+    int step = 1;
+    for (size_t gi = 0; gi < bank.size(); ++gi)
+    {
+        const float gx = x;
+        for (auto& id : bank[gi].second)
+        {
+            if (auto* it = findItem (id))
+            {
+                auto cellR = juce::Rectangle<float> (x, content.getY(), cell, content.getHeight());
+                it->comp->setBounds (cellR.withSizeKeepingCentre (pad, pad).toNearestInt());
+                placedElsewhere.insert (it->comp);
+                captions.push_back ({ juce::Rectangle<float> (x, numRow.getY(), cell, numRow.getHeight()), juce::String (step) });
+            }
+            ++step;
+            x += cell + gap;
+        }
+        x -= gap;
+        captions.push_back ({ juce::Rectangle<float> (gx, capRow.getY(), x - gx, capRow.getHeight()), "#" + bank[gi].first });
+        x += groupGap;
+    }
 }
 
 void MainPanel::layoutStandard (juce::Rectangle<float> full)
 {
     auto b = full;
     if (theme->rackEars)
-    {
         b = b.reduced (40.0f, 0);
-    }
     const bool padStation = theme->layout == LayoutVariant::padStation;
-    const float g = 8.0f;
-    layoutTopBar (b.removeFromTop (54.0f));
-    b = b.reduced (g, 0).withTrimmedBottom (g);
+    const float g = theme->signalArrows ? 20.0f : 8.0f;   // wide gutters carry the printed arrows
+    layoutTopBar (b.removeFromTop (FreddyLookAndFeel::topBarHeight));
+    b = b.reduced (theme->signalArrows ? 12.0f : g, 0).withTrimmedBottom (theme->signalArrows ? 22.0f : g);
+    b.removeFromTop (theme->rackEars ? 2.0f : 4.0f);
 
-    const float leftW = 300.0f, rightW = 352.0f;
+    if (padStation)
+    {
+        layoutPadBank (b.removeFromBottom (166.0f));
+        b.removeFromBottom (g);
+    }
+
+    const float leftW = theme->signalArrows ? 292.0f : 300.0f, rightW = theme->signalArrows ? 340.0f : 352.0f;
     auto left = b.removeFromLeft (leftW);
     b.removeFromLeft (g);
     auto right = b.removeFromRight (rightW);
@@ -698,53 +891,58 @@ void MainPanel::layoutStandard (juce::Rectangle<float> full)
     auto centre = b;
 
     // left column: IR browser, IR display, REVERB
-    irBrowser->setBounds (left.removeFromTop (left.getHeight() * 0.29f).toNearestInt());
-    left.removeFromTop (g);
-    irDisplay->setBounds (left.removeFromTop (left.getHeight() * 0.27f).toNearestInt());
-    left.removeFromTop (g);
+    irBrowser->setBounds (left.removeFromTop (std::round (left.getHeight() * (padStation ? 0.3f : 0.29f))).toNearestInt());
+    left.removeFromTop (8.0f);
+    irDisplay->setBounds (left.removeFromTop (std::round (left.getHeight() * (padStation ? 0.25f : 0.27f))).toNearestInt());
+    left.removeFromTop (theme->signalArrows ? 12.0f : g);
     sectionRects[IRCOL] = {};
-    layoutSection (REVERB, left);
+    const auto reverbRect = left;
 
     // centre: envelope LCD, readout strip, DUCK | GATE, DETECT
-    auto lcd = centre.removeFromTop (centre.getHeight() * (padStation ? 0.33f : 0.355f));
+    auto lcd = centre.removeFromTop (std::round (centre.getHeight() * (padStation ? 0.37f : 0.345f)));
     visualizer->setBounds (lcd.toNearestInt());
-    centre.removeFromTop (g);
+    centre.removeFromTop (8.0f);
     auto strip = centre.removeFromTop (44.0f);
     jog->setBounds (strip.removeFromRight (44.0f).toNearestInt());
-    strip.removeFromRight (g);
+    strip.removeFromRight (8.0f);
     freezeBtn->setBounds (strip.removeFromRight (66.0f).reduced (0, 9).toNearestInt());
     strip.removeFromRight (4.0f);
     scaleBtn->setBounds (strip.removeFromRight (66.0f).reduced (0, 9).toNearestInt());
-    strip.removeFromRight (g);
+    strip.removeFromRight (8.0f);
     readout->setBounds (strip.toNearestInt());
-    centre.removeFromTop (g);
-    auto detect = centre.removeFromBottom (padStation ? 82.0f : 92.0f);
+    centre.removeFromTop (theme->signalArrows ? 10.0f : g);
+    auto detect = centre.removeFromBottom (86.0f);
     centre.removeFromBottom (g);
-    auto duck = centre.removeFromLeft (centre.getWidth() * 0.6f);
+    auto duck = centre.removeFromLeft (std::round (centre.getWidth() * 0.58f));
     centre.removeFromLeft (g);
-    layoutSection (DUCK, duck);
-    layoutSection (GATE, centre);
-    layoutSection (DETECT, detect);
 
     // right: TONE, SPACE, MIX
-    auto tone = right.removeFromTop (right.getHeight() * 0.47f);
+    auto tone = right.removeFromTop (std::round (right.getHeight() * 0.47f));
     right.removeFromTop (g);
-    auto space = right.removeFromTop (right.getHeight() * 0.36f);
+    auto space = right.removeFromTop (std::round (right.getHeight() * 0.36f));
     right.removeFromTop (g);
-    layoutSection (TONE, tone);
-    layoutSection (SPACE, space);
-    layoutSection (MIX, right);
-    if (auto it = std::find_if (items.begin(), items.end(), [] (const Item& i) { return i.kind == "meter" && i.section == SPACE; }); it != items.end())
-        juce::ignoreUnused (it);
+    layoutSections ({ { REVERB, reverbRect }, { DUCK, duck }, { GATE, centre }, { DETECT, detect },
+                      { TONE, tone }, { SPACE, space }, { MIX, right } });
 
     if (theme->signalArrows)
     {
-        auto mid = [&] (int s) { return sectionRects[s]; };
-        arrows.push_back ({ { mid (REVERB).getRight() - 2.0f, mid (REVERB).getY() + 14.0f }, { mid (DUCK).getX() + 2.0f, mid (DUCK).getY() + 14.0f } });
-        arrows.push_back ({ { mid (DUCK).getRight() - 2.0f, mid (DUCK).getY() + 14.0f }, { mid (GATE).getX() + 2.0f, mid (GATE).getY() + 14.0f } });
-        arrows.push_back ({ { mid (GATE).getRight() - 2.0f, mid (GATE).getY() + 14.0f }, { mid (TONE).getX() + 2.0f, mid (TONE).getBottom() - 20.0f } });
-        arrows.push_back ({ { mid (TONE).getCentreX(), mid (TONE).getBottom() - 2.0f }, { mid (SPACE).getCentreX(), mid (SPACE).getY() + 2.0f } });
-        arrows.push_back ({ { mid (SPACE).getCentreX(), mid (SPACE).getBottom() - 2.0f }, { mid (MIX).getCentreX(), mid (MIX).getY() + 2.0f } });
+        // printed signal flow: REVERB -> DUCK -> GATE -> TONE -> SPACE -> MIX
+        auto sr = [&] (int s) { return sectionRects[s]; };
+        auto across = [&] (int a, int b)
+        {
+            const float y = std::max (sr (a).getY(), sr (b).getY()) + 30.0f;
+            arrows.push_back ({ { sr (a).getRight() + 2.0f, y }, { sr (b).getX() - 2.0f, y } });
+        };
+        auto down = [&] (int a, int b)
+        {
+            const float x = sr (a).getCentreX();
+            arrows.push_back ({ { x, sr (a).getBottom() + 2.0f }, { x, sr (b).getY() - 2.0f } });
+        };
+        across (REVERB, DUCK);
+        across (DUCK, GATE);
+        across (GATE, TONE);
+        down (TONE, SPACE);
+        down (SPACE, MIX);
     }
 }
 
@@ -752,42 +950,51 @@ void MainPanel::layoutFloppy (juce::Rectangle<float> full)
 {
     auto b = full;
     const float g = 8.0f;
-    layoutTopBar (b.removeFromTop (54.0f));
-    b = b.reduced (g, 0).withTrimmedBottom (g);
+    layoutTopBar (b.removeFromTop (FreddyLookAndFeel::topBarHeight));
+    b = b.reduced (g + 2.0f, 0).withTrimmedBottom (g + 2.0f);
+    b.removeFromTop (6.0f);
 
-    // upper band: [IR browser + disk slot] [big envelope LCD + strip] [IR display]
-    auto upper = b.removeFromTop (b.getHeight() * 0.46f);
-    b.removeFromTop (g);
-    auto irCol = upper.removeFromLeft (300.0f);
-    upper.removeFromLeft (g);
-    auto irDisp = upper.removeFromRight (300.0f);
-    upper.removeFromRight (g);
-    floppySlot = irCol.removeFromBottom (34.0f);
-    irCol.removeFromBottom (6.0f);
+    // upper band: [IR browser + disk drive] [big envelope LCD + readout] [IR display + data entry]
+    auto upper = b.removeFromTop (338.0f);
+    b.removeFromTop (12.0f);
+    auto irCol = upper.removeFromLeft (318.0f);
+    upper.removeFromLeft (12.0f);
+    auto irDisp = upper.removeFromRight (318.0f);
+    upper.removeFromRight (12.0f);
+
+    auto slot = irCol.removeFromBottom (74.0f);
+    irCol.removeFromBottom (8.0f);
     irBrowser->setBounds (irCol.toNearestInt());
-    irDisplay->setBounds (irDisp.removeFromTop (irDisp.getHeight() - 52.0f).toNearestInt());
-    irDisp.removeFromTop (8.0f);
-    jog->setBounds (irDisp.removeFromRight (44.0f).toNearestInt());
-    irDisp.removeFromRight (g);
-    freezeBtn->setBounds (irDisp.removeFromRight (66.0f).reduced (0, 9).toNearestInt());
-    irDisp.removeFromRight (4.0f);
-    scaleBtn->setBounds (irDisp.removeFromRight (66.0f).reduced (0, 9).toNearestInt());
-    auto strip = upper.removeFromBottom (40.0f);
-    upper.removeFromBottom (6.0f);
+    diskSlot->setBounds (slot.toNearestInt());
+    diskSlot->setVisible (true);
+
+    auto dataRow = irDisp.removeFromBottom (54.0f);
+    irDisp.removeFromBottom (8.0f);
+    irDisplay->setBounds (irDisp.toNearestInt());
+    jog->setBounds (dataRow.removeFromRight (54.0f).toNearestInt());
+    dataRow.removeFromRight (12.0f);
+    freezeBtn->setBounds (dataRow.removeFromRight (80.0f).reduced (0, 12).toNearestInt());
+    dataRow.removeFromRight (6.0f);
+    scaleBtn->setBounds (dataRow.removeFromRight (80.0f).reduced (0, 12).toNearestInt());
+    captions.push_back ({ dataRow.withTrimmedRight (6.0f).withSizeKeepingCentre (dataRow.getWidth() - 6.0f, 16.0f), "!DATA ENTRY" });
+
+    auto strip = upper.removeFromBottom (46.0f);
+    upper.removeFromBottom (8.0f);
     readout->setBounds (strip.toNearestInt());
     visualizer->setBounds (upper.toNearestInt());
 
     // lower band: colour-striped sections in signal order
     const int order[] = { REVERB, DETECT, DUCK, GATE, TONE, SPACE, MIX };
-    const float weights[] = { 1.25f, 0.62f, 1.35f, 0.82f, 1.2f, 0.62f, 1.0f };
+    const float weights[] = { 1.45f, 0.62f, 1.5f, 0.9f, 1.32f, 0.68f, 1.0f };
     float total = 0; for (float w : weights) total += w;
     const float avail = b.getWidth() - g * 6.0f;
+    std::vector<std::pair<int, juce::Rectangle<float>>> secs;
     for (int i = 0; i < 7; ++i)
     {
-        auto r = b.removeFromLeft (avail * weights[i] / total);
+        secs.push_back ({ order[i], b.removeFromLeft (std::round (avail * weights[i] / total)) });
         b.removeFromLeft (g);
-        layoutSection (order[i], r);
     }
+    layoutSections (secs);
 }
 
 void MainPanel::layoutPhotoreal (const SkinLayout& L)
@@ -820,25 +1027,24 @@ void MainPanel::paint (juce::Graphics& g)
     for (auto& [idx, r] : sectionRects)
     {
         if (idx == TOP || r.isEmpty()) continue;
-        lnf->drawSection (g, r, { sectionTitle (idx), lnf->sectionAccent (idx), idx });
+        lnf->drawSection (g, r, { sectionTitle (idx), lnf->sectionAccent (idx == PADS ? DUCK : idx), idx });
     }
     if (! logoArea.isEmpty()) lnf->drawLogo (g, logoArea.reduced (0, 2));
+    if (! detailArea.isEmpty()) lnf->drawPanelDetail (g, detailArea);
     for (auto& a : arrows) lnf->drawSignalArrow (g, a.first, a.second);
-
-    if (! floppySlot.isEmpty())
+    for (auto& [r, text] : captions)
     {
-        // disk-drive style IR loader slot
-        auto s = floppySlot;
-        g.setColour (theme->c.section);
-        g.fillRoundedRectangle (s, 3.0f);
-        auto slot = s.reduced (12.0f, s.getHeight() * 0.38f).withTrimmedRight (60.0f);
-        g.setColour (juce::Colours::black);
-        g.fillRect (slot);
-        g.setColour (theme->c.accent);
-        g.fillEllipse (juce::Rectangle<float> (7, 7).withCentre ({ s.getRight() - 46.0f, s.getCentreY() }));
-        g.setColour (theme->c.sectionLabel);
-        g.setFont (lnf->labelFont (11.0f));
-        g.drawText ("IR DISK", s.removeFromRight (36.0f), juce::Justification::centred);
+        if (text.startsWith ("#"))
+        {
+            // group caption with a printed bracket line under it
+            lnf->drawCaption (g, r.withTrimmedBottom (4.0f), text.substring (1));
+            g.setColour (theme->c.sectionLabel.withAlpha (0.5f));
+            g.fillRect (r.getX() + 2.0f, r.getBottom() - 2.0f, r.getWidth() - 4.0f, 1.0f);
+        }
+        else if (text.startsWith ("!"))
+            lnf->drawControlLabel (g, r, text.substring (1), false, juce::Justification::centredRight);
+        else
+            lnf->drawCaption (g, r, text);
     }
 }
 

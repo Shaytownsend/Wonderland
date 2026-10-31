@@ -228,8 +228,19 @@ void IRDisplay::paint (juce::Graphics& g)
     auto head = area.removeFromTop (std::max (10.0f, area.getHeight() * 0.12f));
     plot = area.reduced (0, 3.0f);
 
-    lnf->drawDisplayText (g, irName, head, juce::Justification::centredLeft);
-    lnf->drawDisplayText (g, "RT60 " + juce::String (rt60, 2) + "S", head, juce::Justification::centredRight, true);
+    {
+        // name left, RT60 right; never overlapping (the name shrinks/truncates first)
+        const juce::String rt = "RT60 " + juce::String (rt60, 2) + "S";
+        const float px = std::min (2.2f, head.getHeight() / 7.0f);
+        auto rtArea = head.removeFromRight (std::min (head.getWidth() * 0.42f, PixelFont::textWidth (rt, px)));
+        head.removeFromRight (px * 4.0f);
+        juce::String name = irName;
+        const float minPx = std::max (1.2f, px * 0.6f);
+        while (name.length() > 4 && PixelFont::textWidth (name, minPx) > head.getWidth())
+            name = name.dropLastCharacters (1);
+        lnf->drawDisplayText (g, name, head, juce::Justification::centredLeft);
+        lnf->drawDisplayText (g, rt, rtArea, juce::Justification::centredRight, true);
+    }
 
     if (missing)
     {
