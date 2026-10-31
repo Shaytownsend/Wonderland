@@ -150,15 +150,14 @@ class Layout:
         if p.get("vu"):
             self.add("meter_in", mx0 + 4, 76, 84, 58, bezel="vu")
             self.add("meter_wet", mx1 - 88, 76, 84, 58, bezel="vu")
-            self.label("INPUT", mx0 + 46, 148, "pad", owner="meter_in")
-            self.label("WET", mx1 - 46, 148, "pad", owner="meter_wet")
-            ks = p["knob_s"]
-            for cid, cx in zip(["mix_pct", "dry_level_db", "wet_level_db", "output_gain_db"], self.spread(mx0, mx1, 4)):
-                self.knob(cid, cx, 158)
-            for cid, cx in zip(["mix_lock", "wet_solo", "bypass"], self.spread(mx0, mx1 - 34, 3)):
-                self.pad(cid, cx, 226)
-            self.add("meter_out", mx1 - 20, 222, 12, 82, bezel="meter")
-            self.label("OUT", mx1 - 14, 312, "pad", owner="meter_out")
+            # big knobs 2x2, OUT bar meter in the right column, keys underneath
+            for cid, cx, top in (("mix_pct", mx0 + 32, 151), ("dry_level_db", mx0 + 94, 151),
+                                 ("wet_level_db", mx0 + 32, 222), ("output_gain_db", mx0 + 94, 222)):
+                self.knob(cid, cx, top)
+            for cid, cx in zip(["mix_lock", "wet_solo", "bypass"], self.spread(mx0, mx1, 3)):
+                self.pad(cid, cx, 292)
+            self.add("meter_out", mx1 - 32, 162, 14, 108, bezel="meter")
+            self.label("OUT", mx1 - 25, 280, "pad", owner="meter_out")
         else:
             cxs = [mx0 + 29, mx0 + 87]
             self.knob_big("mix_pct", cxs[0], 74)
@@ -173,6 +172,7 @@ class Layout:
                 self.pad(cid, cx, 228)
 
     def bottom_band(self):
+        RK2 = self.parts.get("row_knob2", ROW_KNOB2)
         ks = self.parts["knob_s"]
         secs = {"REVERB": (X0, 476), "DETECT": (490, 640), "DUCK": (654, 1084), "GATE": (1098, 1358), "SPACE": (1372, X1)}
         for t, (a, b) in secs.items():
@@ -190,7 +190,7 @@ class Layout:
         for cid, cx in zip(r1, self.spread(a, b, 5)):
             self.knob(cid, cx, ROW_KNOB1)
         for cid, cx in zip(r2, self.spread(a, b, 5)):
-            self.knob(cid, cx, ROW_KNOB2)
+            self.knob(cid, cx, RK2)
 
         # DETECT
         a, b = secs["DETECT"]
@@ -199,7 +199,7 @@ class Layout:
         for cid, cx in zip(["key_hpf", "key_lpf"], self.spread(a, b, 2)):
             self.knob(cid, cx, ROW_KNOB1)
         for cid, cx in zip(["det_rms_ms", "lookahead_ms"], self.spread(a, b, 2)):
-            self.knob(cid, cx, ROW_KNOB2)
+            self.knob(cid, cx, RK2)
 
         # DUCK
         a, b = secs["DUCK"]
@@ -218,8 +218,8 @@ class Layout:
         self.notes["curve_glyphs"] = cx7
         self.pad("curve_sync", a + 368, ROW_MISC2)
         for cid, cx in zip(["curve_duration_ms", "curve_tension", "curve_guard_ms", "curve_hyst_db"], kx[:4]):
-            self.knob(cid, cx, ROW_KNOB2)
-        self.stepper("curve_note@stepper", b - 124, ROW_KNOB2 + 8, 86)
+            self.knob(cid, cx, RK2)
+        self.stepper("curve_note@stepper", b - 124, RK2 + 8, 86)
         # FOLLOW / CURVE groups (printed brackets)
         self.notes["duck_groups"] = [("FOLLOW", a + 4, a + 300, ROW_KNOB1), ("CURVE", a + 4, b - 4, ROW_MISC2)]
 
@@ -232,7 +232,7 @@ class Layout:
         self.pad("gate_hold_sync", a + 52, ROW_MISC2)
         self.stepper("gate_hold_note@stepper", b - 128, ROW_MISC2, 86)
         for cid, cx in zip(["gate_hold_ms", "gate_release_ms", "gate_floor_db"], self.spread(a, b, 3)):
-            self.knob(cid, cx, ROW_KNOB2)
+            self.knob(cid, cx, RK2)
 
         # SPACE
         a, b = secs["SPACE"]
@@ -241,8 +241,8 @@ class Layout:
         for cid, cx in zip(["width_pct", "wet_balance"], self.spread(a, b, 2)):
             self.knob(cid, cx, ROW_KNOB1)
         c = self.spread(a, b, 2)
-        self.knob("mono_below_hz", c[0], ROW_KNOB2)
-        self.pad("mono_below_on", c[1], ROW_KNOB2 + 6)
+        self.knob("mono_below_hz", c[0], RK2)
+        self.pad("mono_below_on", c[1], RK2 + 6)
 
     # -- checks -----------------------------------------------------------------
     def validate(self):

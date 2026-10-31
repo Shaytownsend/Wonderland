@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw
 from scipy import ndimage
 
 import pf_core as C
+import pf_hand
 from pf_layout import EAR, W as LW, H as LH, X0, X1
 from pf_skins import USAGE
 
@@ -83,13 +84,29 @@ class PanelRenderer:
                 d = C.sdf_rrect(X, Y, x0, y0, x1 - x0, y1 - y0 + 40 * S, 3 * S)
                 c.H[sl] += 0.5 * C.smoothstep(0, 1.6 * S, -d)
         elif mat == "hammertone":
-            a = C.fbm(self.H, self.W, 9.0 * S, self.seed + 5, 2, 0.45)
-            b = C.fbm(self.H, self.W, 3.0 * S, self.seed + 6, 2, 0.5)
-            ham = np.clip(np.abs(a - 0.5) * 2.6, 0, 1)
-            c.H += 0.8 * (1 - ham) ** 1.5 + 0.15 * b
+            # hammered paint: soft cellular dimples (Worley F1) of ~3 mm, metallic flake in the
+            # paint, faint orange peel. Computed at 1x and upsampled (the dimples are smooth).
+            from scipy.spatial import cKDTree
+            r = C.rng(self.seed + 5)
+            sp = 9.0
+            gy, gx = np.mgrid[-1:LH / sp + 2, -1:LW / sp + 2].astype(np.float32)
+            pts = np.stack([(gx + r.uniform(0.1, 0.9, gx.shape)) * sp, (gy + r.uniform(0.1, 0.9, gy.shape)) * sp], -1).reshape(-1, 2)
+            yy, xx = np.mgrid[0:LH, 0:LW].astype(np.float32)
+            dist, _ = cKDTree(pts).query(np.stack([xx.ravel(), yy.ravel()], -1), k=2)
+            f1 = (dist[:, 0] / sp).reshape(LH, LW)
+            f2 = (dist[:, 1] / sp).reshape(LH, LW)
+            bowl = np.clip(f1 / 0.75, 0, 1) ** 1.6            # 0 at dimple centre
+            ridge = np.exp(-((f2 - f1) / 0.10) ** 2)           # crest between dimples
+            hf = ndimage.zoom(0.30 * bowl + 0.05 * ridge, S, order=3)[: self.H, : self.W]
+            hf = ndimage.gaussian_filter(hf, 0.8 * S)
+            peel = C.fbm(self.H, self.W, 2.0 * S, self.seed + 6, 2)
+            c.H += hf + 0.025 * peel
             flake = C.white(self.H, self.W, self.seed + 7)
-            c.A[:] = base[None, None, :] * (0.84 + 0.24 * (1 - ham) + 0.06 * (flake - 0.5))[..., None]
-            c.spec[:] = P["spec"] * (0.6 + 0.8 * (flake > 0.92))
+            tone = ndimage.zoom(0.94 + 0.10 * bowl, S, order=1)[: self.H, : self.W]
+            mott = C.fbm(self.H, self.W, 120 * S, self.seed + 8, 2)
+            c.A[:] = base[None, None, :] * (tone * (1 + 0.04 * (mott - 0.5)) + 0.07 * (flake > 0.965))[..., None]
+            c.spec[:] = P["spec"] * (0.7 + 1.6 * (flake > 0.95))
+            c.gloss[:] = P["gloss"]
         # panel outline chamfer + ears
         self.edges_and_ears()
 
@@ -353,7 +370,10 @@ class PanelRenderer:
             if deco.get("dial"):
                 cx, cy = ctl["x"] + ctl["w"] / 2, ctl["y"] + ctl["h"] / 2
                 rad = 0.47 * (ctl["w"] - 2)
-                self.knob_shadow(cx, cy, rad)
+                if sk["knob"]["kind"] == "chicken":
+                    self.knob_shadow(cx, cy, 0.29 * (ctl["w"] - 2), soft=1.4, off=(1.0, 1.5), strength=0.4)
+                else:
+                    self.knob_shadow(cx, cy, rad)
                 self.dial(layers, ctl, sk["dial"])
                 if sk["knob"]["kind"] == "chicken":
                     self.knob_nut(cx, cy, rad)
@@ -442,6 +462,17 @@ class PanelRenderer:
                 ImageDraw.Draw(layers[key]).polygon(pts, fill=255)
                 ImageDraw.Draw(self.text_guard).polygon(pts, fill=255)
                 continue
+            owner = lb["owner"] or ""
+            if owner.startswith("curve_shape#"):
+                # legend + a printed icon of the duck curve (same shapes as FreddyLookAndFeel::drawCurveGlyph)
+                key = "engr" if self.sk["ink"]["style"] == "engraved" else self.ink_key_for(lb["cy"])
+                tw, _ = C.text_size(t, "semibold", 11.5 * self.S, 0.4 * self.S)
+                tw /= self.S
+                iw, ih = 12.0, 8.0
+                x0 = lb["cx"] - (tw + 3 + iw) / 2
+                self.text(layers, t, x0, lb["cy"], 11.5, anchor="lm", tracking=0.4, key=key)
+                self.curve_icon(layers[key], int(owner.split("#")[1]), x0 + tw + 3, lb["cy"] - ih / 2 - 0.5, iw, ih)
+                continue
             if self.sk["ink"]["style"] == "engraved":
                 self.text(layers, t, lb["cx"], lb["cy"], px, anchor=lb["anchor"], tracking=0.6, key="engr")
             else:
@@ -470,6 +501,34 @@ class PanelRenderer:
         self.text(layers, "SELECTED BAND", (x0b + x1b) / 2, yb + 9, 10.5, tracking=1.2, key=key)
         self.line(layers, [(1000 - 22, yb - 5), (1000 - 22, yb), (1073 + 22, yb), (1073 + 22, yb - 5)], 0.9, key=key)
         self.text(layers, "FILTERS", (1000 + 1073) / 2, yb + 9, 10.5, tracking=1.2, key=key)
+
+    def curve_icon(self, mask, shape, x, y, w, h):
+        S = self.S
+        pts = []
+        for i in range(33):
+            u = i / 32
+            v = u
+            if shape == 1:
+                v = (1 - math.exp(-4 * u)) / (1 - math.exp(-4))
+            elif shape == 2:
+                v = (math.exp(4 * u) - 1) / (math.exp(4) - 1)
+            elif shape == 3:
+                v = u * u * (3 - 2 * u)
+            elif shape == 4:
+                v = 0.0 if u < 0.5 else (u - 0.5) * 2
+            elif shape == 5:
+                v = math.sin(u * math.pi / 2) ** 0.6 * (u / 0.08 if u < 0.08 else 1)
+            elif shape == 6:
+                v = min(1.0, 1.1 * (1 - math.exp(-5 * u)))
+                if u > 0.45:
+                    v = 1 + 0.12 * math.exp(-8 * (u - 0.45)) * math.sin((u - 0.45) * 6)
+            v = max(-0.1, min(1.15, v))
+            pts.append(((x + u * w) * S, (y + h - v * h * 0.85) * S))
+        d = ImageDraw.Draw(mask)
+        d.line(pts, fill=255, width=max(1, int(round(1.1 * S))), joint="curve")
+        # baseline tick marks the "ducked" level
+        d.line([(x * S, (y + h) * S), ((x + w) * S, (y + h) * S)], fill=150, width=max(1, int(round(0.5 * S))))
+        ImageDraw.Draw(self.text_guard).line(pts, fill=255, width=max(1, int(round(1.1 * S))))
 
     def branding(self, layers):
         sk, S = self.sk, self.S
@@ -541,7 +600,8 @@ class PanelRenderer:
                 tr = R + 9.5 * S
                 lbl = str(abs(vu)) if vu != 3 else "+3"
                 C.draw_text_mask(red if vu > 0 else m, lbl, pvx + math.sin(a) * tr, pvy - math.cos(a) * tr, "semibold", 7.5 * S)
-        C.draw_text_mask(m, "VU", pvx, pvy - 0.36 * h * S, "semibold", 12 * S, tracking=0.8 * S)
+        C.draw_text_mask(m, "VU", pvx, pvy - 0.40 * h * S, "semibold", 12 * S, tracking=0.8 * S)
+        C.draw_text_mask(m, "INPUT" if ctl["id"] == "meter_in" else "WET", pvx, pvy - 0.20 * h * S, "semibold", 7.5 * S, tracking=0.9 * S)
         C.draw_text_mask(red, "−", pvx - 0.36 * w * S, pvy - 0.20 * h * S, "semibold", 9 * S)
         C.draw_text_mask(red, "+", pvx + 0.36 * w * S, pvy - 0.20 * h * S, "semibold", 9 * S)
         mk = np.asarray(m, np.float32) / 255 * inside
@@ -765,18 +825,11 @@ class PanelRenderer:
         right = [(pad + tw - r.uniform(0, 2.5) * S, pad + th * (8 - k) / 8) for k in range(9)]
         dr.polygon(left + right, fill=255)
         let = Image.new("L", base.size, 0)
-        # handwriting: per-letter jitter in size, baseline and angle
-        xx = pad + 6 * S
-        f_kind = "medium"
-        for ch in text:
-            s = px * S * r.uniform(0.92, 1.1)
-            glyph = Image.new("L", (int(s * 1.4), int(s * 1.6)), 0)
-            C.draw_text_mask(glyph, ch, glyph.width / 2, glyph.height / 2, f_kind, s)
-            glyph = glyph.rotate(r.normal(0, 5) - 4, resample=Image.BICUBIC)
-            glyph = glyph.transform(glyph.size, Image.AFFINE, (1, 0.18, -0.1 * glyph.height, 0, 1, 0), Image.BICUBIC)
-            let.paste(255, (int(xx - glyph.width * 0.2), int(pad + th / 2 - glyph.height / 2 + r.normal(0, 0.6) * S)), glyph)
-            xx += C.font(f_kind, s).getlength(ch) * r.uniform(0.95, 1.05) + 0.5 * S
-        let = Image.fromarray(ndimage.maximum_filter(np.asarray(let), size=2))
+        # handwriting: stroke skeletons with a jittered, pressure-varying felt pen (pf_hand)
+        hw, _ = pf_hand.write(text, px * 0.72 * S, int(x * 7 + y), pen=1.15, slant=0.16)
+        if hw.width > tw - 6 * S:
+            hw = hw.resize((int(tw - 6 * S), int(hw.height * (tw - 6 * S) / hw.width)), Image.LANCZOS)
+        let.paste(hw, (int(pad + (tw - hw.width) / 2), int(pad + th / 2 - hw.height * 0.62)))
         if rot:
             base = base.rotate(rot, resample=Image.BICUBIC)
             let = let.rotate(rot, resample=Image.BICUBIC)
@@ -792,6 +845,16 @@ class PanelRenderer:
         self.text_guard.paste(255, (ox, oy), let)
         sh = C.shift2d(ndimage.gaussian_filter(ta, 1.0 * S), -int(1.0 * S), -int(0.8 * S))
         self.post_mul[sl] = np.maximum(self.post_mul[sl], sh * (1 - ta) * 0.3)
+
+    def pencil(self, x, y, text, cap):
+        """Faint graphite handwriting straight on the panel (slightly glossy)."""
+        c, S = self.c, self.S
+        hw, base = pf_hand.write(text, cap * S, int(x + y), pen=0.55, slant=0.22, jitter=0.12)
+        hw = hw.rotate(2.0, resample=Image.BICUBIC, expand=True)
+        ox, oy = int(x * S), int(y * S - base)
+        sl = (slice(oy, oy + hw.height), slice(ox, ox + hw.width))
+        a = np.asarray(hw, np.float32) / 255.0 * 0.7
+        c.paint(sl, a, (0.22, 0.22, 0.24), spec=0.5, gloss=30, aniso=0.0)
 
     def plate(self, x, y, w, h, lines, rivets=True):
         """Small brushed aluminium plate with engraved/stamped text."""
@@ -870,7 +933,7 @@ class PanelRenderer:
         if "dent" in ex:
             self.dent()
         if "pencil_marks" in ex:
-            self.text(layers, "cal 3/86 ✓", 1184, 579, 10, kind="medium", anchor="mm", tracking=0.4, guard=False, rotate=2)
+            self.pencil(1356, 333, "cal 3/86 \u2713", 8)
 
     def extras_post(self, layers, U):
         pass
@@ -932,8 +995,8 @@ class PanelRenderer:
             v = (Y - y) / max(h, 1)
             # broad diagonal reflection of the studio light
             diag = (u * w * 0.35 + v * h) / (w * 0.35 + h)
-            refl = np.exp(-((diag - 0.18) / 0.10) ** 2) * 0.07 + np.exp(-((diag - 0.30) / 0.03) ** 2) * 0.035
-            refl += (1 - v) * 0.02
+            refl = np.exp(-((diag - 0.16) / 0.10) ** 2) * 0.045 + np.exp(-((diag - 0.30) / 0.03) ** 2) * 0.02
+            refl += (1 - v) * 0.012
             a = refl
             col = np.ones(X.shape + (3,), np.float32)
             # dust specks on the glass
@@ -943,7 +1006,7 @@ class PanelRenderer:
                 px, py = r.uniform(0, X.shape[1]), r.uniform(0, X.shape[0])
                 rad = r.uniform(0.25, 0.8) * S
                 d.ellipse([px - rad, py - rad, px + rad, py + rad], fill=int(r.uniform(40, 120)))
-            dust = np.asarray(m, np.float32) / 255.0 * 0.35
+            dust = np.asarray(m, np.float32) / 255.0 * 0.22
             a = np.maximum(a, dust)
             if ctl["id"] in prints_on:
                 for k in range(2 if ctl["id"] == "envelope" else 1):
@@ -955,10 +1018,11 @@ class PanelRenderer:
                     rx, ry = 9 * S, 12 * S
                     e = (du / rx) ** 2 + (dv / ry) ** 2
                     ridges = 0.5 + 0.5 * np.sin(np.sqrt(e) * 26 + 0.6 * np.sin(du / (2 * S)))
-                    fp = np.clip(1 - e, 0, 1) ** 0.6 * ridges * 0.05
+                    fp = np.clip(1 - e, 0, 1) ** 0.6 * ridges * 0.035
                     a = np.maximum(a, fp)
             if b == "vu":
-                a = a * 1.4
+                a = a * 1.3
+            a = np.minimum(a, 0.12)
             a = a * inside
             rgba[sl][..., :3] = np.maximum(rgba[sl][..., :3], col)
             rgba[sl][..., 3] = np.maximum(rgba[sl][..., 3], a)

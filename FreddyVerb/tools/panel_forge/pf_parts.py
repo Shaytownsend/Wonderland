@@ -88,14 +88,14 @@ def knob_frame(st: dict, size: float, S: int, angle_deg: float, seed: int = 1, j
 
     kind = st["kind"]
     if kind == "chicken":
-        # round skirt + pointer body
-        Rs = 0.40 * size
-        ds = r - Rs
+        # fluted round skirt + sculpted pointer (domed head, raised spine, hollow flanks, beak)
+        Rs = 0.29 * size
+        Rse = Rs * (1 + 0.012 * np.cos(36 * phi_l))
+        ds = r - Rse
         a_sk = np.clip(0.5 - ds * Se / 1.5, 0, 1)
-        h_sk = 1.8 * C.smoothstep(0, 1.0, -ds) + 0.4 * (1 - r / Rs).clip(0, 1)
+        h_sk = 1.6 * C.smoothstep(0, 0.9, -ds) + 0.7 * (1 - r / Rs).clip(0, 1)
 
         def capsule(px, py, ax, ay, ra, bx, by, rb):
-            # uneven capsule SDF
             pax, pay = px - ax, py - ay
             bax, bay = bx - ax, by - ay
             L2 = bax * bax + bay * bay
@@ -104,22 +104,35 @@ def knob_frame(st: dict, size: float, S: int, angle_deg: float, seed: int = 1, j
             dx, dy = pax - bax * t, pay - bay * t
             return np.hypot(dx, dy) - rr
 
-        d1 = capsule(lu, lv, 0, -0.42 * size, 0.045 * size, 0, 0.0 * size, 0.19 * size)
-        d2 = capsule(lu, lv, 0, 0.0 * size, 0.19 * size, 0, 0.30 * size, 0.085 * size)
+        d1 = capsule(lu, lv, 0, -0.43 * size, 0.035 * size, 0, -0.02 * size, 0.17 * size)
+        d2 = capsule(lu, lv, 0, -0.02 * size, 0.17 * size, 0, 0.33 * size, 0.075 * size)
         dp = np.minimum(d1, d2)
         a_p = np.clip(0.5 - dp * Se / 1.5, 0, 1)
-        h_p = 2.6 + 5.5 * np.sqrt(np.clip(-dp / (0.10 * size), 0, 1))
+        prof = np.sqrt(np.clip(-dp / (0.09 * size), 0, 1))
+        spine = np.exp(-(lu / (0.035 * size)) ** 2)
+        flank = np.exp(-((np.abs(lu) - 0.10 * size) / (0.035 * size)) ** 2) * (lv < 0.12 * size)
+        head = np.exp(-((lu / (0.15 * size)) ** 2 + ((lv + 0.01 * size) / (0.15 * size)) ** 2))
+        beak = np.clip((-lv - 0.18 * size) / (0.25 * size), 0, 1)
+        h_p = 3.0 + prof * (4.2 + 1.4 * spine + 1.6 * head - 1.0 * flank - 2.0 * beak)
         alpha = np.maximum(a_sk, a_p)
         c.H[:] = np.maximum(h_sk * a_sk, h_p * a_p)
         c.A[:] = skirt_c * (1 + 0.2 * noise)[..., None]
         c.A[:] = c.A * (1 - a_p[..., None]) + body * (1 + 0.25 * noise)[..., None] * a_p[..., None]
         c.spec[:] = st["spec"]
         c.gloss[:] = st["gloss"]
-        # white inlay line along the pointer ridge
-        ln = C.cov((np.abs(lu) - 0.022 * size) * Se) * (lv < -0.06 * size) * (dp < -0.01 * size)
+        ln = C.cov((np.abs(lu) - 0.02 * size) * Se) * (lv < -0.08 * size) * (dp < -0.012 * size)
         c.paint((slice(None), slice(None)), ln, line_c, spec=0.3, gloss=20)
-        c.H[:] -= ln * 0.15
-        return _down(_finish(c, alpha))
+        c.H[:] -= ln * 0.2
+        knob = _finish(c, alpha)
+        # cast shadow on the panel, rotating with the pointer (panel only bakes the skirt's)
+        from scipy import ndimage as _nd
+        sh = C.shift2d(a_p, -int(round(1.8 * Se)), -int(round(1.2 * Se)))
+        sh = _nd.gaussian_filter(sh, 1.1 * Se) * 0.7
+        sh = sh * np.clip((r - Rs * 0.9) / 1.5, 0, 1)
+        out = knob.copy()
+        out[..., 3] = knob[..., 3] + sh * (1 - knob[..., 3])
+        out[..., :3] = np.where(out[..., 3:4] > 0, knob[..., :3] * (knob[..., 3:4] / np.maximum(out[..., 3:4], 1e-6)), 0)
+        return _down(out)
 
     # --- skirted round knob
     Rs = 0.47 * size
@@ -132,7 +145,7 @@ def knob_frame(st: dict, size: float, S: int, angle_deg: float, seed: int = 1, j
     h_sk = 2.2 * C.smoothstep(0, 1.1, -ds) + 0.9 * ((Rs - r) / (Rs - Rb)).clip(0, 1)
     if sk_ribs:
         zone = C.smoothstep(Rb + 0.6, Rb + 1.6, r) * C.smoothstep(Rs, Rs - 1.2, r)
-        h_sk += 0.35 * zone * np.cos(sk_ribs * phi_l)
+        h_sk += st.get("knurl", 0.35) * zone * np.cos(sk_ribs * phi_l)
     Rbe = Rb * (1 + (0.02 * np.cos(ribs * phi_l) if ribs else 0))
     db = r - Rbe
     h_b = 3.0 + 5.0 * np.sqrt(np.clip(-db / 1.6, 0, 1))
@@ -241,72 +254,75 @@ def button(st: dict, w: float, h: float, S: int, state: str, led=None, lit=None)
         return _down(_finish(c, alpha))
 
     if kind == "toggle":
+        # bat-handle toggle seen from the front: small black-oxide nut, long chrome bat
+        # with a ball tip. ON = bat up, OFF = bat down, pressed = mid travel.
         metal = np.asarray(st.get("metal", (0.8, 0.8, 0.8)), np.float32)
         cx, cy = w / 2, h / 2
         rr = np.hypot(u - cx, v - cy)
-        # hex nut + washer
         ang = np.arctan2(v - cy, u - cx)
-        hexr = 7.2 / np.cos(((ang + math.pi / 6) % (math.pi / 3)) - math.pi / 6)
-        dw = rr - 9.4
+        hexr = 5.0 / np.cos(((ang + math.pi / 6) % (math.pi / 3)) - math.pi / 6)
+        dw = rr - 6.8
         dn = rr - hexr
         aw = np.clip(0.5 - dw * Se / 1.5, 0, 1)
         an = np.clip(0.5 - dn * Se / 1.5, 0, 1)
-        hh = 0.8 * aw + an * 2.0 * C.smoothstep(0, 1.2, -dn)
-        # bushing
-        db = rr - 4.2
+        hh = 0.7 * aw + an * 1.8 * C.smoothstep(0, 1.0, -dn)
+        db = rr - 3.0
         ab = np.clip(0.5 - db * Se / 1.2, 0, 1)
-        hh = np.maximum(hh, ab * (4.0 + 1.0 * np.sqrt(np.clip(1 - (rr / 4.2) ** 2, 0, 1))))
-        # bat: capsule from centre to tip; up = toward panel top when ON
-        L = 10.0 if state != "down" else 3.0
+        hh = np.maximum(hh, ab * (3.4 + 0.8 * np.sqrt(np.clip(1 - (rr / 3.0) ** 2, 0, 1))))
+        L = 10.2 if state != "down" else 2.5
         sgn = -1.0 if state == "on" else 1.0
-        tx, ty = cx, cy + sgn * L
         pax, pay = u - cx, v - cy
-        bax, bay = 0.0, sgn * L
-        L2 = max(1e-3, bay * bay)
-        t = np.clip((pax * bax + pay * bay) / L2, 0, 1)
-        rad = 2.9 + 1.6 * t ** 3
-        dbat = np.hypot(pax - bax * t, pay - bay * t) - rad
+        bay = sgn * L
+        t = np.clip((pay * bay) / max(1e-3, bay * bay), 0, 1)
+        rad = 1.7 + 0.5 * t
+        dbat = np.hypot(pax, pay - bay * t) - rad
+        dball = np.hypot(pax, pay - bay) - 3.4
+        dbat = np.minimum(dbat, dball)
         abat = np.clip(0.5 - dbat * Se / 1.2, 0, 1)
-        hbat = (5.0 + 5.0 * (1 - t)) + 1.8 * np.sqrt(np.clip(-dbat / rad, 0, 1))
+        hbat = (6.0 + 5.0 * (1 - t)) + 2.2 * np.sqrt(np.clip(-dbat / 3.0, 0, 1))
         hh = np.maximum(hh, abat * hbat)
-        alpha = np.maximum(aw, abat)
+        # dark rim around the bat so it separates from the nut at 1x
+        rim = np.clip(0.5 - (dbat - 0.7) * Se / 1.2, 0, 1) * (1 - abat)
+        alpha = np.maximum(np.maximum(aw, abat), rim * 0.0)
         c.H[:] = hh
-        c.A[:] = metal * (0.75 + 0.1 * noise)[..., None]
-        c.spec[:] = 0.9
-        c.gloss[:] = 60
-        # washer slightly duller
-        c.paint((slice(None), slice(None)), aw * (1 - an) * (1 - abat), metal * 0.6, spec=0.5, gloss=30)
-        # chrome look: environment stripe on the bat
-        env = np.exp(-((pax + 0.6) / 0.9) ** 2) * abat
-        c.emit[:] += (env * 0.25)[..., None]
-        return _down(_finish(c, alpha, ambient=0.3))
+        c.A[:] = np.asarray((0.16, 0.16, 0.17), np.float32) * (1 + 0.2 * noise)[..., None]   # black-oxide nut
+        c.spec[:] = 0.6
+        c.gloss[:] = 40
+        c.paint((slice(None), slice(None)), aw * (1 - an), (0.45, 0.45, 0.45), spec=0.5, gloss=30)
+        c.paint((slice(None), slice(None)), rim, (0.02, 0.02, 0.02), spec=0.0)
+        c.paint((slice(None), slice(None)), abat, metal * 0.85, spec=1.0, gloss=70)
+        env = np.exp(-((pax + 0.7) / 0.8) ** 2) * abat
+        c.emit[:] += (env * 0.35)[..., None]
+        return _down(_finish(c, alpha, ambient=0.32))
 
     if kind == "rocker":
-        # black bezel frame + rocker paddle tilted one way or the other
+        # illuminated rocker: smoked-red paddle that glows when ON, I/O printed
         d = C.sdf_rrect(u, v, 0.3, 0.3, w - 0.6, h - 0.6, 1.8)
         alpha = np.clip(0.5 - d * Se / 1.5, 0, 1)
-        di = C.sdf_rrect(u, v, 2.6, 2.6, w - 5.2, h - 5.2, 1.0)
+        di = C.sdf_rrect(u, v, 2.4, 2.4, w - 4.8, h - 4.8, 1.0)
         ai = np.clip(0.5 - di * Se / 1.0, 0, 1)
         frame_h = 1.6 * C.smoothstep(0, 1.0, -d)
-        t = (v - h / 2) / (h / 2 - 2.6)          # -1 top .. 1 bottom
-        tilt = {"up": -1.0, "on": 1.0, "down": 0.0}[state]   # up(off): top raised; on: bottom raised
-        paddle = 2.4 + 1.5 * (-t * tilt) - 0.4 * (1 - (2 * (u - w / 2) / (w - 5.2)) ** 2).clip(0, 1)
-        hh = frame_h * (1 - ai) + ai * paddle
-        c.H[:] = hh
+        tq = (v - h / 2) / (h / 2 - 2.4)
+        tilt = {"up": -1.0, "on": 1.0, "down": 0.0}[state]
+        paddle = 2.4 + 1.6 * (-tq * tilt) - 0.4 * (1 - (2 * (u - w / 2) / (w - 4.8)) ** 2).clip(0, 1)
+        c.H[:] = frame_h * (1 - ai) + ai * paddle
         c.A[:] = np.asarray((0.05, 0.05, 0.05), np.float32) * (1 + 0.3 * noise)[..., None]
         c.spec[:] = 0.4
         c.gloss[:] = 30
-        # I / O marks
+        red = np.asarray((0.30, 0.03, 0.02), np.float32)
+        c.paint((slice(None), slice(None)), ai, red * (1 + 0.1 * noise)[..., None], spec=0.6, gloss=50)
         m = Image.new("L", (Wp, Hp), 0)
-        C.draw_text_mask(m, "I", Wp / 2, Hp * 0.30, "semibold", 9 * Se)
-        C.draw_text_mask(m, "O", Wp / 2, Hp * 0.70, "semibold", 8 * Se)
+        C.draw_text_mask(m, "I", Wp / 2, Hp * 0.31, "semibold", 9 * Se)
+        C.draw_text_mask(m, "O", Wp / 2, Hp * 0.69, "semibold", 8 * Se)
         ma = np.asarray(m, np.float32) / 255.0 * ai
-        c.paint((slice(None), slice(None)), ma * 0.85, (0.9, 0.9, 0.88), spec=0.2)
         if state == "on":
-            # red pilot strip in the top of the frame glows
-            dl = C.sdf_rrect(u, v, w / 2 - 3.0, 0.9, 6.0, 1.3, 0.6)
-            al = np.clip(0.5 - dl * Se / 0.8, 0, 1)
-            c.emit[:] += al[..., None] * np.asarray((1.0, 0.18, 0.06), np.float32)
+            hot = np.exp(-(((u - w / 2) / (w * 0.5)) ** 2 + ((v - h * 0.45) / (h * 0.45)) ** 2))
+            glow = ai * (0.55 + 0.45 * hot)
+            c.emit[:] += glow[..., None] * np.asarray((1.0, 0.16, 0.05), np.float32)
+            c.paint((slice(None), slice(None)), ma * 0.9, (0.25, 0.02, 0.0))
+            c.emit[:] *= (1 - 0.75 * ma)[..., None]
+        else:
+            c.paint((slice(None), slice(None)), ma * 0.85, (0.85, 0.82, 0.8), spec=0.2)
         return _down(_finish(c, alpha))
     raise ValueError(kind)
 
@@ -339,7 +355,7 @@ def led(st: dict, lw: float, lh: float, S: int, on: bool):
         ey = np.clip(1 - np.abs(v - ch / 2) / (ch / 2), 0, 1)
         edge = np.minimum(ex / 0.6, 1) * np.minimum(ey / 0.6, 1)
         glow_d = np.maximum(d, 0)
-        glow = np.exp(-glow_d / (0.35 * min(lw, lh))) * 0.6 * edge ** 2
+        glow = np.exp(-glow_d / (0.5 * min(lw, lh))) * 0.8 * edge ** 1.5
         rgba[..., :3] = lit * lens[..., None] + col * (1 - lens[..., None])
         rgba[..., :3] += glint[..., None] * 0.4
         rgba[..., 3] = np.maximum(lens, glow * (1 - lens))

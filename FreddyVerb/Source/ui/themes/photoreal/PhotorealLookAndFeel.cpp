@@ -241,8 +241,10 @@ void PhotorealLookAndFeel::drawValueReadout (juce::Graphics& g, const juce::Stri
     if (t.lcdStyle == LcdStyle::redLed || t.id == "harmonizer_black_79")
     {
         const auto led = t.id == "harmonizer_black_79" ? juce::Colour (0xffff2a1a) : t.c.lcdFg;
-        // glow then segments
-        PixelFont::drawSevenSegment (g, s, b.expanded (1.0f), led.withAlpha (0.18f), juce::Colours::transparentBlack);
+        // soft bloom: the same segments, offset by a fraction of a pixel (same cell grid,
+        // so the glow lines up with the digits), then the lit segments on top
+        for (auto o : { juce::Point<float> (-0.7f, 0.0f), { 0.7f, 0.0f }, { 0.0f, -0.7f }, { 0.0f, 0.7f } })
+            PixelFont::drawSevenSegment (g, s, b.translated (o.x, o.y), led.withAlpha (0.16f), juce::Colours::transparentBlack);
         PixelFont::drawSevenSegment (g, s, b, led, led.withAlpha (0.07f));
         return;
     }

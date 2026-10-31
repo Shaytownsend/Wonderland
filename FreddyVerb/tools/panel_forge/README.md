@@ -32,7 +32,7 @@ machine.** All art is generated with numpy/scipy/Pillow:
   rendered per frame with the geometry rotated and the lighting fixed (so
   highlights stay put while the indicator turns). 2x supersampled.
 * Materials: brushed aluminium (row-noise grain with slow drift), satin paint
-  (orange peel), hammertone (two-scale fbm dimples + metallic flake), anodizing
+  (orange peel), hammertone (Worley-cell dimples ~3 mm + metallic flake + faint orange peel), anodizing
   (brushed + tint), crinkle finish on the broadcast bezels.
 * Wear is fully deterministic (fixed seed per skin): a "hand time" map built from
   the most-used controls (`pf_skins.USAGE`) drives scratch density (tangential
@@ -52,6 +52,7 @@ machine.** All art is generated with numpy/scipy/Pillow:
 | `pf_skins.py` | the five directions as data (materials, inks, part styles, wear level, extras) and the usage weights |
 | `pf_panel.py` | panel renderer: material, ears + EIA slots + rack screws/washers, corner screws, display/stepper/meter bezels, VU faces (broadcast), button wells, knob shadows + dial scales, silkscreen/engraving/label-tape, wear, dust, tape notes, plates, stickers; plus the glass overlay |
 | `pf_parts.py` | knob / chicken-head / jog filmstrips, square keys, membrane keys, lamp buttons, toggles, rockers, LEDs, VU needle |
+| `pf_hand.py` | procedural handwriting: single-stroke glyph skeletons drawn with a jittered, pressure-varying pen (tape notes, pencil marks) |
 | `pf_core.py` | noise, SDF primitives, lighting, text masks, PNG helpers |
 | `controls_manifest.json` | input from `FreddyVerb_Snapshots --manifest` |
 
@@ -69,9 +70,14 @@ machine.** All art is generated with numpy/scipy/Pillow:
 * Broadcast only: `meter_in` / `meter_wet` are wide analog VU meters (face baked
   into the panel, `vu_needle@Nx.png` drawn by code); `meter_out` stays an LED bar.
 * Per skin only the part sizes change (pad 30x26 keys, 34x22 membrane keys,
-  26x30 toggles, 22x28 rockers).
+  26x30 toggles, 22x28 illuminated rockers; broadcast uses 46/52 px knobs, a 2x2
+  MIX knob block under the VU meters and a slightly higher second knob row).
+* The seven curve-shape keys carry printed curve icons next to their legends
+  (same shapes as `FreddyLookAndFeel::drawCurveGlyph`).
+* Chicken-head filmstrips include their own rotating drop shadow; the panel only
+  bakes the round skirt shadow.
 
-Art names: `knob_small` (40 px) / `knob_large` (46 px) (`knob_chicken`,
+Art names: `knob_small` (40 px; 46 on broadcast) / `knob_large` (46 px; 52 on broadcast) (`knob_chicken`,
 `knob_chicken_large` on `lab`), `jog`, `key`, `lamp` (broadcast), `toggle`
 (champagne pads), `rocker` (lab pads), `led_on/off`, `overlay`, `vu_needle`.
 
