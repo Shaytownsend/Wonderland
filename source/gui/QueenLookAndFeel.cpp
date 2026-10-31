@@ -45,7 +45,7 @@ void QueenLookAndFeel::drawRotarySlider (juce::Graphics& g, int x, int y, int w,
                                          juce::Slider& s)
 {
     const auto& fs = strip (s.getProperties()["strip"].toString());
-    fs.draw (g, fs.frameFor (pos), juce::Rectangle<int> (x, y, w, h).toFloat());
+    fs.draw (g, fs.frameFor (pos), juce::Rectangle<int> (x, y, w, h).toFloat(), &s);
 }
 
 juce::Slider::SliderLayout QueenLookAndFeel::getSliderLayout (juce::Slider& s)
@@ -74,7 +74,7 @@ void QueenLookAndFeel::drawLinearSlider (juce::Graphics& g, int, int, int, int, 
     const float x = 0.0f;
     const auto proportion = (float) s.valueToProportionOfLength (s.getValue());
     const float sliderPos = capH / 2.0f + (1.0f - proportion) * ((float) s.getHeight() - capH);
-    drawCrisp (g, img, juce::Rectangle<float> ((float) x, sliderPos - capH / 2.0f, capW, capH));
+    drawCrisp (g, img, juce::Rectangle<float> (x, sliderPos - capH / 2.0f, capW, capH), &s);
 }
 
 void QueenLookAndFeel::drawPopupMenuBackground (juce::Graphics& g, int width, int height)

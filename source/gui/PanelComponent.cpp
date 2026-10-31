@@ -104,7 +104,7 @@ void SwitchControl::mouseDrag (const juce::MouseEvent& e) { setPosition (positio
 
 void SwitchControl::paint (juce::Graphics& g)
 {
-    lnf.strip (spec.spriteName ("strip")).draw (g, getPosition(), getLocalBounds().toFloat());
+    lnf.strip (spec.spriteName ("strip")).draw (g, getPosition(), getLocalBounds().toFloat(), this);
 }
 
 // ------------------------------------------------------------------------------------------------ button
@@ -133,7 +133,7 @@ void PanelButton::paintButton (juce::Graphics& g, bool, bool down)
 {
     const auto& img = lnf.image (spec.spriteName (down ? "down" : "up"));
     if (img.isValid())
-        drawCrisp (g, img, getLocalBounds().toFloat());
+        drawCrisp (g, img, getLocalBounds().toFloat(), this);
 }
 
 // ------------------------------------------------------------------------------------------------ led
@@ -156,7 +156,7 @@ void LedControl::paint (juce::Graphics& g)
 {
     const auto& img = lnf.image (spec.spriteName (lit ? "on" : "off"));
     if (img.isValid())
-        drawCrisp (g, img, getLocalBounds().toFloat());
+        drawCrisp (g, img, getLocalBounds().toFloat(), this);
 }
 
 // ------------------------------------------------------------------------------------------------ display
@@ -186,7 +186,7 @@ void DisplayControl::paint (juce::Graphics& g)
             return;
         juce::Graphics::ScopedSaveState s (g);
         g.reduceClipRegion ((right ? b.withTrimmedLeft (b.getWidth() / 2) : b.withTrimmedRight (b.getWidth() / 2)).toNearestInt());
-        strip.draw (g, digit, b);
+        strip.draw (g, digit, b, this);
     };
     half (digitL, false);
     half (digitR, true);
@@ -239,7 +239,7 @@ void WheelControl::paint (juce::Graphics& g)
     const float travel = 18.0f;
     const float offset = -value * travel; // 0 = the rendered rest position (bend centre, mod down)
     g.reduceClipRegion (getLocalBounds().reduced (0, 30));
-    drawCrisp (g, img, getLocalBounds().toFloat().translated (0.0f, offset));
+    drawCrisp (g, img, getLocalBounds().toFloat().translated (0.0f, offset), this);
 }
 
 // ------------------------------------------------------------------------------------------------ panel
@@ -385,7 +385,7 @@ juce::Component* PanelComponent::findControl (const juce::String& id) const
 
 void PanelComponent::paint (juce::Graphics& g)
 {
-    drawCrisp (g, background, getLocalBounds().toFloat());
+    drawCrisp (g, background, getLocalBounds().toFloat(), this);
 }
 
 void PanelComponent::refresh()

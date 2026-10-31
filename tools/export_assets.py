@@ -4,7 +4,7 @@ Run:  .venv/bin/python tools/export_assets.py [--samples 24] [--only knob,led,..
 Prints one line per asset written. Geometry/filenames come from tools/sprites.py.
 
 Method: an orthographic top-down camera maps registry space exactly (x = X*100+900, y = 415-Y*100),
-so every sprite lands pixel-aligned on panel@2x.png. Sprites render with film_transparent and every
+so every sprite lands pixel-aligned on panel@4x.png. Sprites render with film_transparent and every
 static object turned into a shadow catcher, so contact shadows come along in the alpha.
 """
 import argparse
@@ -113,6 +113,7 @@ def setup(samples):
     sc.cycles.samples = samples
     sc.cycles.use_adaptive_sampling = True
     sc.render.use_persistent_data = True
+    sc.cycles.filter_width = 1.0  # tighter pixel filter: crisper text edges (default 1.5 px)
     try:
         sc.cycles.use_denoising = True
         sc.cycles.denoiser = "OPENIMAGEDENOISE"
@@ -361,7 +362,7 @@ PASSES = {"knob": do_knob, "slidercap": do_slidercap, "switch": do_switch, "butt
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
     ap = argparse.ArgumentParser()
-    ap.add_argument("--samples", type=int, default=24)
+    ap.add_argument("--samples", type=int, default=48)
     ap.add_argument("--only", default="", help="comma list of kinds: background,knob,slidercap,switch,button,led,digits,wheel,key")
     ap.add_argument("--out", default=sprites.ASSETS)
     args = ap.parse_args(argv)

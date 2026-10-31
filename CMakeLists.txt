@@ -62,7 +62,15 @@ file(GLOB_RECURSE SourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/sou
 target_sources(SharedCode INTERFACE ${SourceFiles})
 target_include_directories(SharedCode INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/source")
 
-pamplejuce_add_assets()
+# GUI art: embedded in each binary (default), or shipped once as files next to the plug-ins
+# (installer: /Library/Application Support/The Queen/Assets) to keep the 4x renders out of every binary.
+option(QUEEN_EMBED_ASSETS "Embed the GUI art in the plug-in binaries" ON)
+if (QUEEN_EMBED_ASSETS)
+    pamplejuce_add_assets()
+else ()
+    juce_add_binary_data(Assets SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/assets/layout.json")
+    set_target_properties(Assets PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+endif ()
 pamplejuce_xcode_prettify()
 
 target_compile_definitions(SharedCode
@@ -75,6 +83,7 @@ target_compile_definitions(SharedCode
     VERSION="${CURRENT_VERSION}"
     PRODUCT_NAME_WITHOUT_VERSION="The Queen"
     QUEEN_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
+    QUEEN_EMBED_ASSETS=$<BOOL:${QUEEN_EMBED_ASSETS}>
 )
 
 # Pamplejuce links modules to SharedCode with INTERFACE visibility (juce_dsp included)

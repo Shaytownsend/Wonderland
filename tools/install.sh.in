@@ -9,6 +9,11 @@ copy() { # src dest-dir
     cp -R "$1" "$2/"
     echo "installed $(basename "$1") -> $2"
 }
+# non-embedded builds (-DQUEEN_EMBED_ASSETS=OFF) read the GUI art from the per-user data folder
+if [ "@QUEEN_EMBED_ASSETS@" != "ON" ]; then
+    if [ "$(uname)" = "Darwin" ]; then A="$HOME/Library/Application Support/The Queen/Assets"; else A="$HOME/.config/The Queen/Assets"; fi
+    mkdir -p "$A" && cp "@CMAKE_SOURCE_DIR@"/assets/*.png "$A/" && echo "installed GUI art -> $A"
+fi
 if [ "$(uname)" = "Darwin" ]; then
     P="$HOME/Library/Audio/Plug-Ins"
     copy "$ART/AU/The Queen.component" "$P/Components"

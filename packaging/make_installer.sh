@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Builds "The Queen Installer.pkg" from a Release build (macOS only).
-# Installs: AU, VST3, CLAP -> /Library/Audio/Plug-Ins/..., Standalone -> /Applications.
+# Installs: AU, VST3, CLAP -> /Library/Audio/Plug-Ins/..., Standalone -> /Applications,
+#           GUI art -> /Library/Application Support/The Queen/Assets.
 # Bundles are ad-hoc signed (no Apple Developer account needed); see README for real signing.
 set -euo pipefail
 ART="${1:-build/TheQueen_artefacts/Release}"
@@ -8,8 +9,11 @@ OUT="${2:-packaging/Output}"
 VERSION="$(cat VERSION)"
 STAGE="$(mktemp -d)/root"
 
+ASSETS="$STAGE/Library/Application Support/The Queen/Assets"
 mkdir -p "$STAGE/Library/Audio/Plug-Ins/Components" "$STAGE/Library/Audio/Plug-Ins/VST3" \
-         "$STAGE/Library/Audio/Plug-Ins/CLAP" "$STAGE/Applications" "$OUT"
+         "$STAGE/Library/Audio/Plug-Ins/CLAP" "$STAGE/Applications" "$ASSETS" "$OUT"
+# GUI art shared by all formats (the CI build is configured with -DQUEEN_EMBED_ASSETS=OFF)
+cp assets/*.png "$ASSETS/"
 cp -R "$ART/AU/The Queen.component" "$STAGE/Library/Audio/Plug-Ins/Components/"
 cp -R "$ART/VST3/The Queen.vst3" "$STAGE/Library/Audio/Plug-Ins/VST3/"
 cp -R "$ART/CLAP/The Queen.clap" "$STAGE/Library/Audio/Plug-Ins/CLAP/"

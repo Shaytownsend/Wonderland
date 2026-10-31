@@ -30,16 +30,17 @@ jobs:
         run: brew install ninja
 
       - name: Configure
-        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DQUEEN_EMBED_ASSETS=OFF
 
       - name: Build
         run: cmake --build build --config Release --parallel 4
 
       - name: Test
-        run: ctest --test-dir build -C Release --output-on-failure
+        run: QUEEN_ASSETS_DIR="$PWD/assets" ctest --test-dir build -C Release --output-on-failure
 
       - name: Validate Audio Unit (auval)
         run: |
+          mkdir -p "$HOME/Library/Application Support/The Queen/Assets" && cp assets/*.png "$HOME/Library/Application Support/The Queen/Assets/"
           codesign --force --deep -s - "$HOME/Library/Audio/Plug-Ins/Components/The Queen.component"
           killall -9 AudioComponentRegistrar || true
           auval -v aumu Quen Lshp | tee auval.log

@@ -15,8 +15,8 @@
   1680,
   808
  ],
- "scale": 2,
- "background": "panel@2x.png",
+ "scale": 4,
+ "background": "panel@4x.png",
  "controls": [
   {
    "id": "op1_ratio",
@@ -28,7 +28,7 @@
    "label": "RATIO",
    "cap": "cream",
    "sprite": {
-    "strip": "knob_cream@2x.png",
+    "strip": "knob_cream@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -43,7 +43,7 @@
    "label": "LEVEL",
    "cap": "cream",
    "sprite": {
-    "strip": "knob_cream@2x.png",
+    "strip": "knob_cream@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -58,7 +58,7 @@
    "label": "DETUNE",
    "cap": "cream",
    "sprite": {
-    "strip": "knob_cream@2x.png",
+    "strip": "knob_cream@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -73,7 +73,7 @@
    "label": "FEEDBK",
    "cap": "cream",
    "sprite": {
-    "strip": "knob_cream@2x.png",
+    "strip": "knob_cream@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -88,7 +88,7 @@
    "label": "VELOC",
    "cap": "cream",
    "sprite": {
-    "strip": "knob_cream@2x.png",
+    "strip": "knob_cream@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -103,7 +103,7 @@
    "label": "RATIO",
    "cap": "red",
    "sprite": {
-    "strip": "knob_red@2x.png",
+    "strip": "knob_red@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -118,7 +118,7 @@
    "label": "LEVEL",
    "cap": "red",
    "sprite": {
-    "strip": "knob_red@2x.png",
+    "strip": "knob_red@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -133,7 +133,7 @@
    "label": "DETUNE",
    "cap": "red",
    "sprite": {
-    "strip": "knob_red@2x.png",
+    "strip": "knob_red@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -148,7 +148,7 @@
    "label": "FEEDBK",
    "cap": "red",
    "sprite": {
-    "strip": "knob_red@2x.png",
+    "strip": "knob_red@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -163,7 +163,7 @@
    "label": "VELOC",
    "cap": "red",
    "sprite": {
-    "strip": "knob_red@2x.png",
+    "strip": "knob_red@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -178,7 +178,7 @@
    "label": "RATIO",
    "cap": "blue",
    "sprite": {
-    "strip": "knob_blue@2x.png",
+    "strip": "knob_blue@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -193,7 +193,7 @@
    "label": "LEVEL",
    "cap": "blue",
    "sprite": {
-    "strip": "knob_blue@2x.png",
+    "strip": "knob_blue@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -208,7 +208,7 @@
    "label": "DETUNE",
    "cap": "blue",
    "sprite": {
-    "strip": "knob_blue@2x.png",
+    "strip": "knob_blue@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -223,7 +223,7 @@
    "label": "FEEDBK",
    "cap": "blue",
    "sprite": {
-    "strip": "knob_blue@2x.png",
+    "strip": "knob_blue@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -238,7 +238,7 @@
    "label": "VELOC",
    "cap": "blue",
    "sprite": {
-    "strip": "knob_blue@2x.png",
+    "strip": "knob_blue@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -253,7 +253,7 @@
    "label": "RATIO",
    "cap": "black",
    "sprite": {
-    "strip": "knob_black@2x.png",
+    "strip": "knob_black@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -268,7 +268,7 @@
    "label": "LEVEL",
    "cap": "black",
    "sprite": {
-    "strip": "knob_black@2x.png",
+    "strip": "knob_black@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -283,7 +283,7 @@
    "label": "DETUNE",
    "cap": "black",
    "sprite": {
-    "strip": "knob_black@2x.png",
+    "strip": "knob_black@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -298,7 +298,7 @@
    "label": "FEEDBK",
    "cap": "black",
    "sprite": {
-    "strip": "knob_black@2x.png",
+    "strip": "knob_black@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -313,7 +313,7 @@
    "label": "VELOC",
    "cap": "black",
    "sprite": {
-    "strip": "knob_black@2x.png",
+    "strip": "knob_black@4x.png",
     "frames": 128,
     "size": 38.454
    }
@@ -328,7 +328,7 @@
    "label": "TUNE",
    "cap": "black",
    "sprite": {
-    "strip": "knob_black@2x.png",
+    "strip": "knob_black@4x.png",
     "frames": 128,
     "size": 30.784
    }
@@ -344,7 +344,7 @@
    "label": "VOL",
    "cap": "white",
    "sprite": {
-    "cap": "slidercap_white@2x.png",
+    "cap": "slidercap_white@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -360,7 +360,7 @@
    "label": "DCO",
    "cap": "silver",
    "sprite": {
-    "cap": "slidercap_silver@2x.png",
+    "cap": "slidercap_silver@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -376,7 +376,7 @@
    "label": "VCF",
    "cap": "silver",
    "sprite": {
-    "cap": "slidercap_silver@2x.png",
+    "cap": "slidercap_silver@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -392,7 +392,7 @@
    "label": "RATE",
    "cap": "red",
    "sprite": {
-    "cap": "slidercap_red@2x.png",
+    "cap": "slidercap_red@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -408,7 +408,7 @@
    "label": "RATE",
    "cap": "orange",
    "sprite": {
-    "cap": "slidercap_orange@2x.png",
+    "cap": "slidercap_orange@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -424,7 +424,7 @@
    "label": "DELAY",
    "cap": "orange",
    "sprite": {
-    "cap": "slidercap_orange@2x.png",
+    "cap": "slidercap_orange@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -440,7 +440,7 @@
    "label": "LFO",
    "cap": "silver",
    "sprite": {
-    "cap": "slidercap_silver@2x.png",
+    "cap": "slidercap_silver@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -456,7 +456,7 @@
    "label": "PWM",
    "cap": "silver",
    "sprite": {
-    "cap": "slidercap_silver@2x.png",
+    "cap": "slidercap_silver@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -472,7 +472,7 @@
    "label": "SUB",
    "cap": "silver",
    "sprite": {
-    "cap": "slidercap_silver@2x.png",
+    "cap": "slidercap_silver@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -488,7 +488,7 @@
    "label": "NOISE",
    "cap": "silver",
    "sprite": {
-    "cap": "slidercap_silver@2x.png",
+    "cap": "slidercap_silver@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -504,7 +504,7 @@
    "label": "HPF",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -520,7 +520,7 @@
    "label": "FREQ",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -536,7 +536,7 @@
    "label": "RES",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -552,7 +552,7 @@
    "label": "ENV",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -568,7 +568,7 @@
    "label": "LFO",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -584,7 +584,7 @@
    "label": "KYBD",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -600,7 +600,7 @@
    "label": "LEVEL",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -616,7 +616,7 @@
    "label": "A",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -632,7 +632,7 @@
    "label": "D",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -648,7 +648,7 @@
    "label": "S",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -664,7 +664,7 @@
    "label": "R",
    "cap": "blue",
    "sprite": {
-    "cap": "slidercap_blue@2x.png",
+    "cap": "slidercap_blue@4x.png",
     "capW": 34.0,
     "capH": 42.0
    }
@@ -688,7 +688,7 @@
     "DOWN"
    ],
    "sprite": {
-    "strip": "switch_3@2x.png",
+    "strip": "switch_3@4x.png",
     "frames": 3,
     "w": 30.0,
     "h": 80.0
@@ -713,7 +713,7 @@
     "DOWN"
    ],
    "sprite": {
-    "strip": "switch_3@2x.png",
+    "strip": "switch_3@4x.png",
     "frames": 3,
     "w": 30.0,
     "h": 80.0
@@ -738,7 +738,7 @@
     "3"
    ],
    "sprite": {
-    "strip": "switch_3@2x.png",
+    "strip": "switch_3@4x.png",
     "frames": 3,
     "w": 30.0,
     "h": 80.0
@@ -761,7 +761,7 @@
     "MAN"
    ],
    "sprite": {
-    "strip": "switch_2@2x.png",
+    "strip": "switch_2@4x.png",
     "frames": 2,
     "w": 30.0,
     "h": 64.0
@@ -786,7 +786,7 @@
     "LFO"
    ],
    "sprite": {
-    "strip": "switch_3@2x.png",
+    "strip": "switch_3@4x.png",
     "frames": 3,
     "w": 30.0,
     "h": 80.0
@@ -809,7 +809,7 @@
     "-"
    ],
    "sprite": {
-    "strip": "switch_2@2x.png",
+    "strip": "switch_2@4x.png",
     "frames": 2,
     "w": 30.0,
     "h": 64.0
@@ -832,7 +832,7 @@
     "GATE"
    ],
    "sprite": {
-    "strip": "switch_2@2x.png",
+    "strip": "switch_2@4x.png",
     "frames": 2,
     "w": 30.0,
     "h": 64.0
@@ -849,8 +849,8 @@
    "label": "1",
    "cap": "ivory",
    "sprite": {
-    "up": "button_bank_1_up@2x.png",
-    "down": "button_bank_1_down@2x.png",
+    "up": "button_bank_1_up@4x.png",
+    "down": "button_bank_1_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -863,8 +863,8 @@
    "r": 4.0,
    "led_for": "bank_1",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -880,8 +880,8 @@
    "label": "2",
    "cap": "ivory",
    "sprite": {
-    "up": "button_bank_2_up@2x.png",
-    "down": "button_bank_2_down@2x.png",
+    "up": "button_bank_2_up@4x.png",
+    "down": "button_bank_2_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -894,8 +894,8 @@
    "r": 4.0,
    "led_for": "bank_2",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -911,8 +911,8 @@
    "label": "3",
    "cap": "ivory",
    "sprite": {
-    "up": "button_bank_3_up@2x.png",
-    "down": "button_bank_3_down@2x.png",
+    "up": "button_bank_3_up@4x.png",
+    "down": "button_bank_3_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -925,8 +925,8 @@
    "r": 4.0,
    "led_for": "bank_3",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -942,8 +942,8 @@
    "label": "4",
    "cap": "ivory",
    "sprite": {
-    "up": "button_bank_4_up@2x.png",
-    "down": "button_bank_4_down@2x.png",
+    "up": "button_bank_4_up@4x.png",
+    "down": "button_bank_4_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -956,8 +956,8 @@
    "r": 4.0,
    "led_for": "bank_4",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -973,8 +973,8 @@
    "label": "5",
    "cap": "ivory",
    "sprite": {
-    "up": "button_bank_5_up@2x.png",
-    "down": "button_bank_5_down@2x.png",
+    "up": "button_bank_5_up@4x.png",
+    "down": "button_bank_5_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -987,8 +987,8 @@
    "r": 4.0,
    "led_for": "bank_5",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1004,8 +1004,8 @@
    "label": "1",
    "cap": "ivory",
    "sprite": {
-    "up": "button_patch_1_up@2x.png",
-    "down": "button_patch_1_down@2x.png",
+    "up": "button_patch_1_up@4x.png",
+    "down": "button_patch_1_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -1018,8 +1018,8 @@
    "r": 4.0,
    "led_for": "patch_1",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1035,8 +1035,8 @@
    "label": "2",
    "cap": "ivory",
    "sprite": {
-    "up": "button_patch_2_up@2x.png",
-    "down": "button_patch_2_down@2x.png",
+    "up": "button_patch_2_up@4x.png",
+    "down": "button_patch_2_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -1049,8 +1049,8 @@
    "r": 4.0,
    "led_for": "patch_2",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1066,8 +1066,8 @@
    "label": "3",
    "cap": "ivory",
    "sprite": {
-    "up": "button_patch_3_up@2x.png",
-    "down": "button_patch_3_down@2x.png",
+    "up": "button_patch_3_up@4x.png",
+    "down": "button_patch_3_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -1080,8 +1080,8 @@
    "r": 4.0,
    "led_for": "patch_3",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1097,8 +1097,8 @@
    "label": "4",
    "cap": "ivory",
    "sprite": {
-    "up": "button_patch_4_up@2x.png",
-    "down": "button_patch_4_down@2x.png",
+    "up": "button_patch_4_up@4x.png",
+    "down": "button_patch_4_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -1111,8 +1111,8 @@
    "r": 4.0,
    "led_for": "patch_4",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1128,8 +1128,8 @@
    "label": "5",
    "cap": "ivory",
    "sprite": {
-    "up": "button_patch_5_up@2x.png",
-    "down": "button_patch_5_down@2x.png",
+    "up": "button_patch_5_up@4x.png",
+    "down": "button_patch_5_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -1142,8 +1142,8 @@
    "r": 4.0,
    "led_for": "patch_5",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1159,8 +1159,8 @@
    "label": "6",
    "cap": "ivory",
    "sprite": {
-    "up": "button_patch_6_up@2x.png",
-    "down": "button_patch_6_down@2x.png",
+    "up": "button_patch_6_up@4x.png",
+    "down": "button_patch_6_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -1173,8 +1173,8 @@
    "r": 4.0,
    "led_for": "patch_6",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1190,8 +1190,8 @@
    "label": "7",
    "cap": "ivory",
    "sprite": {
-    "up": "button_patch_7_up@2x.png",
-    "down": "button_patch_7_down@2x.png",
+    "up": "button_patch_7_up@4x.png",
+    "down": "button_patch_7_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -1204,8 +1204,8 @@
    "r": 4.0,
    "led_for": "patch_7",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1221,8 +1221,8 @@
    "label": "8",
    "cap": "ivory",
    "sprite": {
-    "up": "button_patch_8_up@2x.png",
-    "down": "button_patch_8_down@2x.png",
+    "up": "button_patch_8_up@4x.png",
+    "down": "button_patch_8_down@4x.png",
     "w": 54.0,
     "h": 36.0
    }
@@ -1235,8 +1235,8 @@
    "r": 4.0,
    "led_for": "patch_8",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1252,8 +1252,8 @@
    "label": "MANUAL",
    "cap": "orange",
    "sprite": {
-    "up": "button_manual_up@2x.png",
-    "down": "button_manual_down@2x.png",
+    "up": "button_manual_up@4x.png",
+    "down": "button_manual_down@4x.png",
     "w": 82.0,
     "h": 36.0
    }
@@ -1266,8 +1266,8 @@
    "r": 4.0,
    "led_for": "manual",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1283,8 +1283,8 @@
    "label": "WRITE",
    "cap": "red",
    "sprite": {
-    "up": "button_write_up@2x.png",
-    "down": "button_write_down@2x.png",
+    "up": "button_write_up@4x.png",
+    "down": "button_write_down@4x.png",
     "w": 82.0,
     "h": 36.0
    }
@@ -1297,8 +1297,8 @@
    "r": 4.0,
    "led_for": "write",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1314,8 +1314,8 @@
    "label": "SAVE",
    "cap": "grey",
    "sprite": {
-    "up": "button_save_up@2x.png",
-    "down": "button_save_down@2x.png",
+    "up": "button_save_up@4x.png",
+    "down": "button_save_down@4x.png",
     "w": 90.0,
     "h": 32.0
    }
@@ -1328,8 +1328,8 @@
    "r": 4.0,
    "led_for": "save",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1345,8 +1345,8 @@
    "label": "VERIFY",
    "cap": "grey",
    "sprite": {
-    "up": "button_verify_up@2x.png",
-    "down": "button_verify_down@2x.png",
+    "up": "button_verify_up@4x.png",
+    "down": "button_verify_down@4x.png",
     "w": 90.0,
     "h": 32.0
    }
@@ -1359,8 +1359,8 @@
    "r": 4.0,
    "led_for": "verify",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1376,8 +1376,8 @@
    "label": "LOAD",
    "cap": "grey",
    "sprite": {
-    "up": "button_load_up@2x.png",
-    "down": "button_load_down@2x.png",
+    "up": "button_load_up@4x.png",
+    "down": "button_load_down@4x.png",
     "w": 90.0,
     "h": 32.0
    }
@@ -1390,8 +1390,8 @@
    "r": 4.0,
    "led_for": "load",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1408,8 +1408,8 @@
    "label": "1",
    "cap": "ivory",
    "sprite": {
-    "up": "button_algo_1_up@2x.png",
-    "down": "button_algo_1_down@2x.png",
+    "up": "button_algo_1_up@4x.png",
+    "down": "button_algo_1_down@4x.png",
     "w": 74.5,
     "h": 38.0
    }
@@ -1422,8 +1422,8 @@
    "r": 4.0,
    "led_for": "algo_1",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1440,8 +1440,8 @@
    "label": "2",
    "cap": "ivory",
    "sprite": {
-    "up": "button_algo_2_up@2x.png",
-    "down": "button_algo_2_down@2x.png",
+    "up": "button_algo_2_up@4x.png",
+    "down": "button_algo_2_down@4x.png",
     "w": 74.5,
     "h": 38.0
    }
@@ -1454,8 +1454,8 @@
    "r": 4.0,
    "led_for": "algo_2",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1472,8 +1472,8 @@
    "label": "3",
    "cap": "ivory",
    "sprite": {
-    "up": "button_algo_3_up@2x.png",
-    "down": "button_algo_3_down@2x.png",
+    "up": "button_algo_3_up@4x.png",
+    "down": "button_algo_3_down@4x.png",
     "w": 74.5,
     "h": 38.0
    }
@@ -1486,8 +1486,8 @@
    "r": 4.0,
    "led_for": "algo_3",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1504,8 +1504,8 @@
    "label": "4",
    "cap": "ivory",
    "sprite": {
-    "up": "button_algo_4_up@2x.png",
-    "down": "button_algo_4_down@2x.png",
+    "up": "button_algo_4_up@4x.png",
+    "down": "button_algo_4_down@4x.png",
     "w": 74.5,
     "h": 38.0
    }
@@ -1518,8 +1518,8 @@
    "r": 4.0,
    "led_for": "algo_4",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1536,8 +1536,8 @@
    "label": "5",
    "cap": "ivory",
    "sprite": {
-    "up": "button_algo_5_up@2x.png",
-    "down": "button_algo_5_down@2x.png",
+    "up": "button_algo_5_up@4x.png",
+    "down": "button_algo_5_down@4x.png",
     "w": 74.5,
     "h": 38.0
    }
@@ -1550,8 +1550,8 @@
    "r": 4.0,
    "led_for": "algo_5",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1568,8 +1568,8 @@
    "label": "6",
    "cap": "ivory",
    "sprite": {
-    "up": "button_algo_6_up@2x.png",
-    "down": "button_algo_6_down@2x.png",
+    "up": "button_algo_6_up@4x.png",
+    "down": "button_algo_6_down@4x.png",
     "w": 74.5,
     "h": 38.0
    }
@@ -1582,8 +1582,8 @@
    "r": 4.0,
    "led_for": "algo_6",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1600,8 +1600,8 @@
    "label": "7",
    "cap": "ivory",
    "sprite": {
-    "up": "button_algo_7_up@2x.png",
-    "down": "button_algo_7_down@2x.png",
+    "up": "button_algo_7_up@4x.png",
+    "down": "button_algo_7_down@4x.png",
     "w": 74.5,
     "h": 38.0
    }
@@ -1614,8 +1614,8 @@
    "r": 4.0,
    "led_for": "algo_7",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1632,8 +1632,8 @@
    "label": "8",
    "cap": "ivory",
    "sprite": {
-    "up": "button_algo_8_up@2x.png",
-    "down": "button_algo_8_down@2x.png",
+    "up": "button_algo_8_up@4x.png",
+    "down": "button_algo_8_down@4x.png",
     "w": 74.5,
     "h": 38.0
    }
@@ -1646,8 +1646,8 @@
    "r": 4.0,
    "led_for": "algo_8",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1664,8 +1664,8 @@
    "label": "16'",
    "cap": "ivory",
    "sprite": {
-    "up": "button_range_16_up@2x.png",
-    "down": "button_range_16_down@2x.png",
+    "up": "button_range_16_up@4x.png",
+    "down": "button_range_16_down@4x.png",
     "w": 48.0,
     "h": 34.0
    }
@@ -1678,8 +1678,8 @@
    "r": 4.0,
    "led_for": "range_16",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1696,8 +1696,8 @@
    "label": "8'",
    "cap": "ivory",
    "sprite": {
-    "up": "button_range_8_up@2x.png",
-    "down": "button_range_8_down@2x.png",
+    "up": "button_range_8_up@4x.png",
+    "down": "button_range_8_down@4x.png",
     "w": 48.0,
     "h": 34.0
    }
@@ -1710,8 +1710,8 @@
    "r": 4.0,
    "led_for": "range_8",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1728,8 +1728,8 @@
    "label": "4'",
    "cap": "ivory",
    "sprite": {
-    "up": "button_range_4_up@2x.png",
-    "down": "button_range_4_down@2x.png",
+    "up": "button_range_4_up@4x.png",
+    "down": "button_range_4_down@4x.png",
     "w": 48.0,
     "h": 34.0
    }
@@ -1742,8 +1742,8 @@
    "r": 4.0,
    "led_for": "range_4",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1759,8 +1759,8 @@
    "label": "I",
    "cap": "yellow",
    "sprite": {
-    "up": "button_chorus_1_up@2x.png",
-    "down": "button_chorus_1_down@2x.png",
+    "up": "button_chorus_1_up@4x.png",
+    "down": "button_chorus_1_down@4x.png",
     "w": 64.0,
     "h": 42.0
    }
@@ -1773,8 +1773,8 @@
    "r": 4.0,
    "led_for": "chorus_1",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1790,8 +1790,8 @@
    "label": "II",
    "cap": "yellow",
    "sprite": {
-    "up": "button_chorus_2_up@2x.png",
-    "down": "button_chorus_2_down@2x.png",
+    "up": "button_chorus_2_up@4x.png",
+    "down": "button_chorus_2_down@4x.png",
     "w": 64.0,
     "h": 42.0
    }
@@ -1804,8 +1804,8 @@
    "r": 4.0,
    "led_for": "chorus_2",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1822,8 +1822,8 @@
    "label": "LFO TRIG",
    "cap": "grey",
    "sprite": {
-    "up": "button_lfo_trigger_up@2x.png",
-    "down": "button_lfo_trigger_down@2x.png",
+    "up": "button_lfo_trigger_up@4x.png",
+    "down": "button_lfo_trigger_down@4x.png",
     "w": 76.0,
     "h": 36.0
    }
@@ -1839,8 +1839,8 @@
    "label": "ARP",
    "cap": "red",
    "sprite": {
-    "up": "button_arp_on_up@2x.png",
-    "down": "button_arp_on_down@2x.png",
+    "up": "button_arp_on_up@4x.png",
+    "down": "button_arp_on_down@4x.png",
     "w": 58.0,
     "h": 36.0
    }
@@ -1853,8 +1853,8 @@
    "r": 4.0,
    "led_for": "arp_on",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1870,8 +1870,8 @@
    "label": "HOLD",
    "cap": "ivory",
    "sprite": {
-    "up": "button_hold_up@2x.png",
-    "down": "button_hold_down@2x.png",
+    "up": "button_hold_up@4x.png",
+    "down": "button_hold_down@4x.png",
     "w": 58.0,
     "h": 36.0
    }
@@ -1884,8 +1884,8 @@
    "r": 4.0,
    "led_for": "hold",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1901,8 +1901,8 @@
    "label": "KEY TR",
    "cap": "ivory",
    "sprite": {
-    "up": "button_key_transpose_up@2x.png",
-    "down": "button_key_transpose_down@2x.png",
+    "up": "button_key_transpose_up@4x.png",
+    "down": "button_key_transpose_down@4x.png",
     "w": 66.0,
     "h": 36.0
    }
@@ -1915,8 +1915,8 @@
    "r": 4.0,
    "led_for": "key_transpose",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1932,8 +1932,8 @@
    "label": "PULSE",
    "cap": "orange",
    "sprite": {
-    "up": "button_wave_pulse_up@2x.png",
-    "down": "button_wave_pulse_down@2x.png",
+    "up": "button_wave_pulse_up@4x.png",
+    "down": "button_wave_pulse_down@4x.png",
     "w": 76.0,
     "h": 36.0
    }
@@ -1946,8 +1946,8 @@
    "r": 4.0,
    "led_for": "wave_pulse",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1963,8 +1963,8 @@
    "label": "SAW",
    "cap": "orange",
    "sprite": {
-    "up": "button_wave_saw_up@2x.png",
-    "down": "button_wave_saw_down@2x.png",
+    "up": "button_wave_saw_up@4x.png",
+    "down": "button_wave_saw_down@4x.png",
     "w": 76.0,
     "h": 36.0
    }
@@ -1977,8 +1977,8 @@
    "r": 4.0,
    "led_for": "wave_saw",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -1994,8 +1994,8 @@
    "label": "SUB",
    "cap": "ivory",
    "sprite": {
-    "up": "button_wave_sub_up@2x.png",
-    "down": "button_wave_sub_down@2x.png",
+    "up": "button_wave_sub_up@4x.png",
+    "down": "button_wave_sub_down@4x.png",
     "w": 76.0,
     "h": 36.0
    }
@@ -2008,8 +2008,8 @@
    "r": 4.0,
    "led_for": "wave_sub",
    "sprite": {
-    "off": "led_off@2x.png",
-    "on": "led_on@2x.png",
+    "off": "led_off@4x.png",
+    "on": "led_on@4x.png",
     "w": 18.0,
     "h": 18.0
    }
@@ -2022,7 +2022,7 @@
    "w": 61.92,
    "h": 48.16,
    "sprite": {
-    "strip": "digits@2x.png",
+    "strip": "digits@4x.png",
     "frames": 10,
     "w": 61.92,
     "h": 48.16
@@ -2038,7 +2038,7 @@
    "source": "pitchbend",
    "label": "BEND",
    "sprite": {
-    "sprite": "wheel@2x.png",
+    "sprite": "wheel@4x.png",
     "w": 40.0,
     "h": 216.0
    }
@@ -2053,7 +2053,7 @@
    "source": "cc1",
    "label": "MOD",
    "sprite": {
-    "sprite": "wheel@2x.png",
+    "sprite": "wheel@4x.png",
     "w": 40.0,
     "h": 216.0
    }
@@ -2135,10 +2135,10 @@
    "black_w": 25.5,
    "black_h": 146.3,
    "sprite": {
-    "white_up": "key_white_up@2x.png",
-    "white_down": "key_white_down@2x.png",
-    "black_up": "key_black_up@2x.png",
-    "black_down": "key_black_down@2x.png",
+    "white_up": "key_white_up@4x.png",
+    "white_down": "key_white_down@4x.png",
+    "black_up": "key_black_up@4x.png",
+    "black_down": "key_black_down@4x.png",
     "whiteW": 43.33,
     "whiteH": 242.0,
     "blackW": 31.0,

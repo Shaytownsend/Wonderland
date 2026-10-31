@@ -16,13 +16,12 @@ TEST_CASE ("layout.json attaches exactly the panel parameters", "[gui]")
     CHECK ((int) attached.size() == panelParams);
 }
 
-TEST_CASE ("Every sprite named in layout.json is embedded", "[gui]")
+TEST_CASE ("Every sprite named in layout.json loads (embedded or installed)", "[gui]")
 {
     for (const auto& f : queen::Layout::get().spriteFiles())
     {
         INFO (f.toStdString());
-        int size = 0;
-        CHECK (queen::assets::find (f, size) != nullptr);
+        CHECK (queen::assets::image (f).isValid());
     }
 }
 

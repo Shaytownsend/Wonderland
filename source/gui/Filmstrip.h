@@ -18,12 +18,34 @@ namespace assets
         return nullptr;
     }
 
+    // Where non-embedded art is looked for (QUEEN_EMBED_ASSETS=0 builds): $QUEEN_ASSETS_DIR, then the
+    // installer's shared folder, then the per-user one.
+    inline juce::Array<juce::File> searchDirectories()
+    {
+        juce::Array<juce::File> dirs;
+        const auto env = juce::SystemStats::getEnvironmentVariable ("QUEEN_ASSETS_DIR", {});
+        if (env.isNotEmpty())
+            dirs.add (juce::File (env));
+        for (auto where : { juce::File::commonApplicationDataDirectory, juce::File::userApplicationDataDirectory })
+        {
+            auto base = juce::File::getSpecialLocation (where); // macOS: /Library, ~/Library; Linux: /opt, ~/.config
+           #if JUCE_MAC
+            base = base.getChildFile ("Application Support");
+           #endif
+            dirs.add (base.getChildFile ("The Queen").getChildFile ("Assets"));
+        }
+        return dirs;
+    }
+
     inline juce::Image image (const juce::String& filename)
     {
         int size = 0;
         if (auto* data = find (filename, size))
             return juce::ImageCache::getFromMemory (data, size);
-        jassertfalse; // every sprite named in layout.json must be in assets/
+        for (const auto& dir : searchDirectories())
+            if (auto f = dir.getChildFile (filename); f.existsAsFile())
+                return juce::ImageCache::getFromFile (f);
+        jassertfalse; // every sprite named in layout.json must be in assets/ (embedded or installed)
         return {};
     }
 
@@ -39,7 +61,10 @@ namespace assets
 // Draws `src` into `dest` from a copy pre-scaled to the exact physical pixel size (halving steps, then a
 // high-quality final resample), so the 2x renders stay sharp at any window size / display density instead
 // of being resampled on the fly by the graphics backend. Message thread only.
-inline void drawCrisp (juce::Graphics& g, const juce::Image& src, juce::Rectangle<float> dest)
+// With `owner` (the component being painted) the image is also snapped to the physical pixel grid, so
+// 1-pixel details are not smeared across two screen pixels by a fractional position.
+inline void drawCrisp (juce::Graphics& g, const juce::Image& src, juce::Rectangle<float> dest,
+                       const juce::Component* owner = nullptr)
 {
     if (! src.isValid() || dest.isEmpty())
         return;
@@ -70,6 +95,22 @@ inline void drawCrisp (juce::Graphics& g, const juce::Image& src, juce::Rectangl
         if (img.getWidth() != pw || img.getHeight() != ph)
             img = img.rescaled (pw, ph, juce::Graphics::highResamplingQuality);
         it = cache.images.emplace (key, img).first;
+    }
+
+    if (owner != nullptr)
+    {
+        // physical position of dest's corner: component -> top level (logical, transforms included) -> peer pixels
+        const auto* top = owner->getTopLevelComponent();
+        const auto origin = top->getLocalPoint (owner, dest.getTopLeft());
+        const float componentScale = top->getLocalPoint (owner, juce::Point<float> (1.0f, 0.0f)).x
+                                     - top->getLocalPoint (owner, juce::Point<float>()).x;
+        if (componentScale > 0.0f)
+        {
+            const float peerScale = t / componentScale;
+            const auto phys = origin * peerScale;
+            const juce::Point<float> snap ((std::round (phys.x) - phys.x) / t, (std::round (phys.y) - phys.y) / t);
+            dest = dest.translated (snap.x, snap.y);
+        }
     }
 
     juce::Graphics::ScopedSaveState state (g);
@@ -109,11 +150,11 @@ public:
         return juce::jlimit (0, getNumFrames() - 1, (int) std::lround (proportion * (getNumFrames() - 1)));
     }
 
-    void draw (juce::Graphics& g, int frame, juce::Rectangle<float> dest) const
+    void draw (juce::Graphics& g, int frame, juce::Rectangle<float> dest, const juce::Component* owner = nullptr) const
     {
         if (frames.empty())
             return;
-        drawCrisp (g, frames[(size_t) juce::jlimit (0, getNumFrames() - 1, frame)], dest);
+        drawCrisp (g, frames[(size_t) juce::jlimit (0, getNumFrames() - 1, frame)], dest, owner);
     }
 
 private:
