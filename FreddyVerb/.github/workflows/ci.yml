@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14
+            name: macOS (Universal)
+            cmake_extra: -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          - os: windows-2022
+            name: Windows x64
+            cmake_extra: -A x64
+          - os: ubuntu-24.04
+            name: Linux x64
+            cmake_extra: -G Ninja
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: FreddyVerb
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libasound2-dev libx11-dev libxrandr-dev libxinerama-dev \
+            libxcursor-dev libxcomposite-dev libxext-dev libfreetype-dev libfontconfig1-dev \
+            libgl1-mesa-dev libcurl4-openssl-dev xvfb
+
+      - name: Cache FetchContent
+        uses: actions/cache@v4
+        with:
+          path: FreddyVerb/build/_deps
+          key: deps-${{ runner.os }}-${{ hashFiles('FreddyVerb/cmake/Dependencies.cmake', 'FreddyVerb/tests/CMakeLists.txt') }}
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_extra }}
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+
+      - name: Tests
+        run: ctest --test-dir build -C Release --output-on-failure --timeout 1800
+
+      - name: pluginval (strictness 10)
+        shell: bash
+        run: |
+          set -e
+          case "${{ runner.os }}" in
+            macOS)   PV_URL=https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip ;;
+            Windows) PV_URL=https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip ;;
+            Linux)   PV_URL=https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Linux.zip ;;
+          esac
+          curl -sSL -o pv.zip "$PV_URL" && unzip -q pv.zip -d pv
+          case "${{ runner.os }}" in
+            macOS)   PV=pv/pluginval.app/Contents/MacOS/pluginval ;;
+            Windows) PV=pv/pluginval.exe ;;
+            Linux)   PV="xvfb-run -a pv/pluginval" ;;
+          esac
+          VST3=$(find build -name "Freddy Verb.vst3" -maxdepth 5 | head -1)
+          $PV --strictness-level 10 --validate-in-process "$VST3"
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            AU=$(find build -name "Freddy Verb.component" -maxdepth 5 | head -1)
+            mkdir -p ~/Library/Audio/Plug-Ins/Components && cp -R "$AU" ~/Library/Audio/Plug-Ins/Components/
+            killall -9 AudioComponentRegistrar || true
+            $PV --strictness-level 10 --validate-in-process ~/Library/Audio/Plug-Ins/Components/"Freddy Verb.component"
+          fi
+
+      - name: UI previews
+        if: runner.os == 'Linux'
+        run: xvfb-run -a build/FreddyVerb_Snapshots_artefacts/Release/FreddyVerb_Snapshots --out build/ui_previews --milestone ci
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FreddyVerb-${{ runner.os }}
+          path: |
+            FreddyVerb/build/FreddyVerb_artefacts/Release
+            FreddyVerb/build/ui_previews
+          if-no-files-found: ignore

@@ -1,0 +1,13 @@
+# Offline IR generator (milestone 5). See tools/ir_forge/README.md.
+file(GLOB IR_FORGE_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+file(GLOB IR_FORGE_HEADERS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+if(IR_FORGE_SOURCES)
+    juce_add_console_app(ir_forge PRODUCT_NAME "ir_forge")
+    target_sources(ir_forge PRIVATE ${IR_FORGE_SOURCES} ${IR_FORGE_HEADERS})
+    target_include_directories(ir_forge PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    target_compile_features(ir_forge PRIVATE cxx_std_17)
+    target_compile_definitions(ir_forge PRIVATE JUCE_WEB_BROWSER=0 JUCE_USE_CURL=0 JUCE_USE_FLAC=1)
+    target_link_libraries(ir_forge PRIVATE juce::juce_core juce::juce_audio_formats juce::juce_dsp juce::juce_recommended_config_flags)
+    find_package(Threads REQUIRED)
+    target_link_libraries(ir_forge PRIVATE Threads::Threads)
+endif()

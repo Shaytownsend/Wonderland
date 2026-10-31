@@ -1,0 +1,820 @@
+{
+  "controls": [
+    {
+      "id": "envelope",
+      "kind": "display",
+      "section": "LCD",
+      "w": 580.0,
+      "h": 300.0,
+      "label": ""
+    },
+    {
+      "id": "ir_browser",
+      "kind": "display",
+      "section": "IR",
+      "w": 300.0,
+      "h": 210.0,
+      "label": ""
+    },
+    {
+      "id": "ir_display",
+      "kind": "display",
+      "section": "IR",
+      "w": 300.0,
+      "h": 150.0,
+      "label": ""
+    },
+    {
+      "id": "eq_display",
+      "kind": "display",
+      "section": "TONE",
+      "w": 330.0,
+      "h": 110.0,
+      "label": ""
+    },
+    {
+      "id": "readout",
+      "kind": "display",
+      "section": "LCD",
+      "w": 470.0,
+      "h": 40.0,
+      "label": ""
+    },
+    {
+      "id": "jog",
+      "kind": "jog",
+      "section": "LCD",
+      "w": 44.0,
+      "h": 44.0,
+      "label": "DATA"
+    },
+    {
+      "id": "preset",
+      "kind": "display",
+      "section": "TOP",
+      "w": 300.0,
+      "h": 36.0,
+      "label": ""
+    },
+    {
+      "id": "preset_prev",
+      "kind": "button",
+      "section": "TOP",
+      "w": 30.0,
+      "h": 26.0,
+      "label": "<"
+    },
+    {
+      "id": "preset_next",
+      "kind": "button",
+      "section": "TOP",
+      "w": 30.0,
+      "h": 26.0,
+      "label": ">"
+    },
+    {
+      "id": "ab_a",
+      "kind": "button",
+      "section": "TOP",
+      "w": 32.0,
+      "h": 26.0,
+      "label": "A"
+    },
+    {
+      "id": "ab_b",
+      "kind": "button",
+      "section": "TOP",
+      "w": 32.0,
+      "h": 26.0,
+      "label": "B"
+    },
+    {
+      "id": "ab_copy",
+      "kind": "button",
+      "section": "TOP",
+      "w": 44.0,
+      "h": 26.0,
+      "label": "A>B"
+    },
+    {
+      "id": "undo",
+      "kind": "button",
+      "section": "TOP",
+      "w": 50.0,
+      "h": 26.0,
+      "label": "UNDO"
+    },
+    {
+      "id": "redo",
+      "kind": "button",
+      "section": "TOP",
+      "w": 50.0,
+      "h": 26.0,
+      "label": "REDO"
+    },
+    {
+      "id": "settings",
+      "kind": "button",
+      "section": "TOP",
+      "w": 56.0,
+      "h": 26.0,
+      "label": "SETUP"
+    },
+    {
+      "id": "viz_scale",
+      "kind": "button",
+      "section": "LCD",
+      "w": 64.0,
+      "h": 26.0,
+      "label": "TIME"
+    },
+    {
+      "id": "viz_freeze",
+      "kind": "button",
+      "section": "LCD",
+      "w": 64.0,
+      "h": 26.0,
+      "label": "FREEZE"
+    },
+    {
+      "id": "quality@stepper",
+      "kind": "stepper",
+      "section": "REVERB",
+      "w": 118.0,
+      "h": 38.0,
+      "label": "QUALITY"
+    },
+    {
+      "id": "ir_reverse",
+      "kind": "pad",
+      "section": "REVERB",
+      "w": 70.0,
+      "h": 26.0,
+      "label": "REVERSE"
+    },
+    {
+      "id": "ir_normalize",
+      "kind": "pad",
+      "section": "REVERB",
+      "w": 56.0,
+      "h": 26.0,
+      "label": "NORM"
+    },
+    {
+      "id": "predelay_ms",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "PREDLY"
+    },
+    {
+      "id": "ir_start_ms",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "START"
+    },
+    {
+      "id": "ir_length_pct",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "LENGTH"
+    },
+    {
+      "id": "ir_size_pct",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "SIZE"
+    },
+    {
+      "id": "ir_decay_pct",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "DECAY"
+    },
+    {
+      "id": "ir_xover_ms",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "X-OVER"
+    },
+    {
+      "id": "ir_early_db",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "EARLY"
+    },
+    {
+      "id": "ir_late_db",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "LATE"
+    },
+    {
+      "id": "ir_damping_pct",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "DAMP"
+    },
+    {
+      "id": "ir_damp_freq",
+      "kind": "knob",
+      "section": "REVERB",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "DAMP F"
+    },
+    {
+      "id": "predelay_sync",
+      "kind": "pad",
+      "section": "REVERB",
+      "w": 56.0,
+      "h": 26.0,
+      "label": "SYNC"
+    },
+    {
+      "id": "predelay_note@stepper",
+      "kind": "stepper",
+      "section": "REVERB",
+      "w": 86.0,
+      "h": 38.0,
+      "label": "NOTE"
+    },
+    {
+      "id": "key_hpf",
+      "kind": "knob",
+      "section": "DETECT",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "KEY HP"
+    },
+    {
+      "id": "key_lpf",
+      "kind": "knob",
+      "section": "DETECT",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "KEY LP"
+    },
+    {
+      "id": "det_mode@stepper",
+      "kind": "stepper",
+      "section": "DETECT",
+      "w": 80.0,
+      "h": 38.0,
+      "label": "DETECT"
+    },
+    {
+      "id": "det_rms_ms",
+      "kind": "knob",
+      "section": "DETECT",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "RMS WIN"
+    },
+    {
+      "id": "lookahead_ms",
+      "kind": "knob",
+      "section": "DETECT",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "LOOKAHD"
+    },
+    {
+      "id": "key_listen",
+      "kind": "pad",
+      "section": "DETECT",
+      "w": 64.0,
+      "h": 26.0,
+      "label": "LISTEN"
+    },
+    {
+      "id": "duck_on",
+      "kind": "pad",
+      "section": "DUCK",
+      "w": 62.0,
+      "h": 26.0,
+      "label": "DUCK"
+    },
+    {
+      "id": "duck_mode#0",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 70.0,
+      "h": 26.0,
+      "label": "FOLLOW"
+    },
+    {
+      "id": "duck_mode#1",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 70.0,
+      "h": 26.0,
+      "label": "CURVE"
+    },
+    {
+      "id": "curve_retrigger@stepper",
+      "kind": "stepper",
+      "section": "DUCK",
+      "w": 92.0,
+      "h": 38.0,
+      "label": "RETRIG"
+    },
+    {
+      "id": "duck_depth_db",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "DEPTH"
+    },
+    {
+      "id": "duck_threshold_db",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "THRESH"
+    },
+    {
+      "id": "duck_attack_ms",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "ATTACK"
+    },
+    {
+      "id": "duck_release_ms",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "BLOOM"
+    },
+    {
+      "id": "duck_amount",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "AMOUNT"
+    },
+    {
+      "id": "duck_rel_curve@stepper",
+      "kind": "stepper",
+      "section": "DUCK",
+      "w": 100.0,
+      "h": 38.0,
+      "label": "B.CURVE"
+    },
+    {
+      "id": "curve_shape#0",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 44.0,
+      "h": 26.0,
+      "label": "LIN"
+    },
+    {
+      "id": "curve_shape#1",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 44.0,
+      "h": 26.0,
+      "label": "EXP"
+    },
+    {
+      "id": "curve_shape#2",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 44.0,
+      "h": 26.0,
+      "label": "LOG"
+    },
+    {
+      "id": "curve_shape#3",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 44.0,
+      "h": 26.0,
+      "label": "S"
+    },
+    {
+      "id": "curve_shape#4",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 44.0,
+      "h": 26.0,
+      "label": "HOLD"
+    },
+    {
+      "id": "curve_shape#5",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 44.0,
+      "h": 26.0,
+      "label": "PUMP"
+    },
+    {
+      "id": "curve_shape#6",
+      "kind": "choicepad",
+      "section": "DUCK",
+      "w": 44.0,
+      "h": 26.0,
+      "label": "SWELL"
+    },
+    {
+      "id": "curve_duration_ms",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "DURATN"
+    },
+    {
+      "id": "curve_tension",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "TENSION"
+    },
+    {
+      "id": "curve_guard_ms",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "GUARD"
+    },
+    {
+      "id": "curve_hyst_db",
+      "kind": "knob",
+      "section": "DUCK",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "HYST"
+    },
+    {
+      "id": "curve_sync",
+      "kind": "pad",
+      "section": "DUCK",
+      "w": 52.0,
+      "h": 26.0,
+      "label": "SYNC"
+    },
+    {
+      "id": "curve_note@stepper",
+      "kind": "stepper",
+      "section": "DUCK",
+      "w": 78.0,
+      "h": 38.0,
+      "label": "NOTE"
+    },
+    {
+      "id": "gate_on",
+      "kind": "pad",
+      "section": "GATE",
+      "w": 62.0,
+      "h": 26.0,
+      "label": "GATE"
+    },
+    {
+      "id": "gate_rel_curve@stepper",
+      "kind": "stepper",
+      "section": "GATE",
+      "w": 100.0,
+      "h": 38.0,
+      "label": "CURVE"
+    },
+    {
+      "id": "gate_threshold_db",
+      "kind": "knob",
+      "section": "GATE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "THRESH"
+    },
+    {
+      "id": "gate_hyst_db",
+      "kind": "knob",
+      "section": "GATE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "HYST"
+    },
+    {
+      "id": "gate_attack_ms",
+      "kind": "knob",
+      "section": "GATE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "ATTACK"
+    },
+    {
+      "id": "gate_hold_ms",
+      "kind": "knob",
+      "section": "GATE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "HOLD"
+    },
+    {
+      "id": "gate_release_ms",
+      "kind": "knob",
+      "section": "GATE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "RELEASE"
+    },
+    {
+      "id": "gate_floor_db",
+      "kind": "knob",
+      "section": "GATE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "FLOOR"
+    },
+    {
+      "id": "gate_hold_sync",
+      "kind": "pad",
+      "section": "GATE",
+      "w": 52.0,
+      "h": 26.0,
+      "label": "SYNC"
+    },
+    {
+      "id": "gate_hold_note@stepper",
+      "kind": "stepper",
+      "section": "GATE",
+      "w": 78.0,
+      "h": 38.0,
+      "label": "NOTE"
+    },
+    {
+      "id": "eq_on",
+      "kind": "pad",
+      "section": "TONE",
+      "w": 48.0,
+      "h": 26.0,
+      "label": "EQ"
+    },
+    {
+      "id": "eq_position#0",
+      "kind": "choicepad",
+      "section": "TONE",
+      "w": 48.0,
+      "h": 26.0,
+      "label": "PRE"
+    },
+    {
+      "id": "eq_position#1",
+      "kind": "choicepad",
+      "section": "TONE",
+      "w": 52.0,
+      "h": 26.0,
+      "label": "POST"
+    },
+    {
+      "id": "eq_hpf_on",
+      "kind": "pad",
+      "section": "TONE",
+      "w": 46.0,
+      "h": 26.0,
+      "label": "HPF"
+    },
+    {
+      "id": "eq_ls_on",
+      "kind": "pad",
+      "section": "TONE",
+      "w": 40.0,
+      "h": 26.0,
+      "label": "LS"
+    },
+    {
+      "id": "eq_b1_on",
+      "kind": "pad",
+      "section": "TONE",
+      "w": 40.0,
+      "h": 26.0,
+      "label": "B1"
+    },
+    {
+      "id": "eq_b2_on",
+      "kind": "pad",
+      "section": "TONE",
+      "w": 40.0,
+      "h": 26.0,
+      "label": "B2"
+    },
+    {
+      "id": "eq_hs_on",
+      "kind": "pad",
+      "section": "TONE",
+      "w": 40.0,
+      "h": 26.0,
+      "label": "HS"
+    },
+    {
+      "id": "eq_lpf_on",
+      "kind": "pad",
+      "section": "TONE",
+      "w": 46.0,
+      "h": 26.0,
+      "label": "LPF"
+    },
+    {
+      "id": "eq_hpf_freq",
+      "kind": "knob",
+      "section": "TONE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "HPF"
+    },
+    {
+      "id": "eq_hpf_slope@stepper",
+      "kind": "stepper",
+      "section": "TONE",
+      "w": 78.0,
+      "h": 38.0,
+      "label": "HP SLP"
+    },
+    {
+      "id": "eq_lpf_freq",
+      "kind": "knob",
+      "section": "TONE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "LPF"
+    },
+    {
+      "id": "eq_lpf_slope@stepper",
+      "kind": "stepper",
+      "section": "TONE",
+      "w": 78.0,
+      "h": 38.0,
+      "label": "LP SLP"
+    },
+    {
+      "id": "eqsel_freq",
+      "kind": "knob",
+      "section": "TONE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "FREQ"
+    },
+    {
+      "id": "eqsel_gain",
+      "kind": "knob",
+      "section": "TONE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "GAIN"
+    },
+    {
+      "id": "eqsel_q",
+      "kind": "knob",
+      "section": "TONE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "Q"
+    },
+    {
+      "id": "width_pct",
+      "kind": "knob",
+      "section": "SPACE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "WIDTH"
+    },
+    {
+      "id": "mono_below_hz",
+      "kind": "knob",
+      "section": "SPACE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "MONO <"
+    },
+    {
+      "id": "mono_below_on",
+      "kind": "pad",
+      "section": "SPACE",
+      "w": 70.0,
+      "h": 26.0,
+      "label": "MONO LO"
+    },
+    {
+      "id": "wet_balance",
+      "kind": "knob",
+      "section": "SPACE",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "BAL"
+    },
+    {
+      "id": "correlation",
+      "kind": "meter",
+      "section": "SPACE",
+      "w": 90.0,
+      "h": 12.0,
+      "label": "CORR"
+    },
+    {
+      "id": "mix_pct",
+      "kind": "knob",
+      "section": "MIX",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "MIX"
+    },
+    {
+      "id": "dry_level_db",
+      "kind": "knob",
+      "section": "MIX",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "DRY"
+    },
+    {
+      "id": "wet_level_db",
+      "kind": "knob",
+      "section": "MIX",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "WET"
+    },
+    {
+      "id": "output_gain_db",
+      "kind": "knob",
+      "section": "MIX",
+      "w": 54.0,
+      "h": 64.0,
+      "label": "OUTPUT"
+    },
+    {
+      "id": "mix_lock",
+      "kind": "pad",
+      "section": "MIX",
+      "w": 54.0,
+      "h": 26.0,
+      "label": "LOCK"
+    },
+    {
+      "id": "wet_solo",
+      "kind": "pad",
+      "section": "MIX",
+      "w": 54.0,
+      "h": 26.0,
+      "label": "SOLO"
+    },
+    {
+      "id": "bypass",
+      "kind": "pad",
+      "section": "MIX",
+      "w": 66.0,
+      "h": 26.0,
+      "label": "BYPASS"
+    },
+    {
+      "id": "meter_in",
+      "kind": "meter",
+      "section": "MIX",
+      "w": 22.0,
+      "h": 110.0,
+      "label": "IN"
+    },
+    {
+      "id": "meter_wet",
+      "kind": "meter",
+      "section": "MIX",
+      "w": 22.0,
+      "h": 110.0,
+      "label": "WET"
+    },
+    {
+      "id": "meter_out",
+      "kind": "meter",
+      "section": "MIX",
+      "w": 22.0,
+      "h": 110.0,
+      "label": "OUT"
+    }
+  ]
+}
