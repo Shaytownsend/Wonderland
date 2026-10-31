@@ -186,6 +186,8 @@ A **scrolling real-time display** that makes the duck → bloom → gate relatio
 
 ## 8. UI design — "vintage sampler hardware, flat 2D"
 
+*(This section is the brief for the 8 flat options. The 5 photorealistic rack options in section 8B have their own brief.)*
+
 The look is inspired by **late-'80s / early-'90s rack samplers and MPC-era hardware**, rendered **completely flat and 2D**: no skeuomorphic gloss, no 3D bevels, no photoreal textures. It should feel like a clean vector illustration of the hardware. Use an organized, premium layout in the spirit of top-tier convolution reverbs, with the space, IR and envelope as the visual focus.
 
 > Inspired by, not copied from: **do not use any real manufacturer names, logos, trade dress, or product layouts.** All branding is FREDDY VERB.
@@ -213,23 +215,23 @@ The look is inspired by **late-'80s / early-'90s rack samplers and MPC-era hardw
 
 ---
 
-## 8A. Eight UI design options — show them to me as the code is written
+## 8A. Thirteen UI design options — show them to me as the code is written
 
-I want to **see and choose between 8 different UI directions**, all following the brief in section 8: inspired by vintage sampler hardware, flat 2D, no real brand names or logos. Don't pick one for me. Build them so I can compare them side by side and watch them evolve as the plugin gets built.
+I want to **see and choose between 13 different UI directions**: **8 flat 2D options** (this section) and **5 photorealistic aged-rack-gear options** (section 8B). The 8 flat options follow the brief in section 8: inspired by vintage sampler hardware, flat 2D, no real brand names or logos. Don't pick one for me. Build them so I can compare them side by side and watch them evolve as the plugin gets built.
 
 ### How to build them
 - Write the UI so **all controls, layout logic and the visualizer are shared**. Each option is a **theme**: a `FreddyTheme` struct (colors, fonts, knob and button drawing style, LCD style, panel layout variant) plus its own `LookAndFeel` subclass. Swapping options must never touch DSP or parameter code.
-- Add a **theme switcher** (hidden in Settings, or a dev-only dropdown) so I can flip between all 8 live in the standalone app while audio plays.
-- Add a **screenshot tool**: a command-line target or test, e.g. `FreddyVerb_Snapshots`, that renders the editor offscreen in each of the 8 themes and writes PNGs to `ui_previews/<milestone>/<nn>_<theme>.png`. Render them with a realistic state: a drum hit visible in the envelope display, the bloom window shaded, and an IR loaded.
-- Also generate `ui_previews/<milestone>/index.html`, a contact sheet that shows all 8 side by side with names and short descriptions.
+- Add a **theme switcher** (hidden in Settings, or a dev-only dropdown) so I can flip between all 13 live in the standalone app while audio plays.
+- Add a **screenshot tool**: a command-line target or test, e.g. `FreddyVerb_Snapshots`, that renders the editor offscreen in each of the 13 themes and writes PNGs to `ui_previews/<milestone>/<nn>_<theme>.png`. Render them with a realistic state: a drum hit visible in the envelope display, the bloom window shaded, and an IR loaded.
+- Also generate `ui_previews/<milestone>/index.html`, a contact sheet that shows all 13 side by side, grouped into "Flat" and "Photoreal Rack", with names and short descriptions.
 
 ### When to show them
-- **Early, before deep UI work** (in milestone 1): rough but recognizable static mockups of all 8, drawn with real JUCE components and placeholder data.
-- **At every milestone after that**, automatically re-render all 8 with whatever controls exist so far, so I see them fill in as the code is written.
-- **At the UI checkpoint (milestone 6)**, render all 8 at full detail. Then **stop and ask me to choose** one, or to combine elements of several. This is the **only** point where you wait for me. Polish only the chosen direction to final quality, but keep the others selectable as alternate skins unless I say to remove them.
+- **Early, before deep UI work** (in milestone 1): rough but recognizable static mockups of all 13 (for the photoreal options, early versions of the rendered panels are fine), drawn with real JUCE components and placeholder data.
+- **At every milestone after that**, automatically re-render all 13 with whatever controls exist so far, so I see them fill in as the code is written.
+- **At the UI checkpoint (milestone 6)**, render all 13 at full detail. Then **stop and ask me to choose** one, or to combine elements of several. This is the **only** point where you wait for me. Polish only the chosen direction to final quality, but keep the others selectable as alternate skins unless I say to remove them.
 - At every other milestone, generate the previews and **keep going**. Don't wait for feedback on them.
 
-### The 8 directions
+### The 8 flat directions
 Each must be a distinct take on vintage sampler / drum-machine hardware, flat and 2D. Use these as starting points; you may refine them, but keep 8 clearly different options.
 
 1. **Putty Classic**: warm grey-beige chassis, green-yellow backlit LCD, red-orange accent, black screen-printed labels. The baseline look.
@@ -243,9 +245,72 @@ Each must be a distinct take on vintage sampler / drum-machine hardware, flat an
 
 ### Rules for every option
 - Every option has the same functionality and every control. Only the presentation differs.
-- All are fully vector-drawn, resizable, HiDPI-correct, and readable at 75% scale.
+- All 8 flat options are fully vector-drawn, resizable, HiDPI-correct, and readable at 75% scale.
 - Text contrast meets WCAG AA for labels and readouts.
 - The envelope visualizer's duck, gate, combined-gain and bloom-window colors stay clearly distinguishable in every theme.
+
+---
+
+## 8B. Five photorealistic options — aged studio rack gear
+
+Alongside the 8 flat options, build **5 photorealistic skins** that look like real, **aged 19" rack-mount studio processors** from the late '70s to the '80s. Think of the vintage digital effects units and reverbs of that period: classic studio harmonizers and digital reverbs (the Eventide- and Yamaha-era rack gear look). Each one must look like a photograph of a real, used unit sitting in a studio rack.
+
+> Inspired by, not copied from: **no real manufacturer names, logos, model numbers, trade dress or exact panel layouts.** All markings say FREDDY VERB (plus invented model numbers like "FV-2400"). Evoke the era and materials, not specific products.
+
+### What every photoreal option must have
+- **A full 19" rack front panel** with correct proportions: 3U (19" × 5.25") by default, with a 4U variant if the layout needs it. The plugin window's aspect ratio matches the panel.
+- **Rack ears** on both sides, with **slotted oval screw holes** (EIA spacing). Some holes have real-looking **rack screws** (Phillips or hex, with a nylon or metal washer); one or two are empty. Lighting and shadow make the ears look slightly recessed and bent from use.
+- **Panel fasteners**: small screws at the panel corners, with slight paint chipping around the heads.
+- **Ageing and wear**, physically believable:
+  - scuffs and fine scratches, heaviest around the controls people touch most;
+  - worn and faded silkscreen on frequently used labels;
+  - dust in the recesses and edge wear where the paint has worn to bare metal;
+  - slight yellowing of plastic parts;
+  - fingerprints or smudges on the display glass.
+
+  The wear should be subtle enough to look loved, not broken. Generate it from a fixed seed so it's reproducible.
+- **Real-looking materials**: brushed or anodized aluminium, painted steel, injection-moulded knobs with skirts and indicator lines, tactile/membrane buttons, and lens-capped LEDs that **glow**, with bloom when lit.
+- **Era-correct displays** that stay live and readable. The envelope visualizer and IR display must fit the unit:
+  - a red or green **7-segment LED** readout for values;
+  - a **VFD** (cyan-green vacuum fluorescent display, with its fine grid and slight phosphor glow) or a backlit **LCD** for graphics;
+  - optionally a small green **CRT-scope** look with phosphor persistence for the envelope display.
+
+  Draw the displays live in code, under a rendered glass layer with reflections.
+- **Optional extras**:
+  - masking-tape labels with handwritten notes, e.g. "FREDDY — SNARE BLOOM";
+  - a faded inventory sticker;
+  - a small "SERIAL No." plate.
+
+### The 5 photoreal directions
+1. **Harmonizer Black '79**: black anodized brushed-aluminium 3U panel, white silkscreen worn thin, red 7-segment LED readouts, a row of square push-buttons with red LED lenses, and a central amber VFD showing the envelope. Rack ears are scuffed down to silver at the edges.
+2. **Digital Reverb Silver-Blue '84**: silver-grey and blue-grey painted panel, a green-backlit LCD with a visible pixel grid, soft grey rubber membrane buttons, slim parameter keys with printed legends, and a slightly yellowed plastic display bezel. Clean, mid-'80s studio digital.
+3. **Broadcast Silver Console Rack**: heavy brushed natural-aluminium 4U panel with engraved and black-filled labels, large black knobs with knurled skirts, two **analog VU meters** (input / wet) behind slightly yellowed glass with warm backlight, and a green CRT-scope envelope display.
+4. **Tour-Worn Champagne**: champagne/gold anodized panel with heavy road wear (deep scratches, a dented corner on one ear), gaffer-tape residue, masking-tape notes, a cyan VFD, and chunky toggle switches for mode selection.
+5. **Studio Lab Prototype**: grey hammertone-painted steel with a slightly rough texture, a hand-labelled Dymo-style embossed tape for section names, a cyan-green VFD dot-matrix display, chicken-head knobs, rocker switches and small amounts of surface rust on the screws.
+
+### How to build the photoreal skins in JUCE
+- **Render the static art offline, and draw the live parts in code.** Build an offline asset tool, `tools/panel_forge`, that renders each skin:
+  - Preferred: **headless Blender** (Python script) with physically based materials. Use only **CC0** textures and HDRIs, e.g. Poly Haven or ambientCG, with attribution recorded in `CREDITS.md`.
+  - Fallback, if Blender isn't available: a procedural C++/Python generator (noise-based brushed metal, paint, scratches and baked lighting). Log which pipeline was used in `DECISIONS.md`.
+- **Output layers**, rendered at 1×, 2× and 3× for HiDPI:
+  - background panel with baked lighting, shadows and wear;
+  - **knob filmstrips** (128+ frames, rendered with the same lighting so they sit in the scene);
+  - button up/down states;
+  - LED off/on with a glow layer;
+  - display glass, reflection and dust overlays;
+  - meter needles.
+- **Live layers drawn in code** on top:
+  - display contents (envelope visualizer, IR waveform, readouts), styled with the era's display effects (segment shape, VFD grid and glow, LCD pixel grid, CRT persistence);
+  - LED states;
+  - meter needle positions with realistic ballistics.
+- **Hit-testing**: controls must map exactly to the rendered art. `panel_forge` exports a JSON layout file with each control's position, radius and bounds, so the C++ layout always matches the render.
+- **Performance and size**:
+  - Load only the active skin's images, and cache scaled versions.
+  - Display glow effects are cached or done on the GPU through OpenGL, never as a full-screen blur every frame.
+  - Keep each photoreal skin under about 15 MB of compressed assets; the total plugin binary/resources should stay under about 100 MB.
+- **Resizing**: 75%–200% using the closest-resolution asset set and high-quality downscaling. No blurry upscaling past the 3× renders.
+- **Readability comes first**: even with ageing, every label and readout must be legible at 100%. Wear never covers essential text.
+- The photoreal skins have the same controls and functionality as the flat ones; only the presentation changes.
 
 ---
 
@@ -295,11 +360,13 @@ FreddyVerb/
     PluginProcessor.{h,cpp}
     PluginEditor.{h,cpp}
     dsp/      Convolver, IRProcessor, Resampler, Detector, Ducker, Gate, WetEQ, Width, LatencyDelay
-    ui/       themes/ (8 FreddyTheme + LookAndFeel variants), SnapshotTool, LookAndFeelFreddy, LCDPanel, EnvelopeVisualizer, IRBrowser, IRDisplay, Knob, PadButton, DataSlider
+    ui/       themes/flat (8 FreddyTheme + LookAndFeel variants), themes/photoreal (5 image-based skins + layout JSON), SnapshotTool, LookAndFeelFreddy, LCDPanel, EnvelopeVisualizer, IRBrowser, IRDisplay, Knob, PadButton, DataSlider
     state/    Parameters, PresetManager, IRLibrary
   Resources/  factory IRs, presets, fonts (open-licensed)
   tools/ir_forge/
-  ui_previews/   (generated 8-theme PNGs + contact sheets per milestone)
+  tools/panel_forge/   (Blender/procedural renderer for the 5 photoreal rack skins)
+  Resources/skins/     (rendered photoreal layers, filmstrips, layout JSON)
+  ui_previews/   (generated 13-theme PNGs + contact sheets per milestone)
   tests/
   CREDITS.md
 ```
@@ -316,7 +383,7 @@ Run the whole build **end to end without asking me anything**, except for **the 
   1. build all formats;
   2. run the full test suite;
   3. run pluginval on the available formats;
-  4. render the 8 UI previews.
+  4. render the 13 UI previews.
 
   If anything fails, fix it before moving on. A milestone is done only when its tests are green.
 - **Commit at the end of each milestone** with a clear message, and append a short entry to `PROGRESS.md`:
@@ -324,7 +391,7 @@ Run the whole build **end to end without asking me anything**, except for **the 
   - test results;
   - CPU numbers;
   - decisions made;
-  - a link to that milestone's `ui_previews/.../index.html`.
+  - a link to that milestone's `ui_previews/.../index.html` (all 13 options).
 
   That file is my progress report; don't pause to report in chat.
 - **Work efficiently:**
@@ -343,7 +410,7 @@ Run the whole build **end to end without asking me anything**, except for **the 
    - latency-compensated dry/wet pass-through;
    - test harness;
    - theme system and snapshot tool;
-   - **rough mockups of all 8 UI options**.
+   - **rough mockups of all 13 UI options** (8 flat, plus first-pass renders of the 5 photoreal rack panels from `panel_forge`).
 2. **Reverb core**:
    - zero-latency partitioned convolution (vDSP/IPP/PFFFT);
    - true stereo;
@@ -368,10 +435,10 @@ Run the whole build **end to end without asking me anything**, except for **the 
    - 30+ factory presets and the preset manager (A/B, undo/redo);
    - previews.
 6. **UI checkpoint — the only stop.**
-   - Finish all 8 UI options to full detail with every control wired up and working.
+   - Finish all 13 UI options to full detail with every control wired up and working: the 8 flat ones, plus the 5 photoreal rack skins with final renders, filmstrips, live displays and LED glow.
    - Render the final contact sheet.
-   - **Ask me to pick one** (or a combination) and wait.
-7. **Final UI**: polish the chosen direction to release quality: resizing, HiDPI, tooltips, fine-adjust, accessibility contrast. Keep the other 7 as alternate skins.
+   - **Ask me to pick one of the 13** (or a combination) and wait.
+7. **Final UI**: polish the chosen direction to release quality: resizing, HiDPI, tooltips, fine-adjust, accessibility contrast. Keep the other 12 as alternate skins.
 8. **Release**:
    - profile and optimize against the CPU target;
    - pluginval strictness 10 on all formats;
