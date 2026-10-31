@@ -8,7 +8,19 @@
 
 > The repository also contains `ace_rack_mount/`, an unrelated project.
 
-## Build
+## Install (Mac, no tools needed)
+
+1. Download **The Queen Installer.pkg** from the
+   [Mac installer release](https://github.com/Shaytownsend/Wonderland/releases/tag/mac-latest).
+2. Double-click it and click through the installer.
+   First time only: if macOS says it can't verify the developer, open
+   **System Settings → Privacy & Security**, scroll down, click **Open Anyway**, then open the installer again.
+3. Open your DAW and pick **The Queen** (Lance Shipp) as an instrument, or open **The Queen** from Applications.
+
+It installs AU / VST3 / CLAP into `/Library/Audio/Plug-Ins` and the standalone app into `/Applications`.
+The installer is rebuilt automatically by GitHub (`.github/workflows/mac-installer.yml`) on every push.
+
+## Build from source (developers)
 
 Requirements: CMake ≥ 3.25, Ninja, Xcode 16 command line tools (macOS 13+), Python 3 for the asset tools.
 
