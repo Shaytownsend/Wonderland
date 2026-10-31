@@ -1,5 +1,6 @@
 #include "FreddyEngine.h"
 #include "../state/Parameters.h"
+#include "Dynamics.h"
 
 namespace fv::dsp
 {
@@ -13,7 +14,15 @@ namespace
 struct FreddyEngine::Impl
 {
     LatencyDelay dryDelay, keyDelay, wetInDelay, predelay;
-    std::vector<float> scratch[12];
+    std::vector<float> scratch[16];
+    float* keyF[2] {};    // filtered key (Key Listen)
+    float* levelDb = nullptr;
+    float* duckG = nullptr;
+    float* gateG = nullptr;
+    Detector detector;
+    Ducker ducker;
+    Gate gate;
+    std::vector<float> gateGBuf;
     float* x[2] {};       // input (stereo)
     float* dry[2] {};     // latency-compensated dry
     float* key[2] {};     // detector key (aligned with the wet output)
@@ -74,6 +83,14 @@ void FreddyEngine::prepare (double sr, int maxBlockSize, int /*numInputChannels*
     for (auto& s : d.scratch) s.assign ((size_t) kSubBlock, 0.0f);
     float** ptrs[] = { d.x, d.dry, d.key, d.wet, d.convA, d.convB };
     for (int i = 0; i < 6; ++i) { ptrs[i][0] = d.scratch[2 * i].data(); ptrs[i][1] = d.scratch[2 * i + 1].data(); }
+    d.keyF[0] = d.scratch[12].data(); d.keyF[1] = d.scratch[13].data();
+    d.levelDb = d.scratch[14].data();
+    d.duckG = d.scratch[15].data();
+    d.gateGBuf.assign ((size_t) kSubBlock, 1.0f);
+    d.gateG = d.gateGBuf.data();
+    d.detector.prepare (sr);
+    d.ducker.prepare (sr);
+    d.gate.prepare (sr);
 
     for (auto* s : { &d.dryGain, &d.wetGain, &d.outGain, &d.bypassMix, &d.soloMix, &d.listenMix })
         s->reset (sr, 20.0);
@@ -92,6 +109,7 @@ void FreddyEngine::reset()
     d.dryDelay.reset(); d.keyDelay.reset(); d.wetInDelay.reset(); d.predelay.reset();
     if (d.current) d.current->reset();
     if (d.next) { d.current = std::move (d.next); d.current->reset(); }
+    d.detector.reset(); d.ducker.reset(); d.gate.reset();
     inMeter = wetMeter = outMeter = {};
     d.vizCount = 0; d.vizAcc = {};
     d.snap = true;
@@ -231,6 +249,17 @@ void FreddyEngine::process (const float* const* in, int numIn, float* const* out
         else
             for (int c = 0; c < 2; ++c) std::fill (d.wet[c], d.wet[c] + n, 0.0f);
 
+        // 3b) dynamics keyed from the (aligned) dry key: duck, then gate
+        d.detector.process (d.key[0], d.key[1], d.levelDb, d.keyF[0], d.keyF[1], n, p);
+        d.ducker.process (d.levelDb, d.duckG, n, p);
+        d.gate.process (d.levelDb, d.gateG, n, p);
+        for (int i = 0; i < n; ++i)
+        {
+            const float gg = d.duckG[i] * d.gateG[i];
+            d.wet[0][i] *= gg;
+            d.wet[1][i] *= gg;
+        }
+
         // 4) metering + visualizer feed (wet is post duck/gate here)
         accumulateMeters (d.x, d.wet, n);
         for (int i = 0; i < n; ++i)
@@ -238,10 +267,9 @@ void FreddyEngine::process (const float* const* in, int numIn, float* const* out
             auto& v = d.vizAcc;
             v.dryPeak = std::max (v.dryPeak, std::max (std::abs (d.dry[0][i]), std::abs (d.dry[1][i])));
             v.wetPeak = std::max (v.wetPeak, std::max (std::abs (d.wet[0][i]), std::abs (d.wet[1][i])));
-            const float k = std::max (std::abs (d.key[0][i]), std::abs (d.key[1][i]));
-            v.keyDb = std::max (v.keyDb, gainToDb (k, -120.0f));
-            v.duckGain = 1.0f;
-            v.gateGain = 1.0f;
+            v.keyDb = std::max (v.keyDb, d.levelDb[i]);
+            v.duckGain = d.duckG[i];
+            v.gateGain = d.gateG[i];
             if (++d.vizCount >= kVizDecimation)
             {
                 viz.push (v);
@@ -260,7 +288,7 @@ void FreddyEngine::process (const float* const* in, int numIn, float* const* out
             {
                 const float dr = d.dry[c][i];
                 float y = dr * dg * (1.0f - solo) + d.wet[c][i] * wetG;
-                y = y * (1.0f - listen) + d.key[c][i] * listen;
+                y = y * (1.0f - listen) + d.keyF[c][i] * listen;
                 y *= og;
                 y = y * (1.0f - bp) + dr * bp; // bypass: latency-compensated dry
                 out[c][start + i] = y;

@@ -42,3 +42,19 @@ One entry per milestone. Each links to that milestone's 13-option UI contact she
 **pluginval** — VST3 strictness 10: SUCCESS.
 **CPU** (48 kHz / 128, 3 s true-stereo IR, Linux x86-64, audio thread): Zero Latency 1.5 % (+ worker), Zero Latency all-inline 2.6 %, Efficient 3.3 %. Target < 3 % met in the default mode; Efficient is revisited in M8.
 **Decisions** — DECISIONS.md #5–20, #30–31.
+
+---
+
+## M3 — Dynamics  ·  [UI previews](ui_previews/m3_dynamics/index.html)
+
+**Built**
+- `Detector`: key HPF/LPF (TPT SVF), Peak (10 ms release) or exact moving-window RMS, stereo key = max(L, R), filtered key for Key Listen. Lookahead (M1) keeps the key ahead of the wet by exactly the lookahead time.
+- `Ducker` FOLLOW: threshold / amount / depth (or FULL) / attack / bloom with linear, exponential, logarithmic or S release; program-dependent.
+- `Ducker` CURVE: transient trigger with guard time and hysteresis; Linear Ramp, Exponential, Logarithmic, S-Curve, Hold-then-Ramp, Pump, Swell (+1.5 dB); Depth, Duration (or tempo sync), Tension; Restart / Continue retrigger.
+- `Gate`: threshold, hysteresis, attack, hold (or tempo sync), release with linear / exponential / log curves, floor (−∞…0 dB), Gate Off.
+- Engine: wet × duck × gate per sample; visualizer frames now carry the real key level, duck and gate gains; static preview uses the real dynamics code.
+
+**Tests** — 35 test cases / 2 363 assertions green. New: curve shapes vs independent reference table (max error < 1e-9), shape endpoints + Swell peak = +1.5 dB, detector peak/RMS levels and key HPF rejection, FOLLOW program dependence and depth, CURVE retrigger guard, gate hold/release timing, **bounded-derivative click tests** under step, swept and fast-roll inputs for every mode × release curve/shape × tension × retrigger mode × attack 0.1–50 ms × release 5–2000 ms with full-depth ducking, plus absolute click thresholds at default settings.
+**pluginval** — VST3 strictness 10: SUCCESS.
+**CPU** (48 kHz / 128, 3 s true-stereo IR, audio thread): Zero Latency 1.55 %, all-inline 2.40 %, Efficient 3.20 %.
+**Decisions** — DECISIONS.md #32–37.
