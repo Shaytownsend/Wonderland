@@ -83,3 +83,16 @@
   shifts the slider group in 7 sections +6 units (ink + slot/cap objects), re-stamps the leftmost "10"/"0",
   and redraws HPF's 3/2/1/0 in Oswald (generic 10/0 had overprinted them). Edits the .blend; idempotent.
   Then: extract_registry.py, make_layout.py, export_assets.py --only background,slidercap.
+- Mac feedback (blurry text, fader caps cut off at the bottom):
+  * Faders: caps were placed by JUCE's slider layout, which on the Mac ended up computed with the default
+    LookAndFeel (no inset) -> caps hung below the scale and were clipped. Now every Knob/Fader owns the
+    LookAndFeel from construction and the cap is drawn straight from the value (travel = h - capH);
+    FeatureTest checks cap-on-tick and JUCE's mouse mapping for every fader.
+  * Blur: drawCrisp() (Filmstrip.h) pre-scales each image to the exact physical pixel size (halving
+    steps + high-quality resample, cached per scale) and draws it 1:1. Small cap labels enlarged in the
+    scene (fix_label_legibility.py); display unit shrunk/moved so BANK/PATCH aren't under its bezel.
+- tests/FeatureTest: every parameter audibly changes the output (in its needed context), bend/mod/velocity/
+  sustain/arp sync/key transpose, on-screen keyboard + wheels, all switch positions, host bar, settings,
+  editor painting at 900..3600 px.
+- Mac installer: .github/workflows/mac-installer.yml (macos-15) builds, runs ctest + auval, makes
+  packaging/make_installer.sh's .pkg and republishes release "mac-latest" on every push.

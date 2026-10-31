@@ -2,6 +2,8 @@
 
 #include <BinaryData.h>
 #include <juce_gui_basics/juce_gui_basics.h>
+#include <map>
+#include <tuple>
 
 namespace queen
 {
@@ -33,6 +35,48 @@ namespace assets
         return {};
     }
 } // namespace assets
+
+// Draws `src` into `dest` from a copy pre-scaled to the exact physical pixel size (halving steps, then a
+// high-quality final resample), so the 2x renders stay sharp at any window size / display density instead
+// of being resampled on the fly by the graphics backend. Message thread only.
+inline void drawCrisp (juce::Graphics& g, const juce::Image& src, juce::Rectangle<float> dest)
+{
+    if (! src.isValid() || dest.isEmpty())
+        return;
+
+    struct Cache
+    {
+        float scale = 0.0f;
+        std::map<std::tuple<const void*, int, int>, juce::Image> images;
+    };
+    static Cache cache;
+
+    const float t = g.getInternalContext().getPhysicalPixelScaleFactor();
+    if (! juce::approximatelyEqual (t, cache.scale))
+    {
+        cache.images.clear(); // new window size or display: rebuild lazily
+        cache.scale = t;
+    }
+    const int pw = juce::jmax (1, juce::roundToInt (dest.getWidth() * t));
+    const int ph = juce::jmax (1, juce::roundToInt (dest.getHeight() * t));
+    const auto key = std::make_tuple ((const void*) src.getPixelData().get(), pw, ph);
+
+    auto it = cache.images.find (key);
+    if (it == cache.images.end())
+    {
+        juce::Image img = src;
+        while (img.getWidth() >= pw * 2 && img.getHeight() >= ph * 2)
+            img = img.rescaled (img.getWidth() / 2, img.getHeight() / 2, juce::Graphics::highResamplingQuality);
+        if (img.getWidth() != pw || img.getHeight() != ph)
+            img = img.rescaled (pw, ph, juce::Graphics::highResamplingQuality);
+        it = cache.images.emplace (key, img).first;
+    }
+
+    juce::Graphics::ScopedSaveState state (g);
+    g.setImageResamplingQuality (juce::Graphics::highResamplingQuality);
+    g.drawImageTransformed (it->second, juce::AffineTransform::scale (dest.getWidth() / (float) pw, dest.getHeight() / (float) ph)
+                                            .translated (dest.getX(), dest.getY()));
+}
 
 // A vertical strip of equally sized frames. The frame count is derived from the image and the frame's
 // logical aspect ratio, so 2x renders (128 frames) and 1x placeholders (fewer frames) both just work.
@@ -69,7 +113,7 @@ public:
     {
         if (frames.empty())
             return;
-        g.drawImage (frames[(size_t) juce::jlimit (0, getNumFrames() - 1, frame)], dest, juce::RectanglePlacement::stretchToFit);
+        drawCrisp (g, frames[(size_t) juce::jlimit (0, getNumFrames() - 1, frame)], dest);
     }
 
 private:

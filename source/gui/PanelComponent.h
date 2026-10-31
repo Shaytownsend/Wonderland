@@ -16,7 +16,8 @@ struct PanelControl
 class KnobControl : public juce::Slider, public PanelControl
 {
 public:
-    KnobControl (const ControlSpec&, juce::AudioProcessorValueTreeState&);
+    KnobControl (const ControlSpec&, juce::AudioProcessorValueTreeState&, QueenLookAndFeel&);
+    ~KnobControl() override { setLookAndFeel (nullptr); }
     void simulateUserChange() override;
 
 private:
@@ -26,8 +27,10 @@ private:
 class FaderControl : public juce::Slider, public PanelControl
 {
 public:
-    FaderControl (const ControlSpec&, juce::AudioProcessorValueTreeState&);
+    FaderControl (const ControlSpec&, juce::AudioProcessorValueTreeState&, QueenLookAndFeel&);
+    ~FaderControl() override { setLookAndFeel (nullptr); }
     void simulateUserChange() override;
+    float capCentreY() const; // where the cap is drawn (local), straight from the value
 
 private:
     juce::AudioProcessorValueTreeState::SliderAttachment attachment;

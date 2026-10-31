@@ -105,7 +105,7 @@ TEST_CASE ("Editor resizes with a fixed aspect ratio", "[gui]")
 TEST_CASE ("Editor snapshot", "[.snapshot]")
 {
     PluginProcessor p;
-    p.memory.recall (0, 3);
+    p.memory.recall (0, juce::SystemStats::getEnvironmentVariable ("QUEEN_SNAPSHOT_PATCH", "3").getIntValue());
     std::unique_ptr<PluginEditor> ed (dynamic_cast<PluginEditor*> (p.createEditor()));
     const int w = juce::SystemStats::getEnvironmentVariable ("QUEEN_SNAPSHOT_WIDTH", "1800").getIntValue();
     ed->setSize (w, w / 2);

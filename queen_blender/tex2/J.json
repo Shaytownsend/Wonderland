@@ -1647,12 +1647,12 @@
   {
    "id": "display",
    "t": "display",
-   "x": 750.0,
+   "x": 743.0,
    "y": 72.0,
    "group": "MEMORY",
    "obj": "Plane.003",
-   "w": 72.0,
-   "h": 56.0
+   "w": 61.92,
+   "h": 48.16
   },
   {
    "id": "bend_wheel",

@@ -24,10 +24,11 @@ namespace
 } // namespace
 
 // ------------------------------------------------------------------------------------------------ knob
-KnobControl::KnobControl (const ControlSpec& spec, juce::AudioProcessorValueTreeState& state)
+KnobControl::KnobControl (const ControlSpec& spec, juce::AudioProcessorValueTreeState& state, QueenLookAndFeel& lnf)
     : juce::Slider (juce::Slider::RotaryHorizontalVerticalDrag, juce::Slider::NoTextBox),
       attachment (state, spec.param, *this)
 {
+    setLookAndFeel (&lnf); // own it from the start: layout must never come from the default LookAndFeel
     setComponentID (spec.id);
     getProperties().set ("strip", spec.spriteName ("strip"));
     setMouseDragSensitivity (220);
@@ -42,12 +43,13 @@ KnobControl::KnobControl (const ControlSpec& spec, juce::AudioProcessorValueTree
 void KnobControl::simulateUserChange() { flipSlider (*this); }
 
 // ------------------------------------------------------------------------------------------------ fader
-FaderControl::FaderControl (const ControlSpec& spec, juce::AudioProcessorValueTreeState& state)
+FaderControl::FaderControl (const ControlSpec& spec, juce::AudioProcessorValueTreeState& state, QueenLookAndFeel& lnf)
     : juce::Slider (juce::Slider::LinearVertical, juce::Slider::NoTextBox), attachment (state, spec.param, *this)
 {
     setComponentID (spec.id);
     getProperties().set ("cap", spec.spriteName ("cap"));
     getProperties().set ("capH", spec.spriteFloat ("capH"));
+    setLookAndFeel (&lnf); // sets the travel (getSliderLayout) before any resize
     auto& p = param (state, spec.param);
     setDoubleClickReturnValue (true, p.convertFrom0to1 (p.getDefaultValue()));
     setSliderSnapsToMousePosition (false);
@@ -55,6 +57,14 @@ FaderControl::FaderControl (const ControlSpec& spec, juce::AudioProcessorValueTr
 }
 
 void FaderControl::simulateUserChange() { flipSlider (*this); }
+
+float FaderControl::capCentreY() const
+{
+    auto& self = *const_cast<FaderControl*> (this); // juce::Slider's accessors are non-const
+    const float capH = (float) (double) self.getProperties()["capH"];
+    const auto proportion = (float) self.valueToProportionOfLength (getValue());
+    return capH / 2.0f + (1.0f - proportion) * ((float) getHeight() - capH);
+}
 
 // ------------------------------------------------------------------------------------------------ switch
 SwitchControl::SwitchControl (const ControlSpec& s, juce::AudioProcessorValueTreeState& state, const QueenLookAndFeel& l)
@@ -123,7 +133,7 @@ void PanelButton::paintButton (juce::Graphics& g, bool, bool down)
 {
     const auto& img = lnf.image (spec.spriteName (down ? "down" : "up"));
     if (img.isValid())
-        g.drawImage (img, getLocalBounds().toFloat());
+        drawCrisp (g, img, getLocalBounds().toFloat());
 }
 
 // ------------------------------------------------------------------------------------------------ led
@@ -146,7 +156,7 @@ void LedControl::paint (juce::Graphics& g)
 {
     const auto& img = lnf.image (spec.spriteName (lit ? "on" : "off"));
     if (img.isValid())
-        g.drawImage (img, getLocalBounds().toFloat());
+        drawCrisp (g, img, getLocalBounds().toFloat());
 }
 
 // ------------------------------------------------------------------------------------------------ display
@@ -229,7 +239,7 @@ void WheelControl::paint (juce::Graphics& g)
     const float travel = 18.0f;
     const float offset = -value * travel; // 0 = the rendered rest position (bend centre, mod down)
     g.reduceClipRegion (getLocalBounds().reduced (0, 30));
-    g.drawImage (img, getLocalBounds().toFloat().translated (0.0f, offset));
+    drawCrisp (g, img, getLocalBounds().toFloat().translated (0.0f, offset));
 }
 
 // ------------------------------------------------------------------------------------------------ panel
@@ -247,12 +257,12 @@ PanelComponent::PanelComponent (PluginProcessor& p, QueenLookAndFeel& l)
         std::unique_ptr<juce::Component> comp;
         if (c.type == "knob")
         {
-            comp = std::make_unique<KnobControl> (c, state);
+            comp = std::make_unique<KnobControl> (c, state, lnf);
             comp->setBounds (centred (c.x, c.y, c.spriteFloat ("size"), c.spriteFloat ("size")));
         }
         else if (c.type == "slider")
         {
-            comp = std::make_unique<FaderControl> (c, state);
+            comp = std::make_unique<FaderControl> (c, state, lnf);
             comp->setBounds (centred (c.x, c.y, c.spriteFloat ("capW"), c.h + c.spriteFloat ("capH")));
         }
         else if (c.type == "switch")
@@ -375,7 +385,7 @@ juce::Component* PanelComponent::findControl (const juce::String& id) const
 
 void PanelComponent::paint (juce::Graphics& g)
 {
-    g.drawImage (background, getLocalBounds().toFloat());
+    drawCrisp (g, background, getLocalBounds().toFloat());
 }
 
 void PanelComponent::refresh()

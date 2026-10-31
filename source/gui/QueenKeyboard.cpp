@@ -45,7 +45,7 @@ void QueenKeyboard::drawWhiteNote (int, juce::Graphics& g, juce::Rectangle<float
     if (! img.isValid())
         return;
     const float scale = area.getWidth() / whiteW; // keyboard may be scaled
-    g.drawImage (img, juce::Rectangle<float> (area.getX(), area.getY() - 3.0f * scale, whiteW * scale, whiteH * scale));
+    drawCrisp (g, img, juce::Rectangle<float> (area.getX(), area.getY() - 3.0f * scale, whiteW * scale, whiteH * scale));
 }
 
 void QueenKeyboard::drawBlackNote (int, juce::Graphics& g, juce::Rectangle<float> area, bool isDown, bool, juce::Colour)
@@ -55,6 +55,6 @@ void QueenKeyboard::drawBlackNote (int, juce::Graphics& g, juce::Rectangle<float
         return;
     const float scale = getKeyWidth() / (spec.w / 36.0f);
     const float w = blackW * scale, h = blackH * scale;
-    g.drawImage (img, juce::Rectangle<float> (area.getCentreX() - w / 2.0f, area.getY() - 3.0f * scale, w, h));
+    drawCrisp (g, img, juce::Rectangle<float> (area.getCentreX() - w / 2.0f, area.getY() - 3.0f * scale, w, h));
 }
 } // namespace queen

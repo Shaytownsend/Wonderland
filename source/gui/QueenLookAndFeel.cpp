@@ -61,15 +61,20 @@ juce::Slider::SliderLayout QueenLookAndFeel::getSliderLayout (juce::Slider& s)
     return layout;
 }
 
-void QueenLookAndFeel::drawLinearSlider (juce::Graphics& g, int x, int, int w, int, float sliderPos, float, float,
+void QueenLookAndFeel::drawLinearSlider (juce::Graphics& g, int, int, int, int, float, float, float,
                                          juce::Slider::SliderStyle, juce::Slider& s)
 {
     const auto& img = image (s.getProperties()["cap"].toString());
     if (! img.isValid())
         return;
+    // position straight from the value over the whole component (travel = height - capH), so the cap
+    // never depends on when JUCE last computed the slider layout
     const float capH = (float) (double) s.getProperties()["capH"];
-    const float capW = (float) w;
-    g.drawImage (img, juce::Rectangle<float> ((float) x, sliderPos - capH / 2.0f, capW, capH));
+    const float capW = (float) s.getWidth();
+    const float x = 0.0f;
+    const auto proportion = (float) s.valueToProportionOfLength (s.getValue());
+    const float sliderPos = capH / 2.0f + (1.0f - proportion) * ((float) s.getHeight() - capH);
+    drawCrisp (g, img, juce::Rectangle<float> ((float) x, sliderPos - capH / 2.0f, capW, capH));
 }
 
 void QueenLookAndFeel::drawPopupMenuBackground (juce::Graphics& g, int width, int height)

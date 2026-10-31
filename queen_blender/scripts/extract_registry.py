@@ -121,7 +121,7 @@ def spec():
     btn("wave_saw", 774.2, 498, "SAW", "DCO", (774.2, 477), param="wave_saw")
     btn("wave_sub", 848.3, 498, "SUB", "DCO", (848.3, 477), param="wave_sub")
 
-    s.append(dict(id="display", t="display", x=750, y=72, group="MEMORY"))
+    s.append(dict(id="display", t="display", x=743, y=72, group="MEMORY"))  # moved by fix_label_legibility.py
     s.append(dict(id="bend_wheel", t="wheel", x=42, y=687, source="pitchbend", label="BEND"))
     s.append(dict(id="mod_wheel", t="wheel", x=80, y=687, source="cc1", label="MOD"))
     return s
