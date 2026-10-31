@@ -86,15 +86,20 @@ python3 -m venv .venv && .venv/bin/pip install bpy pillow
    python3 tools/make_layout.py
    ```
 
-3. Render everything into `assets/` (Cycles, 24 samples + denoise; uses Metal/CUDA/OptiX if available,
-   otherwise CPU, about 12 minutes on 4 cores). `--only knob,button` re-renders some kinds; `--out dir`
+3. Render everything into `assets/` at 4x (panel 7200x3320; Cycles 48 samples, 1 px filter, denoise;
+   uses Metal/CUDA/OptiX if available, otherwise CPU, about 50 minutes on 4 cores). `--only knob,button` re-renders some kinds; `--out dir`
    renders elsewhere:
 
    ```bash
    .venv/bin/python tools/export_assets.py
    ```
 
-4. Rebuild. `tests/AssetsTest` fails if placeholder art (from `tools/make_placeholders.py`) is embedded.
+4. Rebuild. `tests/AssetsTest` fails if placeholder art (from `tools/make_placeholders.py`) is used.
+
+The art is embedded in the binaries by default. `-DQUEEN_EMBED_ASSETS=OFF` (used for the Mac installer)
+keeps only `layout.json` embedded and loads the PNGs from `$QUEEN_ASSETS_DIR`, else
+`/Library/Application Support/The Queen/Assets`, else `~/Library/Application Support/The Queen/Assets`
+(Linux: `~/.config/The Queen/Assets`); `build/install.sh` copies them there for such builds.
 
 `tools/render_reference.py out.png` renders the untouched scene through the same camera for side-by-side checks.
 

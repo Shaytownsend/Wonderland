@@ -96,3 +96,9 @@
   editor painting at 900..3600 px.
 - Mac installer: .github/workflows/mac-installer.yml (macos-15) builds, runs ctest + auval, makes
   packaging/make_installer.sh's .pkg and republishes release "mac-latest" on every push.
+- "8K sharp" request: all art re-rendered at 4x (panel 7200x3320, knobs 154 px x 128 frames), 48 spp,
+  Cycles filter_width 1.0 (CPU ~51 min); names are @4x. drawCrisp also snaps each image to the physical
+  pixel grid. Max window 3600x1800 maps 4x art 1:1 on Retina. Mac installer builds with
+  -DQUEEN_EMBED_ASSETS=OFF and installs the PNGs once to /Library/Application Support/The Queen/Assets
+  (otherwise 37 MB of art x 4 formats x 2 archs); embedded build = 46 MB Tests binary, OFF = 7 MB.
+  fix_scale_clearance.py step 2 restored border columns where old "1" glyphs remained (LFO/DCO/VCF/VCA).

@@ -2,7 +2,7 @@
 
 Every asset filename, frame count and pixel size is decided HERE, so the real renders and the
 placeholders are interchangeable without touching C++ (the editor reads assets/layout.json).
-All sizes are logical units (1800x830 registry space); files are rendered at SCALE (2x).
+All sizes are logical units (1800x830 registry space); files are rendered at SCALE (4x).
 """
 import json
 import os

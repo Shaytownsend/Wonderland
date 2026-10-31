@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw, ImageFont
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import sprites  # noqa: E402
 
-S = 1  # placeholder scale (real assets are 2x)
+S = 1  # placeholder scale (real assets are 4x)
 KNOB_FRAMES = 32
 COLOURS = {"cream": (210, 196, 156), "red": (160, 20, 16), "blue": (20, 40, 170), "black": (24, 24, 26),
            "orange": (190, 70, 10), "grey": (80, 82, 90), "ivory": (170, 164, 150), "yellow": (205, 150, 30),

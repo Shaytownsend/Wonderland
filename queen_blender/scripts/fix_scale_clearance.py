@@ -95,10 +95,45 @@ def fix_hpf(img, font_path):
     return img
 
 
+MARKER2 = "queen_scale_clearance_borders"
+LEFT_BORDERS = [135.3, 334.0, 518.8, 653.5, 995.0, 1265.8, 1370.5]  # section left border lines (x)
+
+
+def clean_borders(a):
+    """Old '1' glyphs that sat on a border line were left behind by the shift: restore a clean border
+    column in the label rows by copying the border's profile from a label-free row (y 385)."""
+    for b in LEFT_BORDERS:
+        xa, xb = px(b - 3), px(b + 4)
+        ref = a[py(385), xa:xb].copy()
+        for r0, r1 in LABEL_ROWS:
+            a[py(r0):py(r1), xa:xb] = ref[None, :, :]
+    return a
+
+
+def repack_ink(ink_img, arr):
+    Image.fromarray(arr).save(INK)
+    if ink_img.packed_file:
+        ink_img.unpack(method="REMOVE")
+    ink_img.filepath = INK
+    ink_img.reload()
+    ink_img.pack()
+
+
 def main():
     bpy.ops.wm.open_mainfile(filepath=BLEND)
     sc = bpy.context.scene
     if sc.get(MARKER):
+        if not sc.get(MARKER2):
+            ink_img = bpy.data.images["J_ink_panel.png"]
+            tmp = tempfile.mkdtemp()
+            ink_img.filepath_raw = os.path.join(tmp, "ink.png")
+            ink_img.file_format = "PNG"
+            ink_img.save()
+            repack_ink(ink_img, clean_borders(np.array(Image.open(ink_img.filepath_raw).convert("RGBA"))))
+            sc[MARKER2] = 1
+            bpy.ops.wm.save_mainfile(filepath=BLEND, compress=True)
+            print("border remnants cleaned, saved", BLEND)
+            return
         print("already applied")
         return
 
@@ -114,7 +149,7 @@ def main():
     with open(font_path, "wb") as f:
         f.write(font.packed_file.data)
 
-    fixed = fix_hpf(Image.fromarray(fix_ink(src)), font_path)
+    fixed = fix_hpf(Image.fromarray(clean_borders(fix_ink(src))), font_path)
     fixed.save(INK)
     print("wrote", INK)
 
@@ -135,12 +170,9 @@ def main():
     if moved != 5 * sum(len(g[4]) for g in GROUPS):
         sys.exit("unexpected slider part count")
 
-    # repack the ink texture
-    ink_img.unpack(method="REMOVE") if ink_img.packed_file else None
-    ink_img.filepath = INK
-    ink_img.reload()
-    ink_img.pack()
+    repack_ink(ink_img, np.array(fixed))
     sc[MARKER] = 1
+    sc[MARKER2] = 1
     bpy.ops.wm.save_mainfile(filepath=BLEND, compress=True)
     print("saved", BLEND)
 

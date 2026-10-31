@@ -13,7 +13,7 @@ source/dsp/Chorus.{h,cpp} Arpeggiator.{h,cpp} SynthEngine.{h,cpp}
 source/state/PatchMemory.{h,cpp}  5 banks x 8 patches, manual/write, .queen save/verify/load
 source/gui/QueenLookAndFeel.{h,cpp} Filmstrip.h Layout.{h,cpp} PanelComponent.{h,cpp}
 source/gui/HostBar.{h,cpp} QueenKeyboard.{h,cpp}
-assets/                        sprites (@2x) + layout.json (embedded as BinaryData)
+assets/                        sprites (@4x) + layout.json (embedded, or installed as files on the Mac)
 queen_blender/THE_QUEEN.blend  source scene
 queen_blender/scripts/extract_registry.py  bpy: scene -> queen_blender/tex2/J.json (registry)
 tools/make_layout.py           J.json -> assets/layout.json
