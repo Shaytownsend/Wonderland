@@ -33,3 +33,4 @@ __pycache__/
 render_out/
 tools/pluginval*
 *.blend1
+packaging/Output/

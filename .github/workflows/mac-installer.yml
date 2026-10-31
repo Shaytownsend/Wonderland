@@ -1,0 +1,63 @@
+# Builds The Queen on a GitHub macOS machine and publishes "The Queen Installer.pkg"
+# as the "Latest Mac installer" release. Runs on every push to the work branch, or by hand.
+name: Mac installer
+
+on:
+  push:
+    branches: [ "claude/sharp-thompson-cad5l5", "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mac-installer-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s "$(ls -d /Applications/Xcode_16*.app | sort -V | tail -1)"
+
+      - name: Install Ninja
+        run: brew install ninja
+
+      - name: Configure
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+
+      - name: Test
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Validate Audio Unit (auval)
+        run: |
+          codesign --force --deep -s - "$HOME/Library/Audio/Plug-Ins/Components/The Queen.component"
+          killall -9 AudioComponentRegistrar || true
+          auval -v aumu Quen Lshp | tee auval.log
+          grep -q "AU VALIDATION SUCCEEDED" auval.log
+
+      - name: Make installer
+        run: packaging/make_installer.sh build/TheQueen_artefacts/Release packaging/Output
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: The-Queen-Installer
+          path: packaging/Output/The Queen Installer.pkg
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete mac-latest --yes --cleanup-tag || true
+          gh release create mac-latest "packaging/Output/The Queen Installer.pkg" \
+            --title "The Queen — Mac installer (latest build)" --target "$GITHUB_SHA" --prerelease \
+            --notes "Double-click **The Queen Installer.pkg**. First time only: if macOS says it can't verify the developer, open System Settings → Privacy & Security and click **Open Anyway**. Installs AU / VST3 / CLAP to /Library/Audio/Plug-Ins and the app to /Applications. Built from $GITHUB_SHA."
