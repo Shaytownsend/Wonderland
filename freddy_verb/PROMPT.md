@@ -224,9 +224,10 @@ I want to **see and choose between 8 different UI directions**, all following th
 - Also generate `ui_previews/<milestone>/index.html`, a contact sheet that shows all 8 side by side with names and short descriptions.
 
 ### When to show them
-- **Early, before deep UI work** (right after milestone 1): rough but recognizable static mockups of all 8, drawn with real JUCE components and placeholder data.
-- **At every milestone after that**, re-render all 8 with whatever controls exist so far, so I see them fill in as the code is written.
-- **At milestone 6**, render all 8 at full detail. Then **stop and ask me to choose** one, or to combine elements of several. Polish only the chosen direction to final quality, but keep the others selectable as alternate skins unless I say to remove them.
+- **Early, before deep UI work** (in milestone 1): rough but recognizable static mockups of all 8, drawn with real JUCE components and placeholder data.
+- **At every milestone after that**, automatically re-render all 8 with whatever controls exist so far, so I see them fill in as the code is written.
+- **At the UI checkpoint (milestone 6)**, render all 8 at full detail. Then **stop and ask me to choose** one, or to combine elements of several. This is the **only** point where you wait for me. Polish only the chosen direction to final quality, but keep the others selectable as alternate skins unless I say to remove them.
+- At every other milestone, generate the previews and **keep going**. Don't wait for feedback on them.
 
 ### The 8 directions
 Each must be a distinct take on vintage sampler / drum-machine hardware, flat and 2D. Use these as starting points; you may refine them, but keep 8 clearly different options.
@@ -305,14 +306,78 @@ FreddyVerb/
 
 ---
 
-## 12. Milestones (deliver and verify each one before moving on)
-1. Project skeleton, parameters, pass-through, latency-compensated dry/wet mix. Also the theme system and the snapshot tool, with **first rough mockups of all 8 UI options** (section 8A).
-2. Zero-latency convolution engine, IR loading and resampling, tests. Re-render the 8 UI previews.
-3. Shared detector, the Ducker (Follow and Curve modes) and the Gate, tests. Re-render the 8 UI previews; the envelope visualizer is now live.
-4. Wet EQ, width, metering. Re-render the 8 UI previews.
-5. IR shaping (pre-delay, trim, length, decay, size, damping, early/late, reverse). Re-render the 8 UI previews.
-6. UI: look-and-feel, layout, LCD, envelope visualizer, IR browser. All 8 options at full detail. **Stop and ask me to choose one direction**, then polish the chosen one.
-7. `ir_forge`, the factory IR library, factory presets.
-8. Polish, CPU optimization, pluginval, CI, installers.
+## 12. Autonomous execution rules
 
-At each milestone, summarize what was built, how it was tested, and any trade-offs you made, and **show me the updated 8-option UI contact sheet** (`ui_previews/<milestone>/index.html`). Ask me before deviating from this spec.
+Run the whole build **end to end without asking me anything**, except for **the one UI selection checkpoint** (milestone 6). Specifically:
+
+- **Never stop to ask questions or wait for approval** at any other point. If something in this spec is ambiguous, choose the option that best serves the sound described in "Role and goal" and log it in `DECISIONS.md`: what you decided, why, and how to change it. Then continue.
+- **If something is blocked** (e.g. the AAX SDK isn't available, or a dependency won't download), skip or stub that piece, log it in `BLOCKERS.md`, and continue with everything else. Don't stop the build over it.
+- **Self-verify instead of asking me.** At the end of every milestone:
+  1. build all formats;
+  2. run the full test suite;
+  3. run pluginval on the available formats;
+  4. render the 8 UI previews.
+
+  If anything fails, fix it before moving on. A milestone is done only when its tests are green.
+- **Commit at the end of each milestone** with a clear message, and append a short entry to `PROGRESS.md`:
+  - what was built;
+  - test results;
+  - CPU numbers;
+  - decisions made;
+  - a link to that milestone's `ui_previews/.../index.html`.
+
+  That file is my progress report; don't pause to report in chat.
+- **Work efficiently:**
+  - Write the interfaces and tests for each DSP block first, then the implementation.
+  - Build independent pieces in parallel where your tooling allows (e.g. EQ/width alongside the ducker/gate; the theme work alongside the DSP).
+  - Reuse proven libraries (JUCE, vDSP/IPP/PFFFT, r8brain, clap-juce-extensions, Catch2) instead of reinventing them.
+  - Only rebuild what has changed. Keep incremental builds fast (ccache, unity builds where safe).
+  - Don't gold-plate early milestones. Get each block correct and tested, then optimize in the polish milestone using measured profiling data, not guesses.
+
+---
+
+## 13. Milestones (run back-to-back; only milestone 6 waits for me)
+1. **Foundation**:
+   - CMake/JUCE/CLAP project and CI;
+   - all parameters (APVTS);
+   - latency-compensated dry/wet pass-through;
+   - test harness;
+   - theme system and snapshot tool;
+   - **rough mockups of all 8 UI options**.
+2. **Reverb core**:
+   - zero-latency partitioned convolution (vDSP/IPP/PFFFT);
+   - true stereo;
+   - IR loading and r8brain resampling;
+   - click-free IR swaps;
+   - full IR shaping (pre-delay, trim, length, decay, size, damping, early/late, reverse, normalize);
+   - tests and previews.
+3. **Dynamics**:
+   - shared detector (key filter, peak/RMS, lookahead, key listen);
+   - Ducker Follow mode and all Curve-mode shapes;
+   - Gate;
+   - live envelope visualizer data feed;
+   - tests and previews.
+4. **Tone & space**:
+   - wet EQ (pre/post) and width / mono-below;
+   - mix section, metering, bypass;
+   - tests and previews.
+5. **Content**:
+   - `ir_forge` offline IR generator;
+   - the factory IR library with metadata;
+   - the IR browser;
+   - 30+ factory presets and the preset manager (A/B, undo/redo);
+   - previews.
+6. **UI checkpoint — the only stop.**
+   - Finish all 8 UI options to full detail with every control wired up and working.
+   - Render the final contact sheet.
+   - **Ask me to pick one** (or a combination) and wait.
+7. **Final UI**: polish the chosen direction to release quality: resizing, HiDPI, tooltips, fine-adjust, accessibility contrast. Keep the other 7 as alternate skins.
+8. **Release**:
+   - profile and optimize against the CPU target;
+   - pluginval strictness 10 on all formats;
+   - full test pass;
+   - installers (macOS pkg, Windows installer);
+   - final `README.md`, `CREDITS.md`, licensing notes;
+   - a final summary of everything in `PROGRESS.md`.
+
+Milestones 7–8 also run without my input once I've picked the UI.
