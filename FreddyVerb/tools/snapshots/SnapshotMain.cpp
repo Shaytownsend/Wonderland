@@ -154,8 +154,10 @@ int main (int argc, char* argv[])
     editor->getPanel().setPresetDisplay ("Snare Bloom Plate", false, 0);
 
     std::vector<std::pair<const fv::ui::ThemeEntry*, juce::String>> written;
+    const auto only = arg (args, "--theme");
     for (auto& entry : fv::ui::allThemes())
     {
+        if (only.isNotEmpty() && entry.theme.id != only) continue;
         editor->setTheme (entry.theme.id);
         editor->setScale (1.0f);
         editor->tickNow();

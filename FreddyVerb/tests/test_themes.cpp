@@ -75,3 +75,11 @@ TEST_CASE ("Envelope colours stay distinguishable in every theme", "[themes][viz
         CHECK (deltaE (over (c.vizWet, bg), bg) > 15.0);
     }
 }
+
+TEST_CASE ("Release default theme is the M6 choice (Tour-Worn Champagne) and exists", "[themes]")
+{
+    const auto* t = findTheme (defaultThemeId());
+    REQUIRE (t != nullptr);
+    CHECK (t->theme.name == "Tour-Worn Champagne");
+    CHECK (t->theme.group == ThemeGroup::photoreal);
+}

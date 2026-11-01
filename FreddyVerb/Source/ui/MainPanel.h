@@ -58,6 +58,7 @@ private:
     };
 
     void controlTouched (const juce::String& id) override;
+    void controlHovered (const juce::String&) override;
     FreddyKnob*    addKnob (const juce::String& id, int section, int group = 0, bool bipolar = false);
     PadButton*     addPad (const juce::String& id, const juce::String& text, int section, int group = 0, float w = 56);
     PadButton*     addChoicePad (const juce::String& id, int idx, const juce::String& text, int section, int group = 0, float w = 56);

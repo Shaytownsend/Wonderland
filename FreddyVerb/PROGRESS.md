@@ -107,3 +107,21 @@ One entry per milestone. Each links to that milestone's 13-option UI contact she
 **CPU** (48 kHz / 128, 3 s true-stereo IR, EQ on, quiet machine): Zero Latency 2.04 % (audio thread), all-inline 3.41 %, Efficient 3.86 %.
 
 **⏸ Waiting for the UI choice** — pick one of the 13 options (or a combination) to polish to release quality in M7. The others stay selectable as alternate skins unless you say otherwise.
+
+---
+
+## M7 — Final UI: Tour-Worn Champagne  ·  [UI previews](ui_previews/m7_final_ui/index.html) · [Champagne @ 2×](ui_previews/m7_final_ui/champagne_2x/12_tour_worn_champagne.png)
+
+**Your choice:** 12 — Tour-Worn Champagne, now the default skin. The other 12 stay available as alternate skins (SETUP menu).
+
+**Built**
+- Tour-Worn Champagne as the release default; editor opens on it, scales 75–200 % (fixed 19"×7" aspect) using the closest 1×/2×/3× asset set with high-quality downscaling.
+- IR browser redesigned for legibility at 75 %: category stepper instead of a column, full-width list, bigger rows, current IR kept in view.
+- Hover → value readout on the LCD for every knob, pad and stepper (in addition to tooltips; Cmd/Ctrl fine-drag and double-click reset unchanged).
+- Envelope LCD: the measured BLOOM label sits on its own backing plate at the bottom of the bloom window so it no longer collides with the header or the waveform.
+- Tests for the release default and for editor behaviour (opens on the default skin, 75–200 % with fixed aspect, clamped scale, live switching through all 13 skins).
+
+**Tests** — 52 test cases / 3 494 assertions green.
+**pluginval** — VST3 strictness 10: SUCCESS.
+**CPU** — unchanged from M6 (UI only).
+**Decisions** — DECISIONS.md #45–47.

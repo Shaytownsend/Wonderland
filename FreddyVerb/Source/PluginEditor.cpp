@@ -25,7 +25,7 @@ FreddyVerbEditor::FreddyVerbEditor (FreddyVerbProcessor& p)
     auto& ui = proc.getUIState();
     scale = (float) (double) ui.getProperty ("scale", 1.0);
     setResizable (true, true);
-    setTheme (ui.getProperty ("theme", ui::allThemes().front().theme.id).toString());
+    setTheme (ui.getProperty ("theme", ui::defaultThemeId()).toString());
     startTimerHz (60);
 }
 
@@ -42,7 +42,7 @@ FreddyVerbEditor::~FreddyVerbEditor()
 void FreddyVerbEditor::setTheme (const juce::String& id)
 {
     const auto* entry = ui::findTheme (id);
-    if (entry == nullptr) entry = &ui::allThemes().front();
+    if (entry == nullptr) entry = ui::findTheme (ui::defaultThemeId());
     currentThemeId = entry->theme.id;
     proc.getUIState().setProperty ("theme", currentThemeId, nullptr);
 

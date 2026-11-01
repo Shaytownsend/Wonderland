@@ -22,7 +22,22 @@ public:
     }
     juce::String getLastTouched() const { return lastTouched; }
 
-    struct Listener { virtual ~Listener() = default; virtual void controlTouched (const juce::String&) = 0; };
+    struct Listener
+    {
+        virtual ~Listener() = default;
+        virtual void controlTouched (const juce::String&) = 0;
+        virtual void controlHovered (const juce::String&) {}
+    };
+
+    /** Hovering shows a control's value on the readout LCD without touching it
+        (no undo step, the jog wheel keeps its target). Empty = nothing hovered. */
+    void setHover (const juce::String& paramID)
+    {
+        if (paramID == hovered) return;
+        hovered = paramID;
+        listeners.call ([&] (Listener& l) { l.controlHovered (paramID); });
+    }
+    juce::String getHovered() const { return hovered; }
     void addListener (Listener* l)    { listeners.add (l); }
     void removeListener (Listener* l) { listeners.remove (l); }
 
@@ -31,6 +46,7 @@ public:
 
 private:
     juce::String lastTouched { "duck_depth_db" };
+    juce::String hovered;
     juce::ListenerList<Listener> listeners;
 };
 
@@ -50,8 +66,8 @@ public:
     void mouseUp (const juce::MouseEvent&) override;
     void mouseDoubleClick (const juce::MouseEvent&) override;
     void mouseWheelMove (const juce::MouseEvent&, const juce::MouseWheelDetails&) override;
-    void mouseEnter (const juce::MouseEvent&) override { repaint(); }
-    void mouseExit (const juce::MouseEvent&) override  { repaint(); }
+    void mouseEnter (const juce::MouseEvent&) override { hub.setHover (paramID); repaint(); }
+    void mouseExit (const juce::MouseEvent&) override  { hub.setHover ({}); repaint(); }
     std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override;
 
     juce::String getParamID() const { return paramID; }
@@ -102,8 +118,8 @@ public:
     void paint (juce::Graphics&) override;
     void mouseDown (const juce::MouseEvent&) override;
     void mouseUp (const juce::MouseEvent&) override;
-    void mouseEnter (const juce::MouseEvent&) override { repaint(); }
-    void mouseExit (const juce::MouseEvent&) override  { repaint(); }
+    void mouseEnter (const juce::MouseEvent&) override { if (hub != nullptr && paramID.isNotEmpty()) hub->setHover (paramID); repaint(); }
+    void mouseExit (const juce::MouseEvent&) override  { if (hub != nullptr) hub->setHover ({}); repaint(); }
     std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override;
 
 private:
@@ -127,6 +143,8 @@ public:
     ~ChoiceStepper() override;
     void paint (juce::Graphics&) override;
     void mouseDown (const juce::MouseEvent&) override;
+    void mouseEnter (const juce::MouseEvent&) override { hub.setHover (paramID); }
+    void mouseExit (const juce::MouseEvent&) override  { hub.setHover ({}); }
     juce::String getParamID() const { return paramID; }
 
 private:

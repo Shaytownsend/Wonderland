@@ -26,6 +26,15 @@ void IRBrowser::setItems (std::vector<IRListItem> items)
 void IRBrowser::setCurrent (const juce::String& id)
 {
     currentId = id;
+    // keep the current IR on screen
+    const int rows = std::max (1, (int) (listArea.getHeight() / rowH));
+    for (int i = 0; i < (int) visible.size(); ++i)
+        if (visible[(size_t) i].id == id)
+        {
+            if (i < scroll) scroll = i;
+            else if (i >= scroll + rows) scroll = i - rows + 1;
+            break;
+        }
     repaint();
 }
 
@@ -43,7 +52,7 @@ void IRBrowser::filter()
         visible.push_back (it);
     }
     scroll = 0;
-    repaint();
+    setCurrent (currentId);
 }
 
 void IRBrowser::step (int delta)
@@ -62,14 +71,18 @@ void IRBrowser::step (int delta)
 
 void IRBrowser::resized()
 {
+    const auto keep = currentId;
     auto b = getLocalBounds().toFloat().reduced (5.0f);
-    headArea = b.removeFromTop (18.0f);
+    // row 1: search + load; row 2: category stepper "< PLATES >"; then a full-width list.
+    // (A category *column* was unreadable at 75 % scale in the compact rack skins.)
+    headArea = b.removeFromTop (17.0f);
     search.setBounds (headArea.withTrimmedRight (headArea.getWidth() * 0.45f).toNearestInt());
     b.removeFromTop (3.0f);
-    catArea = b.removeFromLeft (std::max (62.0f, b.getWidth() * 0.27f));
-    b.removeFromLeft (4.0f);
+    catArea = b.removeFromTop (16.0f);
+    b.removeFromTop (3.0f);
     listArea = b;
-    rowH = std::max (12.0f, std::min (15.0f, getHeight() / 16.0f));
+    rowH = juce::jlimit (14.0f, 18.0f, listArea.getHeight() / 8.0f);
+    setCurrent (keep);
 }
 
 void IRBrowser::paint (juce::Graphics& g)
@@ -86,19 +99,17 @@ void IRBrowser::paint (juce::Graphics& g)
     auto hr = headArea.withTrimmedLeft (headArea.getWidth() * 0.57f);
     lnf->drawDisplayText (g, "[LOAD...]", hr, juce::Justification::centredRight);
 
-    // categories
-    const auto cats = categories();
-    const float ch = catArea.getHeight() / (float) cats.size();
-    for (int i = 0; i < cats.size(); ++i)
+    // category stepper
     {
-        auto r = juce::Rectangle<float> (catArea.getX(), catArea.getY() + (float) i * ch, catArea.getWidth(), ch);
-        const bool sel = cats[i] == category;
-        if (sel) { g.setColour (c.lcdFg); g.fillRect (r.reduced (0, 1)); }
-        PixelFont::drawFitted (g, cats[i], r.reduced (3.0f, ch * 0.22f), juce::Justification::centredLeft,
-                               sel ? c.lcdBg : c.lcdFg, juce::Colours::transparentBlack, PixelFont::DotShape::square, 1.6f);
+        g.setColour (c.lcdFg.withAlpha (0.12f));
+        g.fillRect (catArea);
+        auto r = catArea.reduced (3.0f, 2.0f);
+        lnf->drawDisplayText (g, "<", r.removeFromLeft (10.0f), juce::Justification::centred);
+        lnf->drawDisplayText (g, ">", r.removeFromRight (10.0f), juce::Justification::centred);
+        const juce::String label = category + "  " + juce::String ((int) visible.size());
+        PixelFont::drawFitted (g, label, r, juce::Justification::centred, c.lcdFg, juce::Colours::transparentBlack,
+                               PixelFont::DotShape::square, 1.8f);
     }
-    g.setColour (c.lcdDim);
-    g.fillRect (catArea.getRight() + 1.5f, catArea.getY(), 1.0f, catArea.getHeight());
 
     // list
     const int rows = (int) (listArea.getHeight() / rowH);
@@ -109,12 +120,12 @@ void IRBrowser::paint (juce::Graphics& g)
         const bool sel = it.id == currentId;
         if (sel) { g.setColour (c.lcdFg); g.fillRect (row); }
         const auto fg = sel ? c.lcdBg : c.lcdFg;
-        PixelFont::drawFitted (g, (it.favourite ? "*" : " ") + it.name.toUpperCase(), row.reduced (2.0f, rowH * 0.2f).withTrimmedRight (30.0f),
-                               juce::Justification::centredLeft, fg, juce::Colours::transparentBlack, PixelFont::DotShape::square, 1.5f);
+        PixelFont::drawFitted (g, (it.favourite ? "*" : " ") + it.name.toUpperCase(), row.reduced (2.0f, rowH * 0.18f).withTrimmedRight (36.0f),
+                               juce::Justification::centredLeft, fg, juce::Colours::transparentBlack, PixelFont::DotShape::square, 1.8f);
         if (it.rt60 > 0)
-            PixelFont::drawFitted (g, juce::String (it.rt60, 1) + "S", row.reduced (2.0f, rowH * 0.25f).removeFromRight (28.0f),
-                                   juce::Justification::centredRight, sel ? c.lcdBg : c.lcdDim, juce::Colours::transparentBlack,
-                                   PixelFont::DotShape::square, 1.3f);
+            PixelFont::drawFitted (g, juce::String (it.rt60, 1) + "S", row.reduced (2.0f, rowH * 0.22f).removeFromRight (34.0f),
+                                   juce::Justification::centredRight, sel ? c.lcdBg : c.lcdFg.withAlpha (0.75f), juce::Colours::transparentBlack,
+                                   PixelFont::DotShape::square, 1.6f);
     }
     if (visible.empty())
         lnf->drawDisplayText (g, all.empty() ? "NO IRS" : "NO MATCH", listArea.withHeight (16.0f), juce::Justification::centred, true);
@@ -133,9 +144,23 @@ void IRBrowser::mouseDown (const juce::MouseEvent& e)
     if (catArea.contains (e.position))
     {
         const auto cats = categories();
-        const int i = (int) ((e.position.y - catArea.getY()) / (catArea.getHeight() / (float) cats.size()));
-        category = cats[juce::jlimit (0, cats.size() - 1, i)];
-        filter();
+        const float x = (e.position.x - catArea.getX()) / catArea.getWidth();
+        if (x < 0.25f || x > 0.75f)
+        {
+            const int i = cats.indexOf (category);
+            category = cats[(i + (x < 0.25f ? cats.size() - 1 : 1)) % cats.size()];
+            filter();
+            return;
+        }
+        juce::PopupMenu m;
+        for (int i = 0; i < cats.size(); ++i) m.addItem (i + 1, cats[i], true, cats[i] == category);
+        m.showMenuAsync (juce::PopupMenu::Options().withTargetComponent (this),
+                         [safe = juce::Component::SafePointer<IRBrowser> (this), cats] (int r)
+                         {
+                             if (safe == nullptr || r <= 0) return;
+                             safe->category = cats[r - 1];
+                             safe->filter();
+                         });
         return;
     }
     if (headArea.contains (e.position) && e.position.x > headArea.getCentreX())

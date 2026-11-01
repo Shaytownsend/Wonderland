@@ -27,7 +27,9 @@ struct MainPanel::Readout : public juce::Component
         auto* lnf = freddyLnf (*this);
         if (lnf == nullptr) return;
         auto inner = lnf->drawDisplayFrame (g, getLocalBounds().toFloat());
-        auto* p = hub.apvts.getParameter (hub.getLastTouched());
+        // hovered control first, otherwise the last touched one (the jog wheel's target)
+        const auto shown = hub.getHovered().isNotEmpty() ? hub.getHovered() : hub.getLastTouched();
+        auto* p = hub.apvts.getParameter (shown);
         juce::String name = "--", value;
         if (p != nullptr)
         {
@@ -498,6 +500,11 @@ std::vector<MainPanel::ManifestEntry> MainPanel::manifest() const
 // state-driven UI
 // ---------------------------------------------------------------------------
 void MainPanel::controlTouched (const juce::String&)
+{
+    readout->repaint();
+}
+
+void MainPanel::controlHovered (const juce::String&)
 {
     readout->repaint();
 }

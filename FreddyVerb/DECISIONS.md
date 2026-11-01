@@ -61,3 +61,8 @@ Ambiguities in the spec, what was chosen, why, and how to change it. Newest at t
 42. **A/B** — two full snapshots (parameters + IR). The first switch to B copies A. "A>B" copies A into B (if you're on B, B becomes A). A/B switches and preset loads are single undo steps; every control gesture starts a new undo transaction.
 43. **User IR folders** — remembered in the UI state (`irFolders`), scanned recursively (capped at 1 000 files per folder) into the browser's USER category alongside recently loaded files.
 44. **Browser RT60 column** — for Non-Linear and reversed IRs the browser shows the IR length instead of RT60 (their T30 is not a meaningful decay time).
+
+## Final UI (M7)
+45. **Chosen direction: 12 — Tour-Worn Champagne** (user's pick at the M6 checkpoint). It is the default skin (`ui::defaultThemeId()`); the other 12 remain selectable under SETUP → Flat / Photoreal Rack. Saved sessions keep whatever skin they were saved with.
+46. **IR browser layout** — the category *column* is replaced by a one-line category stepper (`< PLATES  5 >`, click the middle for a menu) so the list gets full width and 14–18 px rows; this keeps it legible at 75 % in the compact 4U rack skins. The list always scrolls to keep the current IR visible.
+47. **Hover readout** — hovering any knob, pad or stepper shows its name and value on the readout LCD without "touching" it (no undo step; the data-entry jog wheel keeps its target).

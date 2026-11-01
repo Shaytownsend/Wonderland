@@ -239,7 +239,14 @@ void EnvelopeVisualizer::paint (juce::Graphics& g)
         g.fillRect (r.getRight() - 1.0f, r.getY(), 1.0f, r.getHeight());
         const auto label = "BLOOM " + juce::String (juce::roundToInt ((double) (s.end - s.start) * msPerFrame)) + "MS";
         if (r.getWidth() > PixelFont::textWidth (label, 1.2f) + 6.0f)
-            lnf->drawDisplayText (g, label, r.withHeight (12.0f).translated (0, 3.0f), juce::Justification::centred);
+            {
+            // small backing plate so the label stays readable over the wet waveform
+            const float tw = PixelFont::textWidth (label, 11.0f / 7.0f) + 8.0f;
+            const auto box = juce::Rectangle<float> (tw, 15.0f).withCentre ({ r.getCentreX(), r.getBottom() - 10.0f });
+            g.setColour (c.lcdBg.withAlpha (0.85f));
+            g.fillRect (box);
+            lnf->drawDisplayText (g, label, box.reduced (4.0f, 2.0f), juce::Justification::centred);
+        }
     }
 
     // --- threshold lines ----------------------------------------------------

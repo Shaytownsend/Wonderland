@@ -128,6 +128,8 @@ struct ThemeEntry
 /** All 13 options in display order: 8 flat, then 5 photoreal. */
 const std::vector<ThemeEntry>& allThemes();
 const ThemeEntry* findTheme (const juce::String& id);
+/** The release default (chosen at the M6 checkpoint): Tour-Worn Champagne. */
+inline const char* defaultThemeId() { return "tour_worn_champagne"; }
 
 // Registration helpers implemented in themes/flat/FlatThemes.cpp and
 // themes/photoreal/PhotorealThemes.cpp.
