@@ -25,7 +25,7 @@ Hover any control to see its value on the readout LCD; drag the DATA wheel to ed
 
 ## Building
 
-Requirements: CMake ≥ 3.22, a C++20 compiler, Ninja (recommended). Linux also needs the usual JUCE packages (ALSA, X11, freetype, fontconfig, GL headers — see `.github/workflows/ci.yml`).
+Requirements: CMake ≥ 3.22, a C++20 compiler, Ninja (recommended). Linux also needs the usual JUCE packages (ALSA, X11, freetype, fontconfig, GL headers — see `.github/workflows/freddyverb.yml (repository root)`).
 
 ```bash
 cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release

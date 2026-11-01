@@ -1,8 +1,11 @@
-name: CI
+name: Freddy Verb
 
 on:
   push:
+    paths: ['FreddyVerb/**', '.github/workflows/freddyverb.yml']
   pull_request:
+    paths: ['FreddyVerb/**', '.github/workflows/freddyverb.yml']
+  workflow_dispatch:
 
 jobs:
   build:
