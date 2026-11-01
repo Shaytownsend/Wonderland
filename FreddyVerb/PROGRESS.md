@@ -125,3 +125,44 @@ One entry per milestone. Each links to that milestone's 13-option UI contact she
 **pluginval** — VST3 strictness 10: SUCCESS.
 **CPU** — unchanged from M6 (UI only).
 **Decisions** — DECISIONS.md #45–47.
+
+---
+
+## M8 — Release
+
+**Profiling & optimisation (measured, not guessed)** — CPU breakdown at 48 kHz / 128 with a 3 s true-stereo IR (inline): convolution 2.2 %, wet EQ 0.47 %, duck + gate 0.13 %, everything else 0.22 %.
+- EQ: coefficients are no longer recomputed while parameters are settled.
+- Worker wake-up: the 300 µs polling loop (≈ 1 % of a core) is replaced by a futex-style `std::atomic::wait/notify` (lock-free for the audio thread). macOS minimum is now 11.0.
+- Efficient mode: 2048-sample uniform partitions (latency 2048), so it now really is the cheaper mode.
+
+**Final CPU** (Linux x86-64 VM, flat-out runs; spec target < 3 % of one core):
+| Mode | CPU |
+|------|-----|
+| Zero Latency, audio thread (tail on worker) | ≈ 1.5–2.0 % |
+| Zero Latency, everything inline | 2.9–3.0 % |
+| Efficient (2048) | 2.5 % |
+The worker thread adds ≈ 0.8 % of cross-thread overhead in like-for-like paced runs, and in exchange keeps the audio thread light. In 10 s of real-time-paced processing the audio thread never had to take over a late worker block. Paced runs read higher on this VM because the idle gaps let the CPU clock down; numbers on a modern desktop CPU will be lower.
+
+**Validation**
+- Full suite: 52 test cases / 3 494 assertions green.
+- pluginval strictness 10: VST3 ✓ and LV2 ✓ (repeated runs). AU and AAX are validated in CI on macOS (AAX only with the SDK); CLAP via `clap-validator` in CI (BLOCKERS #9).
+- Standalone app launches and runs (headless smoke test).
+
+**Packaging** — macOS `.pkg` (VST3 / AU / CLAP / AAX / Standalone, optional Developer ID signing) and a Windows Inno Setup installer (VST3 / CLAP / AAX / Standalone), both built by CI. Notarisation and code signing need your certificates (BLOCKERS #10).
+**Docs** — README (usage, build, tools, licensing check), CREDITS (all third-party and build-tool licences), DECISIONS (47 entries), BLOCKERS (10 entries).
+**Size** — plugin binary ≈ 40 MB (including 19 MB of factory IRs and 14 MB for all five photoreal skins), well inside the 100 MB budget.
+
+---
+
+# Final summary
+
+Freddy Verb is a complete drum-reverb insert built on JUCE 8, in **VST3, AU, CLAP, LV2 and Standalone** formats; **AAX** builds when the AAX SDK is provided. It runs the planned chain: zero-latency true-stereo convolution → duck → gate → wet EQ → width, keyed from its own dry input, then mixed with the latency-compensated dry.
+
+- **Reverb core:** non-uniform partitioned convolution in double precision (vDSP / PFFFT). The tail partitions run on a lock-free background worker. Output matches a brute-force reference to better than −120 dB. IR swaps are click-free, IRs are resampled with r8brain, and IR shaping is complete.
+- **Content:** 37 original factory IRs from `ir_forge` and 35 factory presets. User IRs are supported, including relink and embedding in the session.
+- **Dynamics:** a shared detector, Follow and Curve ducking (7 curve shapes) and a gate. All of them are tested for clicks across their whole parameter range.
+- **Tone / space / mix:** an oversampled, decramped TPT wet EQ; width, mono-below and balance; equal-power mix; metering; and a click-free bypass. Latency is reported for every quality and lookahead setting, with dry/wet alignment proven by null tests.
+- **UI:** the envelope LCD shows duck, bloom and gate live, with draggable handles and a static preview when audio is stopped. There are 13 skins, with **Tour-Worn Champagne** as the default, all scaling 75–200 %. Presets support A/B compare, undo/redo and Mix Lock.
+- **Engineering:** versioned state, pinned dependencies, CI for macOS Universal / Windows / Linux running tests, pluginval, clap-validator and the installers, and the per-milestone UI contact sheets in `ui_previews/`.
+
+**Open items:** see BLOCKERS.md. The main ones are AAX SDK and signing, code signing and notarisation, one unreproduced pluginval crash to watch in CI, and re-checking the JUCE licence tier before release.

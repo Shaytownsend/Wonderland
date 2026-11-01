@@ -152,7 +152,8 @@ TEST_CASE ("Convolver latency is 0 in zero-latency mode and kEfficientPartition 
     std::vector<float> yL, yR;
     runConvolver (e, x, x, yL, yR, 333, true, false);
     double err = 0;
-    for (size_t i = 0; i + 1024 < x.size(); ++i) err = std::max (err, (double) std::abs (yL[i + 1024] - x[i]));
+    const size_t L = (size_t) Convolver::kEfficientPartition;
+    for (size_t i = 0; i + L < x.size(); ++i) err = std::max (err, (double) std::abs (yL[i + L] - x[i]));
     CHECK (err < 1.0e-6);
     runConvolver (z, x, x, yL, yR, 333, true, false);
     err = 0;

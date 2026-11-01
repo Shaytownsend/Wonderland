@@ -74,6 +74,15 @@ jobs:
             $PV --strictness-level 10 --validate-in-process ~/Library/Audio/Plug-Ins/Components/"Freddy Verb.component"
           fi
 
+      - name: clap-validator
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          curl -sSL -o cv.tar.gz https://github.com/free-audio/clap-validator/releases/latest/download/clap-validator-linux.tar.gz
+          mkdir cv && tar -xzf cv.tar.gz -C cv
+          CV=$(find cv -name clap-validator -type f | head -1); chmod +x "$CV"
+          "$CV" validate "build/FreddyVerb_artefacts/Release/CLAP/Freddy Verb.clap"
+
       - name: Installer (macOS pkg)
         if: runner.os == 'macOS'
         run: packaging/macos/build_pkg.sh build "$(grep -m1 -oE 'VERSION [0-9.]+' CMakeLists.txt | cut -d' ' -f2)"

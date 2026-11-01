@@ -12,6 +12,17 @@ The reverb gets out of the way while the drum hits (ducked), blooms in as the hi
 
 Status and per-milestone reports: [`PROGRESS.md`](PROGRESS.md). Design choices: [`DECISIONS.md`](DECISIONS.md). Known gaps: [`BLOCKERS.md`](BLOCKERS.md).
 
+## Using it
+
+1. Insert Freddy Verb on a drum track (mono or stereo). The default **Init** sound is a Medium Plate with Follow ducking (−18 dB, 250 ms bloom) and a gate (150 ms hold, 300 ms release) at 35 % mix.
+2. Pick an IR in the browser (left LCD) or a factory preset from the preset LCD (35 presets by drum: Snare, Kick, Toms, Perc, …).
+3. Shape the **bloom** in the envelope LCD: drag the DEPTH handle (how far the verb ducks), the BLOOM handle (how fast it comes back), and HOLD / RELEASE (when and how fast the gate cuts the tail). The shaded window is the bloom; its length is printed on it.
+4. DUCK: **Follow** tracks the drum's envelope; **Curve** fires one of seven shapes per hit (Linear, Exponential, Log, S, Hold-Ramp, Pump, Swell). GATE OFF gives a plain ducked reverb.
+5. DETECT filters the internal key (e.g. high-pass to ignore kick bleed on a snare); LISTEN solos it. Lookahead lets the duck land before the hit (adds latency, reported to the host).
+6. TONE / SPACE shape only the wet signal; MIX sets the balance (Mix Lock keeps it while browsing presets).
+
+Hover any control to see its value on the readout LCD; drag the DATA wheel to edit the last touched control; Cmd/Ctrl-drag for fine adjustment; double-click to reset. SETUP switches between the 13 skins and UI sizes (75–200 %). The default skin is **Tour-Worn Champagne**.
+
 ## Building
 
 Requirements: CMake ≥ 3.22, a C++20 compiler, Ninja (recommended). Linux also needs the usual JUCE packages (ALSA, X11, freetype, fontconfig, GL headers — see `.github/workflows/ci.yml`).
@@ -28,7 +39,7 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-- macOS Universal: add `-DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"`.
+- macOS Universal: add `-DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"` (minimum macOS 11).
 - AAX: add `-DFV_AAX_SDK_PATH=/path/to/aax-sdk`.
 - Offline builds: point `-DFETCHCONTENT_SOURCE_DIR_JUCE=…` (and `_CLAP_JUCE_EXTENSIONS`, `_R8BRAIN`, `_PFFFT`, `_CATCH2`) at local clones.
 
@@ -38,6 +49,8 @@ Outputs land in `build/FreddyVerb_artefacts/Release/{VST3,AU,CLAP,LV2,Standalone
 - `FreddyVerb_Snapshots --out ui_previews/<milestone> --milestone "<name>"` renders all 13 UI options to PNG plus a contact sheet `index.html`. `--manifest <file>` exports the control list used by `panel_forge`.
 - `tools/ir_forge` — offline factory IR generator (FDN, plate, spring, non-linear models).
 - `tools/panel_forge` — offline renderer for the five photoreal rack skins.
+- `tools/presets/make_presets.py` — regenerates the factory presets; `tools/curve_reference/make_curve_tables.py` — reference tables for the duck-curve tests.
+- Installers: `packaging/macos/build_pkg.sh <build-dir> <version> [signing identity]` and `packaging/windows/FreddyVerb.iss` (Inno Setup); both run in CI.
 
 ## Licensing (check before release)
 

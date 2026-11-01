@@ -356,7 +356,10 @@ void Convolver::process (const float* inL, const float* inR, float* outL, float*
             if (pos % s.P != 0) continue;
             const int64_t j = pos / s.P - 1;
             if (s.async)
+            {
                 s.posted.store (j, std::memory_order_release);
+                if (worker != nullptr) worker->notify();
+            }
             else
             {
                 s.claimed.store (j, std::memory_order_relaxed);
@@ -385,6 +388,7 @@ ConvolutionWorker::ConvolutionWorker() : thread (std::make_unique<Thread>())
 ConvolutionWorker::~ConvolutionWorker()
 {
     quit.store (true);
+    notify();
     if (thread->t.joinable()) thread->t.join();
 }
 
@@ -414,6 +418,8 @@ void ConvolutionWorker::run()
     ScopedNoDenormalsFV noDenormals;
     while (! quit.load (std::memory_order_relaxed))
     {
+        // read the signal *before* scanning, so a post that lands during the scan wakes us
+        const auto seen = signal.load (std::memory_order_acquire);
         bool did = false;
         for (auto& s : slots)
         {
@@ -425,8 +431,8 @@ void ConvolutionWorker::run()
                 did |= c->workerStep();
             busyWith.store (nullptr, std::memory_order_release);
         }
-        if (! did)
-            std::this_thread::sleep_for (std::chrono::microseconds (300));
+        if (! did && ! quit.load (std::memory_order_relaxed))
+            signal.wait (seen, std::memory_order_acquire);
     }
 }
 } // namespace fv::dsp

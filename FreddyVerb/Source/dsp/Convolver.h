@@ -43,12 +43,16 @@ public:
 
     std::atomic<int> lateTasks { 0 };   // diagnostics: tasks the audio thread had to take over
 
+    /** Wakes the worker (futex-style atomic notify: no lock, never blocks the caller). */
+    void notify() noexcept { signal.fetch_add (1, std::memory_order_release); signal.notify_one(); }
+
 private:
     void run();
     static constexpr int kMaxConvolvers = 16;
     std::array<std::atomic<Convolver*>, kMaxConvolvers> slots {};
     std::atomic<Convolver*> busyWith { nullptr };
     std::atomic<bool> quit { false };
+    std::atomic<uint32_t> signal { 0 };
     struct Thread;
     std::unique_ptr<Thread> thread;
     friend class Convolver;
@@ -69,7 +73,7 @@ public:
     };
 
     static constexpr int kHeadLength = 64;
-    static constexpr int kEfficientPartition = 1024;
+    static constexpr int kEfficientPartition = 2048;
 
     Convolver (const IRData& ir, const Config& cfg, ConvolutionWorker* worker);
     ~Convolver();

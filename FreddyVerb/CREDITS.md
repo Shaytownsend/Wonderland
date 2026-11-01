@@ -10,6 +10,8 @@
 | Apple Accelerate / vDSP | FFT (macOS) | System framework |
 | [Catch2](https://github.com/catchorg/Catch2) 3.16 | Tests | BSL-1.0 |
 | [pluginval](https://github.com/Tracktion/pluginval) | Validation (CI/dev only, not shipped) | GPLv3 |
+| [clap-validator](https://github.com/free-audio/clap-validator) | CLAP validation (CI only, not shipped) | MIT |
+| [Inno Setup](https://jrsoftware.org/isinfo.php) | Windows installer (build tool, not shipped) | Inno Setup licence |
 | [Barlow Condensed](https://github.com/jpt/barlow) | UI labels | SIL OFL 1.1 (`Resources/fonts/OFL-BarlowCondensed.txt`) |
 | [Share Tech Mono](https://fonts.google.com/specimen/Share+Tech+Mono) | Readouts | SIL OFL 1.1 (`Resources/fonts/OFL-ShareTechMono.txt`) |
 

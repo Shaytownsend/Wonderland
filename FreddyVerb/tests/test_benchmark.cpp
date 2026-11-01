@@ -7,10 +7,15 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <functional>
+#include <ctime>
+#include <thread>
 
 using namespace fv::dsp;
 
-static double measure (int quality, bool async, int block, double sr, double seconds)
+static double lastTotalCpu = 0.0;
+static double measure (int quality, bool async, int block, double sr, double seconds,
+                       std::function<void (EngineParams&)> tweak = {}, bool withIR = true, bool paced = false)
 {
     FreddyEngine e;
     e.prepare (sr, block, 2);
@@ -22,10 +27,11 @@ static double measure (int quality, bool async, int block, double sr, double sec
     for (auto& c : src.channels)
         for (size_t i = 0; i < c.size(); ++i) c[i] = g (rng) * std::exp (-6.9 * (double) i / (2.5 * sr));
     auto ir = IRProcessor::render (src, IRShapeParams(), sr);
-    e.installConvolverNow (std::make_unique<Convolver> (ir, Convolver::Config { quality, block, async }, &e.getWorker()));
+    if (withIR) e.installConvolverNow (std::make_unique<Convolver> (ir, Convolver::Config { quality, block, async }, &e.getWorker()));
 
     EngineParams p;       // defaults: duck + gate + EQ on, like a real session
     p.quality = quality;
+    if (tweak) tweak (p);
     auto x = fvtest::noise (block, 3, 0.3f);
     std::vector<float> oL ((size_t) block), oR ((size_t) block);
     const float* in[2] { x.data(), x.data() };
@@ -33,20 +39,42 @@ static double measure (int quality, bool async, int block, double sr, double sec
     const int blocks = (int) (seconds * sr / block);
     for (int i = 0; i < 200; ++i) e.process (in, 2, out, block, p);  // warm-up
     const auto t0 = std::chrono::steady_clock::now();
-    for (int i = 0; i < blocks; ++i) e.process (in, 2, out, block, p);
+    const auto c0 = std::clock();
+    for (int i = 0; i < blocks; ++i)
+    {
+        e.process (in, 2, out, block, p);
+        // real-time pacing for the async case so the worker runs as it would in a host
+        if (async || paced) std::this_thread::sleep_until (t0 + std::chrono::duration<double> ((i + 1) * block / sr));
+    }
     const double wall = std::chrono::duration<double> (std::chrono::steady_clock::now() - t0).count();
+    if (async) std::cout << "  [late tasks taken over by audio thread: " << e.getWorker().lateTasks.load() << "]\n";
+    lastTotalCpu = 100.0 * (double) (std::clock() - c0) / CLOCKS_PER_SEC / (blocks * block / sr);
     return 100.0 * wall / (blocks * block / sr);
 }
 
 TEST_CASE ("CPU benchmark (audio-thread time, % of one core)", "[.bench][bench]")
 {
     const double sr = 48000.0;
-    const double zl = measure (0, true, 128, sr, 20.0);
+    measure (0, true, 128, sr, 10.0);
+    const double zlTotal = lastTotalCpu;
+    measure (0, false, 128, sr, 10.0, {}, true, true);
+    const double zlSyncTotal = lastTotalCpu;
     const double zlSync = measure (0, false, 128, sr, 20.0);
     const double eff = measure (1, false, 128, sr, 20.0);
     std::cout << "\nCPU @48k/128, 3 s true-stereo IR (audio thread):\n"
-              << "  Zero Latency (worker for tail): " << zl << " %\n"
+              << "  Zero Latency, total CPU incl. worker thread: " << zlTotal << " %  (same pacing, all inline: " << zlSyncTotal << " %)\n"
               << "  Zero Latency (all inline)     : " << zlSync << " %\n"
-              << "  Efficient (1024, inline)       : " << eff << " %\n";
+              << "  Efficient (2048, inline)       : " << eff << " %\n";
     CHECK (zlSync < 100.0);
+}
+
+TEST_CASE ("CPU breakdown by stage (inline, 48k/128)", "[.bench][breakdown]")
+{
+    const double sr = 48000.0;
+    const double all = measure (0, false, 128, sr, 10.0);
+    const double noEq = measure (0, false, 128, sr, 10.0, [] (EngineParams& p) { p.eqOn = false; });
+    const double noDyn = measure (0, false, 128, sr, 10.0, [] (EngineParams& p) { p.duckOn = false; p.gateOn = false; });
+    const double noConv = measure (0, false, 128, sr, 10.0, {}, false);
+    std::cout << "\nall " << all << " %  | EQ " << (all - noEq) << " %  | duck+gate " << (all - noDyn)
+              << " %  | convolution " << (all - noConv) << " %  | rest " << noConv - (all - noEq) - (all - noDyn) << " %\n";
 }
